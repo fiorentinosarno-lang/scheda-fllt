@@ -1,767 +1,231 @@
 <!DOCTYPE html>
-
 <html lang="it">
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fallout TTRPG - Scheda Personaggio Tattica (Sistema 2d20)</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Fallout TTRPG - Scheda Personaggio Interattiva Vault-Tec</title>
-
-<link rel="stylesheet" href="style.css">
-<link rel="icon" type="image/svg+xml" href="icon.svg">
-<link rel="apple-touch-icon" href="icon.svg">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1d4ed8">
-
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tactical-high-contrast.css">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#121212">
 </head>
 <body data-theme="vault">
 
-  <!-- PIP-BOY SCANLINE OVERLAY -->
-  <div class="scanlines"></div>
+  <!-- ACCESSIBLE SCREEN READER ANNOUNCER -->
+  <div id="a11y-live-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
-  <!-- APPLICATION HEADER & PIP-BOY STATUS (CON SEZIONE STRUMENTI A SCOMPARSA SU MOBILE) -->
+  <!-- FLOATING SAVE NOTIFICATION (ARIA-LIVE POLITE) -->
+  <div id="save-status-indicator" class="tactical-save-toast" role="status" aria-live="polite">
+    <svg class="tactical-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    <span>SALVATO AUTOMATICO [OK]</span>
+  </div>
+
+  <!-- APPLICATION HEADER & ACTION TOOLBAR -->
   <header class="app-header no-print" id="main-app-header">
     <div class="brand-bar">
       <div class="brand">
-        <div class="brand-icon"></div>
         <div class="brand-text-wrap">
-          <div class="brand-title">VAULT-TEC PIP-BOY 3000 Mk IV</div>
-          <div class="brand-sub">SISTEMA DI GESTIONE PERSONAGGIO</div>
+          <div class="brand-title" style="letter-spacing:0.04em;">FALLOUT TTRPG &bull; SCHEDA PERSONAGGIO TATTICA</div>
+          <div class="brand-sub">SISTEMA UFFICIALE 2D20 &bull; HIGH CONTRAST OPERATOR HUD</div>
         </div>
       </div>
-      <!-- Pulsante Toggle a Scomparsa per Mobile -->
-      <button type="button" class="btn btn-sm mobile-tools-toggle no-print" id="mobile-tools-toggle" onclick="toggleMobileTopTools()" aria-expanded="false" title="Apri o chiudi il pannello strumenti di gestione">
-        <span class="m-toggle-icon">⚙️</span>
-        <span class="m-toggle-text">STRUMENTI</span>
-        <span class="m-toggle-arrow">▼</span>
-      </button>
-    </div>
 
-    <!-- Contenitore a Scomparsa su Mobile (Temi, Salvataggio, Dadi, Compendio, Scheda Riassuntiva) -->
-    <div class="header-tools-collapsible" id="header-tools-collapsible">
-      <!-- Quick action controls -->
-      <div class="header-actions">
-      <!-- Theme Switcher -->
-      <div class="theme-selector theme-switch-group" id="theme-selector-group">
-        <button type="button" class="theme-btn active" data-set-theme="vault" onclick="applyTheme('vault')" title="Tema Ufficiale Vault-Tec">VAULT-TEC</button>
-        <button type="button" class="theme-btn" data-set-theme="paper" onclick="applyTheme('paper')" title="Cartaceo / Alto Contrasto">CARTACEO</button>
-        <button type="button" class="theme-btn" data-set-theme="enclave" onclick="applyTheme('enclave')" title="Enclave Stealth">ENCLAVE</button>
+      <!-- Quick Action Buttons -->
+      <div class="header-actions" style="margin-left:auto; display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+        <button type="button" class="btn btn-success" id="btn-new-character" onclick="startNewCharacter()" title="Crea un nuovo personaggio o avvia il Wizard">+ NUOVO PG</button>
+        <button type="button" class="btn" id="btn-export-json" onclick="exportCharacterJSON()" title="Esporta file .json">SALVA FILE</button>
+        <button type="button" class="btn" id="btn-import-trigger" title="Carica file .json">CARICA FILE</button>
+        <input type="file" id="import-file-input" accept=".json" style="display:none;" onchange="importCharacterJSON(event)">
+        <button type="button" class="btn btn-danger" id="btn-reset-sheet" onclick="resetCharacter()" title="Resetta la scheda">RESET</button>
+        <button type="button" class="btn btn-primary" id="btn-open-compendium" onclick="openCompendiumModal()">COMPENDIO</button>
+        <button type="button" class="btn" id="btn-open-dice" onclick="openDiceModal()">DADI</button>
+        <button type="button" class="btn btn-primary" id="btn-open-level-up" onclick="openLevelUpWizard()">LEVEL UP</button>
+        <button type="button" class="btn" id="btn-print-sheet" title="Stampa o esporta PDF">STAMPA</button>
       </div>
-
-      <!-- Action buttons with official IDs -->
-      <button type="button" class="btn btn-success" id="btn-new-character" onclick="startNewCharacter()" title="Crea un nuovo personaggio da zero o avvia il Wizard guidato" style="font-weight:800; background:linear-gradient(135deg,#15803d,#16a34a); color:#fff; border:1px solid #22c55e;">👤 NUOVO PERSONAGGIO</button>
-      <button type="button" class="btn" id="btn-export-json" onclick="exportCharacterJSON()" title="Scarica il file .json del personaggio sul tuo computer">💾 SALVA FILE</button>
-      <button type="button" class="btn" id="btn-import-trigger" title="Carica un file .json salvato sul computer">📂 CARICA FILE</button>
-      <button type="button" class="btn btn-danger" id="btn-reset-sheet" onclick="resetCharacter()" title="Resetta la scheda ai valori iniziali puliti">↺ RESET SCHEDA</button>
-      <button type="button" class="btn btn-primary" id="btn-open-compendium" onclick="openCompendiumModal()">📖 COMPENDIO</button>
-      <button type="button" class="btn" id="btn-open-dice" onclick="openDiceModal()">🎲 DADI</button>
-      <button type="button" class="btn btn-primary" id="btn-open-level-up" onclick="openLevelUpWizard()">▲ LEVEL UP</button>
-      <button type="button" class="btn" id="btn-print-sheet" title="Stampa o esporta in PDF">🖨️ STAMPA</button>
-      <div class="save-status saved" id="save-status-indicator" title="Autosalvataggio attivo nel browser: ogni modifica è sempre memorizzata automaticamente">SALVATO AUTOMATICO [OK]</div>
     </div>
 
-    <!-- TOP PERSISTENT SUMMARY BAR -->
+    <!-- SUMMARY BAR ANAGRAFICA RAPIDA -->
     <div class="sheet-summary-bar no-print">
-    <div class="summary-group">
-      <label for="char-name-header">Nome Personaggio</label>
-      <input type="text" id="char-name-header" class="input-field" placeholder="Es. John Cassidy">
-    </div>
-    <div class="summary-group">
-      <label for="char-player-header">Giocatore</label>
-      <input type="text" id="char-player-header" class="input-field" placeholder="Nome Giocatore">
-    </div>
-    <div class="summary-group summary-sm">
-      <label for="char-level">Livello</label>
-      <div style="display:flex; align-items:center; gap:6px;">
-        <input type="number" id="char-level" class="input-field" value="1" min="1" max="30" onchange="onLevelInputChange(this.value)" style="width:48px; text-align:center; font-weight:bold;">
-        <button type="button" class="btn btn-sm btn-primary no-print" id="btn-trigger-level-up" onclick="openLevelUpWizard()" title="Apri procedura guidata Sali di Livello" style="padding:3px 8px; font-size:12px; font-weight:bold; white-space:nowrap;">▲ LEVEL UP</button>
+      <div class="summary-group">
+        <label for="char-name-header">Nome Personaggio</label>
+        <input type="text" id="char-name-header" class="input-field" placeholder="Es. John Cassidy">
+      </div>
+      <div class="summary-group">
+        <label for="char-player-header">Giocatore</label>
+        <input type="text" id="char-player-header" class="input-field" placeholder="Nome Giocatore">
+      </div>
+      <div class="summary-group summary-sm">
+        <label for="char-level">Livello</label>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <input type="number" id="char-level" class="input-field" value="1" min="1" max="30" onchange="onLevelInputChange(this.value)" style="width:48px; text-align:center; font-weight:800;">
+          <button type="button" class="btn btn-sm btn-primary no-print" id="btn-trigger-level-up" onclick="openLevelUpWizard()" style="padding:4px 8px; font-size:11px;">LEVEL UP</button>
+        </div>
+      </div>
+      <div class="summary-group summary-sm">
+        <label for="char-xp">Punti XP</label>
+        <input type="number" id="char-xp" class="input-field" value="0" min="0" step="50" style="width:72px; text-align:center; font-weight:700;">
+      </div>
+      <div class="summary-actions" style="margin-left:auto;">
+        <span class="sheet-binder-note">Regolamento Ufficiale 2d20 Modiphius</span>
       </div>
     </div>
-    <div class="summary-group summary-sm">
-      <label for="char-xp">Punti XP</label>
-      <input type="number" id="char-xp" class="input-field" value="0" min="0" step="50" style="width:70px; text-align:center;">
-    </div>
-    <div class="summary-actions" style="margin-left:auto;">
-      <span class="sheet-binder-note">Scheda Personaggio Fallout TTRPG &bull; Sistema 2d20</span>
-    </div>
-    </div>
-    </div> <!-- END header-tools-collapsible -->
   </header>
 
-  <!-- MINI-VITALS HUD STRIP (STICKY IN ALTO SU MOBILE, SOLO ~26px) -->
+  <!-- MOBILE STICKY VITALS HUD STRIP (SEMPRE VISIBILE IN ALTO SU SMARTPHONE) -->
   <div id="fallout-mobile-vitals" class="mobile-top-vitals-strip no-print">
-    <div class="m-vital-chip" onclick="switchMobileSection('core')" title="Punti Ferita Attuali / Massimi">
-      <span class="m-vital-icon">❤️</span> <span id="m-hud-hp">PF --/--</span>
+    <div class="m-vital-chip" onclick="switchMainTab('combat')" title="Punti Ferita Attuali / Massimi">
+      <svg class="tactical-icon icon-hp" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <span id="m-hud-hp">PF --/--</span>
     </div>
-    <div class="m-vital-chip" onclick="switchMobileSection('core')" title="Punti Azione Attuali / Massimi">
-      <span class="m-vital-icon">⚡</span> <span id="m-hud-ap">PA --/--</span>
+    <div class="m-vital-chip" onclick="switchMainTab('combat')" title="Punti Azione Attuali / Massimi">
+      <svg class="tactical-icon icon-ap" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      <span id="m-hud-ap">PA --/--</span>
     </div>
-    <div class="m-vital-chip" onclick="switchMobileSection('armors')" title="Soglia Danni (DT Totale)">
-      <span class="m-vital-icon">🛡️</span> <span id="m-hud-dt">DT --</span>
+    <div class="m-vital-chip" onclick="switchMainTab('combat')" title="Soglia Danni (DT Totale)">
+      <svg class="tactical-icon icon-dt" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span id="m-hud-dt">DT --</span>
     </div>
-    <div class="m-vital-chip" onclick="switchMobileSection('survival')" title="Radiazioni e CD Radiazioni">
-      <span class="m-vital-icon">☢️</span> <span id="m-hud-rad">Rad --</span>
+    <div class="m-vital-chip" onclick="switchMainTab('survival')" title="Radiazioni e CD Radiazioni">
+      <svg class="tactical-icon icon-rad" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="2.5"/><path d="M12 2a10 10 0 0 1 8.66 5l-4.33 2.5a5 5 0 0 0-4.33-2.5V2z"/><path d="M22 12a10 10 0 0 1-5 8.66l-2.5-4.33a5 5 0 0 0 2.5-4.33H22z"/><path d="M7 16.33 4.5 20.66A10 10 0 0 1 2 12h5a5 5 0 0 0 2.5 4.33l-2.5-.01z"/></svg>
+      <span id="m-hud-rad">Rad --</span>
     </div>
   </div>
 
   <!-- MAIN CHARACTER SHEET BINDER CONTAINER -->
-  <main class="app-container layout-binder-root layout-codex-root">
-
+  <main class="app-container layout-binder-root layout-codex-root" id="main-content">
     <div class="sheet-binder-frame">
 
-      <!-- SHEET BODY (4 SEZIONI PRINCIPALI: CORE / COMBAT / INVENTARIO / RELAZIONI) -->
-      <div class="sheet-grid-3x2" id="character-sheet-main">
+      <!-- DESKTOP TACTICAL TAB NAVIGATION BAR (4 TAB) -->
+      <nav class="tactical-tab-navigation no-print" role="tablist" aria-label="Navigazione Scheda Personaggio">
+        <button type="button" role="tab" class="tactical-tab-btn active" id="tab-btn-combat" aria-selected="true" aria-controls="panel-combat" onclick="switchMainTab('combat')">
+          <svg class="tactical-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
+          <span class="tab-text">1. COMBATTIMENTO</span>
+          <span class="tab-badge">Dati Critici &amp; Armi</span>
+        </button>
+        <button type="button" role="tab" class="tactical-tab-btn" id="tab-btn-character" aria-selected="false" aria-controls="panel-character" onclick="switchMainTab('character')">
+          <svg class="tactical-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span class="tab-text">2. PERSONAGGIO</span>
+          <span class="tab-badge">SPECIAL &amp; Abilit&agrave;</span>
+        </button>
+        <button type="button" role="tab" class="tactical-tab-btn" id="tab-btn-survival" aria-selected="false" aria-controls="panel-survival" onclick="switchMainTab('survival')">
+          <svg class="tactical-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+          <span class="tab-text">3. SOPRAVVIVENZA</span>
+          <span class="tab-badge">Arti &amp; Inventario</span>
+        </button>
+        <button type="button" role="tab" class="tactical-tab-btn" id="tab-btn-interpretazione" aria-selected="false" aria-controls="panel-interpretazione" onclick="switchMainTab('interpretazione')">
+          <svg class="tactical-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="tab-text">4. INTERPRETAZIONE</span>
+          <span class="tab-badge">Ruolo &amp; Bio</span>
+        </button>
+      </nav>
 
-        <!-- ===============================================================
-             SEZIONE 1: CORE (IDENTITÀ, SPECIAL, SKILLS, TRATTI & PERK)
-             =============================================================== -->
-                <!-- ===============================================================
-             SEZIONE 1: CORE (IDENTITÀ, SPECIAL, SKILLS, TRATTI & PERK)
-             =============================================================== -->
-        <section class="sheet-row" id="row-core" data-row="core">
-          <div class="sheet-row-heading">
-            <span class="sheet-row-badge">CORE</span>
-            <h2>SEZIONE CORE: IDENTITÀ, SPECIAL, ABILITÀ, TRATTI & PERK</h2>
+      <!-- =====================================================================
+           TAB 1: COMBATTIMENTO (SOLO DATI CRITICI: HP, AP, CA, DT, ARMI, RESISTENZE)
+           ===================================================================== -->
+      <div class="sheet-tab-panel active" id="panel-combat" role="tabpanel" aria-labelledby="tab-btn-combat">
+        
+      <!-- PRIMARY CRITICAL VITALS: CARD ENORMI (FONT-SIZE >= 2.5rem) -->
+      <div class="primary-vitals-container">
+        <!-- 1. PUNTI FERITA (HP) -->
+        <fieldset class="tactical-vital-card card-hp">
+          <legend class="vital-legend">
+            <svg class="tactical-icon icon-hp" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <span>Punti Ferita (HP)</span>
+          </legend>
+          <div class="vital-split-row">
+            <input type="number" id="current-hp" class="vital-massive-input" value="10" min="0" max="999" title="Punti Ferita Attuali" aria-label="Punti Ferita Attuali">
+            <span style="font-size:2rem; font-weight:700; color:var(--text-dim);">/</span>
+            <input type="number" id="max-hp" class="vital-massive-input" value="10" min="1" max="999" title="Punti Ferita Massimi" aria-label="Punti Ferita Massimi">
           </div>
-
-          <div class="sheet-row-cols core-three-columns">
-            <!-- ===============================================================
-                 COLONNA SINISTRA: FOTO, IDENTITÀ, RAZZA, BG & SOPRAVVIVENZA
-                 =============================================================== -->
-            <div class="sheet-col sheet-col-left core-sidebar-col">
-              
-              <!-- 1. FOTO PERSONAGGIO (IN ALTO A SINISTRA) -->
-              <div class="col-inner-box photo-box m-collapsible" data-mobile-cat="core">
-                <div class="box-title-bar">
-                  <span>FOTO PERSONAGGIO</span>
-                  <span style="font-size:11px; color:var(--text-dim);">AVATAR</span>
-                </div>
-                <div class="photo-card">
-                  <div class="portrait-frame" id="portrait-display" title="Clicca per caricare una foto o trascinala qui">
-                    <!-- Populated by app.js -->
-                  </div>
-                  <input type="file" id="portrait-file-input" accept="image/*" style="display: none;">
-                  <div class="portrait-actions no-print" style="margin-top:6px; display:flex; gap:6px;">
-                    <button type="button" class="btn btn-sm" onclick="document.getElementById('portrait-file-input').click()" style="flex:1;">Sfoglia Foto</button>
-                    <button type="button" class="btn btn-sm btn-danger" id="btn-clear-photo" title="Rimuovi Foto">Rimuovi</button>
-                  </div>
-                  <div class="no-print" style="width: 100%; margin-top: 6px;">
-                    <select id="avatar-preset-select" class="input-field" style="font-size: 12px; padding: 4px;">
-                      <option value="">-- Avatar Predefiniti --</option>
-                      <option value="vaultboy">Vault Boy (Vault-Tec)</option>
-                      <option value="ghoul">Ghoul</option>
-                      <option value="synth">Gen-2 Synth</option>
-                      <option value="supermutant">Super Mutante</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-
-              <!-- 3. RAZZA / ORIGINE & SOTTOTIPO -->
-              <div class="col-inner-box race-box m-collapsible" data-mobile-cat="core">
-                <div class="box-title-bar">
-                  <span>RAZZA / ORIGINE</span>
-                  <span style="font-size:11px; color:var(--text-dim);">SPECIE</span>
-                </div>
-                <div class="form-grid" style="display:flex; flex-direction:column; gap:8px;">
-                  <div class="input-group">
-                    <label for="char-race">Razza / Origine</label>
-                    <select id="char-race" class="input-field" onchange="onRaceChange(this.value)">
-                      <option value="human">Umano (Human)</option>
-                      <option value="ghoul">Ghoul</option>
-                      <option value="gen2_synth">Synth Gen-2</option>
-                      <option value="robot">Robot (Handy / Protectron / Robobrain)</option>
-                      <option value="super_mutant">Super Mutante</option>
-                    </select>
-                  </div>
-                  <div class="input-group">
-                    <label for="char-race-variant">Sottotipo / Variante</label>
-                    <select id="char-race-variant" class="input-field" onchange="onRaceVariantChange(this.value)"></select>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 4. BG DI PARTENZA -->
-              <div class="col-inner-box bg-box m-collapsible" data-mobile-cat="core">
-                <div class="box-title-bar">
-                  <span>BG DI PARTENZA</span>
-                  <span style="font-size:11px; color:var(--text-dim);">BACKGROUND</span>
-                </div>
-                <div class="form-grid" style="display:flex; flex-direction:column; gap:8px;">
-                  <div class="input-group">
-                    <label for="char-background">Background Storico</label>
-                    <select id="char-background" class="input-field">
-                      <option value="cultist">Cultista (Cultist)</option>
-                      <option value="doctor">Dottore (Doctor)</option>
-                      <option value="drifter">Vagabondo (Drifter)</option>
-                      <option value="entertainer">Intrattenitore (Entertainer)</option>
-                      <option value="farmer">Agricoltore (Farmer)</option>
-                      <option value="guard">Guardia (Guard)</option>
-                      <option value="hermit">Eremita (Hermit)</option>
-                      <option value="journalist">Giornalista (Journalist)</option>
-                      <option value="laborer">Bracciante (Laborer)</option>
-                      <option value="mechanic">Meccanico (Mechanic)</option>
-                      <option value="mercenary">Mercenario (Mercenary)</option>
-                      <option value="pastor">Pastore (Pastor)</option>
-                      <option value="pilgrim">Pellegrino (Pilgrim)</option>
-                      <option value="pit_fighter">Gladiatore (Pit Fighter)</option>
-                      <option value="scientist">Scienziato (Scientist)</option>
-                      <option value="scribe">Scriba della Confraternita</option>
-                      <option value="soldier">Soldato / Guardia RNC</option>
-                      <option value="trader">Commerciante (Trader)</option>
-                      <option value="vault_dweller" selected>Abitante Vault (Vault Dweller)</option>
-                      <option value="wastelander">Abitante Zona (Wastelander)</option>
-                      <option value="custom">Personalizzato (Custom)</option>
-                    </select>
-                  </div>
-                  <!-- Background Tag Skills Preview & Apply Button -->
-                  <div id="bg-skills-preview" class="bg-skills-preview"></div>
-                </div>
-              </div>
-
-              <!-- 5. PARAMETRI VITALI & RISORSE (CORE) -->
-              <div class="col-inner-box vitals-box core-vitals-box m-collapsible" data-mobile-cat="core">
-                <div class="box-title-bar">
-                  <span>PARAMETRI VITALI & RISORSE</span>
-                  <span class="core-col-badge" style="background:rgba(16,185,129,0.12); color:#10b981; border:1px solid rgba(16,185,129,0.3);">ONLINE</span>
-                </div>
-                <div class="vitals-column">
-                  <!-- Primary Vitals (HP, SP, AP) -->
-                  <div class="vitals-grid">
-                    <!-- Punti Stamina -->
-                    <div class="vital-widget has-tooltip" data-keyword="sp">
-                      <div class="vital-title">STAMINA (SP)</div>
-                      <div class="vital-values">
-                        <input type="number" class="vital-input" id="core-current-sp" value="10" title="SP Attuali">
-                        <span class="vital-sep">/</span>
-                        <input type="number" class="vital-input" id="core-max-sp" value="10" title="SP Massimi">
-                      </div>
-                    </div>
-
-                    <!-- Punti Ferita -->
-                    <div class="vital-widget has-tooltip" data-keyword="hp">
-                      <div class="vital-title">FERITA (HP)</div>
-                      <div class="vital-values">
-                        <input type="number" class="vital-input" id="core-current-hp" value="10" title="HP Attuali">
-                        <span class="vital-sep">/</span>
-                        <input type="number" class="vital-input" id="core-max-hp" value="10" title="HP Massimi">
-                      </div>
-                    </div>
-
-                    <!-- Punti Azione -->
-                    <div class="vital-widget has-tooltip" data-keyword="ap">
-                      <div class="vital-title">AZIONE (AP)</div>
-                      <div class="vital-values">
-                        <input type="number" class="vital-input" id="core-current-ap" value="10" title="AP Attuali">
-                        <span class="vital-sep">/</span>
-                        <input type="number" class="vital-input" id="core-max-ap" value="10" title="AP Massimi">
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Secondary Derived (Classe Armatura, Soglia Danni, Tasso Guarigione, Combat Seq, AP Riciclati, Perc Passiva, DC Rad) -->
-                  <div class="derived-stats-grid">
-                    <!-- Classe Armatura (CA) -->
-                    <div class="derived-card has-tooltip" data-keyword="classe-armatura" title="Classe Armatura (CA): Difficoltà per essere colpiti in combattimento">
-                      <div class="derived-label" style="font-weight:800; color:var(--accent-secondary, #1d4ed8);">Classe Armat.</div>
-                      <input type="number" class="derived-input" id="core-val-ac" value="10" style="font-weight:900; color:var(--accent-secondary, #1d4ed8);">
-                    </div>
-
-                    <!-- Soglia Danni (DT) -->
-                    <div class="derived-card has-tooltip" data-keyword="soglia-danni" title="Soglia Danni (DT): Riduzione fissa del danno assorbita dall'armatura">
-                      <div class="derived-label" style="font-weight:800; color:var(--accent, #b45309);">Soglia Danni</div>
-                      <input type="number" class="derived-input" id="core-val-dt" value="0" style="font-weight:900; color:var(--accent, #b45309);">
-                    </div>
-
-                    <div class="derived-card has-tooltip" data-keyword="robustezza">
-                      <div class="derived-label" title="Tasso di Guarigione">Tasso Guarig.</div>
-                      <input type="number" class="derived-input" id="core-val-healing-rate" value="3">
-                    </div>
-                    <div class="derived-card has-tooltip" data-keyword="percezione">
-                      <div class="derived-label">Sequenza Comb.</div>
-                      <input type="number" class="derived-input" id="core-val-combat-seq" value="0">
-                    </div>
-                    <div class="derived-card has-tooltip" data-tooltip="Punti Azione riciclati (la metà non spesa dal turno precedente)">
-                      <div class="derived-label">AP Riciclati</div>
-                      <input type="number" id="core-recycled-ap" class="derived-input" value="0" min="0" max="15">
-                    </div>
-                    <div class="derived-card has-tooltip" data-tooltip="Percezione Passiva: 12 + Mod. Percezione.">
-                      <div class="derived-label">Perc. Passiva</div>
-                      <input type="number" class="derived-input" id="core-val-passive-sense" value="12">
-                    </div>
-                    <div class="derived-card has-tooltip" data-keyword="robustezza">
-                      <div class="derived-label">DC Radiazioni</div>
-                      <input type="number" class="derived-input" id="core-val-rad-dc" value="12">
-                    </div>
-                  </div>
-
-                  <!-- Statistiche di Gruppo (Party Nerve & Group Sneak & Sconto) -->
-                  <div class="party-stats-row">
-                    <div class="party-card">
-                      <div class="derived-label">Sanguefreddo Gruppo</div>
-                      <input type="number" id="core-input-party-nerve" class="input-field" value="0" style="text-align:center; font-weight:bold; padding:2px;">
-                      <span style="font-size:10px; color:var(--text-dim);">Somma mod CAR / 2</span>
-                    </div>
-                    <div class="party-card">
-                      <div class="derived-label">Sneak di Gruppo</div>
-                      <input type="number" id="core-input-group-sneak" class="input-field" value="0" style="text-align:center; font-weight:bold; padding:2px;">
-                      <span style="font-size:10px; color:var(--text-dim);">Media mod Sneak</span>
-                    </div>
-                    <div class="party-card">
-                      <div class="derived-label">Sconto Mercante</div>
-                      <div class="derived-val" id="core-val-discount">% Barter</div>
-                      <span style="font-size:10px; color:var(--text-dim);">1 volta per riposo</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 5b. RESISTENZE, IMMUNITÀ & SUSCETTIBILITÀ (CORE - SOPRA LO STATO ANATOMICO ARTI) -->
-              <div class="col-inner-box resistances-prominent-box m-collapsible" data-mobile-cat="desktop-only" id="core-resistances-container-box" style="margin-top: 4px;">
-                <div class="box-title-bar">
-                  <div style="display:flex; align-items:center; gap:6px;">
-                    <span>🛡️ RESISTENZE, IMMUNITÀ & SUSCETTIBILITÀ</span>
-                  </div>
-                  <div style="display:flex; align-items:center; gap:6px;">
-                    <span class="core-col-badge badge-defense" style="background:rgba(59,130,246,0.12); color:#2563eb; border:1px solid rgba(59,130,246,0.3);">DIFESE & BUFF</span>
-                    <button type="button" class="btn btn-sm no-print" onclick="openAddCustomResistanceModal()" title="Aggiungi una resistenza o immunità custom" style="padding:2px 8px; font-size:11px;">+ Aggiungi</button>
-                  </div>
-                </div>
-
-                <!-- Timed buffs & Perks banner (CORE) -->
-                <div id="core-active-perks-resistances-banner" style="display:none; margin: 6px 8px 4px 8px; padding: 6px 8px; border-radius: 4px; font-size: 11.5px; background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.25);">
-                  <!-- Injected by app.js -->
-                </div>
-
-                <div class="resistances-section" style="border:none; padding:4px 4px 6px 4px; margin-top:0; box-shadow:none; background:transparent;">
-                  <div class="resistances-grid" style="margin-top:4px;">
-                    <!-- Resistenze (Danno Dimezzato) -->
-                    <div class="resist-col resist-col-half">
-                      <div class="resist-col-header">
-                        <div class="resist-header-top">
-                          <span class="resist-icon">[½]</span>
-                          <span class="resist-title" title="Resistenze (Danno Dimezzato)">RESISTENZE</span>
-                        </div>
-                        <span class="resist-desc-sub">Danno ½</span>
-                      </div>
-                      <div id="core-resistances-list" class="resist-chips-container">
-                        <!-- Injected by app.js -->
-                      </div>
-                    </div>
-
-                    <!-- Immunità (Danno 0 / Immune) -->
-                    <div class="resist-col resist-col-immune">
-                      <div class="resist-col-header">
-                        <div class="resist-header-top">
-                          <span class="resist-icon">[0]</span>
-                          <span class="resist-title" title="Immunità (Danno 0)">IMMUNITÀ</span>
-                        </div>
-                        <span class="resist-desc-sub">Danno 0 (Immune)</span>
-                      </div>
-                      <div id="core-immunities-list" class="resist-chips-container">
-                        <!-- Injected by app.js -->
-                      </div>
-                    </div>
-
-                    <!-- Suscettibilità / Vulnerabilità (Danno x2) -->
-                    <div class="resist-col resist-col-vuln">
-                      <div class="resist-col-header">
-                        <div class="resist-header-top">
-                          <span class="resist-icon">[2×]</span>
-                          <span class="resist-title" title="Suscettibilità (Danno x2)">SUSCETTIBILITÀ</span>
-                        </div>
-                        <span class="resist-desc-sub">Danno 2×</span>
-                      </div>
-                      <div id="core-vulnerabilities-list" class="resist-chips-container">
-                        <!-- Injected by app.js -->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 6. STATO ANATOMICO ARTI (CORE) -->
-              <div class="col-inner-box paperdoll-box core-paperdoll-box m-collapsible" data-mobile-cat="desktop-only">
-                <div class="box-title-bar">
-                  <span>STATO ANATOMICO ARTI</span>
-                  <span class="core-col-badge badge-traits">DANNI & MENOMAZIONI</span>
-                </div>
-                <div class="anatomical-card" id="core-anatomical-body-card">
-                  <div class="anatomical-header">
-                    <span>STATO ARTI & ANATOMIA</span>
-                    <span style="font-size:10px; color:var(--text-dim);">[Clicca per alternare: Sano / Menomato / Reciso]</span>
-                  </div>
-                  <div class="anatomical-body-wrap">
-                    <svg class="body-silhouette-svg" viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">
-                      <circle id="core-limb-head" class="limb-path limb-healthy" cx="50" cy="18" r="11" onclick="toggleLimb('head')" />
-                      <path id="core-limb-torso" class="limb-path limb-healthy" d="M38,32 L62,32 L60,70 L40,70 Z" onclick="toggleLimb('torso')" />
-                      <path id="core-limb-armL" class="limb-path limb-healthy" d="M64,34 L76,46 L82,72 L76,74 L70,52 L62,38 Z" onclick="toggleLimb('armL')" />
-                      <path id="core-limb-armR" class="limb-path limb-healthy" d="M36,34 L24,46 L18,72 L24,74 L30,52 L38,38 Z" onclick="toggleLimb('armR')" />
-                      <path id="core-limb-legL" class="limb-path limb-healthy" d="M52,72 L61,72 L64,106 L66,124 L56,124 L54,104 L52,72 Z" onclick="toggleLimb('legL')" />
-                      <path id="core-limb-legR" class="limb-path limb-healthy" d="M39,72 L48,72 L48,104 L44,124 L34,124 L36,106 L39,72 Z" onclick="toggleLimb('legR')" />
-                    </svg>
-                  </div>
-                  <!-- Quick action limb buttons -->
-                  <div class="limbs-quick-grid" id="core-limbs-quick-grid">
-                    <button type="button" class="limb-quick-btn status-healthy" id="core-btn-limb-head" onclick="toggleLimb('head')">TESTA: SANA</button>
-                    <button type="button" class="limb-quick-btn status-healthy" id="core-btn-limb-torso" onclick="toggleLimb('torso')">TORSO: SANO</button>
-                    <button type="button" class="limb-quick-btn status-healthy" id="core-btn-limb-armL" onclick="toggleLimb('armL')">BRACCIO SX: SANO</button>
-                    <button type="button" class="limb-quick-btn status-healthy" id="core-btn-limb-armR" onclick="toggleLimb('armR')">BRACCIO DX: SANO</button>
-                    <button type="button" class="limb-quick-btn status-healthy" id="core-btn-limb-legL" onclick="toggleLimb('legL')">GAMBA SX: SANA</button>
-                    <button type="button" class="limb-quick-btn status-healthy" id="core-btn-limb-legR" onclick="toggleLimb('legR')">GAMBA DX: SANA</button>
-                  </div>
-                  <!-- Penalties summary banner -->
-                  <div class="limb-penalty-banner" id="core-limb-penalties">
-                    <span class="limb-status-indicator limb-ind-healthy"></span>
-                    <span>Nessuna menomazione: corpo in piena efficienza operativa.</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 7. SEZIONE SOPRAVVIVENZA -->
-              <div class="col-inner-box survival-box m-collapsible" data-mobile-cat="survival">
-                <div class="box-title-bar">
-                  <span>SEZIONE SOPRAVVIVENZA</span>
-                  <span style="font-size:11px; color:var(--text-dim);">CONDIZIONI</span>
-                </div>
-                <div class="survival-panel-inner" style="display:flex; flex-direction:column; gap:8px;">
-                  <div style="font-size:11px; color:var(--text-dim); margin-bottom:2px;">Tracce di Sopravvivenza & Radiazioni (clicca sui quadrati):</div>
-                  <!-- Fame -->
-                  <div class="survival-row">
-                    <span class="survival-label">Fame (0-10):</span>
-                    <div class="pips-row" id="hunger-pips"></div>
-                  </div>
-                  <!-- Disidratazione -->
-                  <div class="survival-row">
-                    <span class="survival-label">Disidratazione:</span>
-                    <div class="pips-row" id="dehydration-pips"></div>
-                  </div>
-                  <!-- Stanchezza -->
-                  <div class="survival-row">
-                    <span class="survival-label">Stanchezza:</span>
-                    <div class="pips-row" id="exhaustion-pips"></div>
-                  </div>
-                  <!-- Fatica -->
-                  <div class="survival-row">
-                    <span class="survival-label">Fatica (0-9):</span>
-                    <div class="pips-row" id="fatigue-pips"></div>
-                  </div>
-                  <!-- Radiazioni -->
-                  <div class="survival-row">
-                    <span class="survival-label" style="color:var(--warning);">Radiazioni:</span>
-                    <div class="pips-row" id="rad-pips"></div>
-                  </div>
-                  <!-- Riepilogo & Calcolo Malus Sopravvivenza -->
-                  <div id="survival-malus-summary" class="survival-malus-summary"></div>
-
-                  <!-- RADIAZIONI & CONTAMINAZIONE (PAG. 124) -->
-                  <div class="radiation-detailed-panel" id="radiation-detailed-panel" style="margin-top:6px; padding:8px; background:rgba(217, 119, 6, 0.08); border:1px solid rgba(217, 119, 6, 0.3); border-radius:6px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                      <span style="font-weight:800; font-size:12px; color:var(--accent-amber, #d97706); display:flex; align-items:center; gap:4px;">
-                        ☢️ CONTAMINAZIONE & CD RAD (PAG. 124)
-                      </span>
-                      <span id="radiation-dc-badge" style="font-size:11px; font-weight:800; background:#fef3c7; color:#b45309; padding:1px 6px; border-radius:3px; border:1px solid #fde68a;">
-                        CD ATTUALE: 12
-                      </span>
-                    </div>
-                    <div style="font-size:11px; color:var(--text-dim); line-height:1.4; margin-bottom:6px;" id="radiation-dc-explanation">
-                      Formula: <strong>12 - Modificatore Costituzione</strong>. Ogni successo in zona irradiata aumenta la CD di <strong>+2</strong> fino a totale decontaminazione.
-                    </div>
-                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                      <button type="button" class="btn btn-xs btn-outline-warning" onclick="rollRadiationCheck()" style="font-size:11px; font-weight:800; padding:3px 8px; flex:1;" title="Tira 1d20 contro la tua CD Radiazioni attuale">
-                        🎲 Test Radiazioni
-                      </button>
-                      <button type="button" class="btn btn-xs btn-outline-info" onclick="toggleRadiationSeverityGuide()" style="font-size:11px; font-weight:800; padding:3px 8px;" title="Mostra tabella frequenza test per gravità zona 1-7">
-                        ℹ️ Tabella Gravità
-                      </button>
-                      <button type="button" class="btn btn-xs btn-outline-success" onclick="cleanseRadiationDoses()" style="font-size:11px; font-weight:800; padding:3px 8px;" title="Usa RadAway o decontaminati: azzera i Rads e resetta l'accumulo di CD">
-                        💊 Rimuovi Rads
-                      </button>
-                    </div>
-                    <!-- Tabella Gravità Espandibile -->
-                    <div id="radiation-severity-guide" style="display:none; margin-top:6px; font-size:10.5px; background:rgba(0,0,0,0.25); padding:6px; border-radius:4px; line-height:1.35; color:var(--text-bright);">
-                      <div style="font-weight:800; margin-bottom:4px; color:var(--accent-amber);">Frequenza Test d20 per Livello Gravità Zona:</div>
-                      <div>• <strong>Livello 1</strong>: Ogni 1 ora (0.05 Rads/s)</div>
-                      <div>• <strong>Livello 2</strong>: Ogni 30 minuti (0.1 Rads/s)</div>
-                      <div>• <strong>Livello 3</strong>: Ogni 10 minuti (0.3 Rads/s)</div>
-                      <div>• <strong>Livello 4</strong>: Ogni 3 minuti (1 Rads/s)</div>
-                      <div>• <strong>Livello 5</strong>: Ogni 1 minuto (3 Rads/s)</div>
-                      <div>• <strong>Livello 6</strong>: Ogni 30 secondi (5 Rads/s)</div>
-                      <div>• <strong>Livello 7</strong>: Ogni 6 secondi / 1 round (30 Rads/s - Ground Zero)</div>
-                      <div style="margin-top:4px; color:#ef4444; font-weight:700;">⚠ Al 10° livello di Rads o 0 HP da rad: Morte. Tira Fortuna (CD 20): con successo rinasci Ghoul (1 HP); con meno di 5 rinasci Ghoul Ferale!</div>
-                    </div>
-                    <!-- Avviso se Rads >= 10 o pulsante Ghoul -->
-                    <div id="radiation-critical-alert" style="display:none; margin-top:6px;"></div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- ===============================================================
-                 COLONNA CENTRALE: SPECIAL (ATTRIBUTI BASE) & ABILITÀ (14 SKILL)
-                 =============================================================== -->
-            <div class="sheet-col sheet-col-center core-center-col">
-              
-              <!-- 1. TAPPI KARMA NUKA-COLA (SOPRA I PUNTI SPECIAL) -->
-              <div class="col-inner-box karma-prominent-box m-collapsible" data-mobile-cat="core">
-                <div class="box-title-bar">
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <span>⭐ TAPPI KARMA NUKA-COLA</span>
-                    <span id="karma-status-badge" class="core-col-badge badge-perks" style="background:#fee2e2; color:#991b1b; border:1px solid #fca5a5;">1 ATTIVO</span>
-                  </div>
-                  <div id="karma-breakdown-text" style="font-size:12px; color:var(--text-dim);" title="Tappi Karma Nuka-Cola">
-                    Capacità: <strong id="karma-caps-val" style="color:var(--text-bright);">1</strong> / <strong id="karma-caps-max">3</strong> Tappi Karma
-                  </div>
-                </div>
-                <div class="karma-bar-horizontal" style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:4px 0;">
-                  <div id="karma-caps-container" class="karma-caps-container karma-caps-row" style="display:flex; gap:8px; align-items:center;">
-                    <!-- Injected by app.js -->
-                  </div>
-                  <div class="karma-controls-row no-print" style="display:flex; align-items:center; gap:6px;">
-                    <button type="button" class="btn btn-sm" id="btn-sub-karma" title="Riduci Tappi">-</button>
-                    <button type="button" class="btn btn-sm" id="btn-add-karma" title="Aumenta Tappi">+</button>
-                    <button type="button" class="btn btn-sm" id="karma-flip-btn" style="margin-left:4px;">ATTIVA/SPENDI</button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 2. S.P.E.C.I.A.L. (50% DI VISIBILITÀ / LA BASE DEL PG) -->
-              <div class="col-inner-box special-prominent-box m-collapsible" data-mobile-cat="core">
-                <div class="box-title-bar">
-                  <span class="special-title-heading">S &bull; P &bull; E &bull; C &bull; I &bull; A &bull; L</span>
-                  <div class="special-points-pool" id="special-pool-info">Totale Punti: 35/38</div>
-                </div>
-
-                <div class="special-seven-grid">
-                  <!-- S - FORZA -->
-                  <div class="special-card has-tooltip" data-keyword="forza">
-                    <div class="special-letter">S</div>
-                    <div class="special-name">FORZA</div>
-                    <div class="special-score-wrap">
-                      <input type="number" class="special-score-input" id="stat-strength" value="5" min="1" max="30" oninput="updateStatScore('strength', this.value)">
-                    </div>
-                    <div class="special-mod-wrap">
-                      <span class="special-mod-label">MOD</span>
-                      <input type="text" class="special-modifier-input" id="mod-strength" value="+0" oninput="updateStatMod('strength', this.value)" title="Modificatore Forza (Modificabile)">
-                    </div>
-                  </div>
-
-                  <!-- P - PERCEZIONE -->
-                  <div class="special-card has-tooltip" data-keyword="percezione">
-                    <div class="special-letter">P</div>
-                    <div class="special-name">PERCEZIONE</div>
-                    <div class="special-score-wrap">
-                      <input type="number" class="special-score-input" id="stat-perception" value="5" min="1" max="30" oninput="updateStatScore('perception', this.value)">
-                    </div>
-                    <div class="special-mod-wrap">
-                      <span class="special-mod-label">MOD</span>
-                      <input type="text" class="special-modifier-input" id="mod-perception" value="+0" oninput="updateStatMod('perception', this.value)" title="Modificatore Percezione (Modificabile)">
-                    </div>
-                  </div>
-
-                  <!-- E - ROBUSTEZZA -->
-                  <div class="special-card has-tooltip" data-keyword="robustezza">
-                    <div class="special-letter">E</div>
-                    <div class="special-name">ROBUSTEZZA</div>
-                    <div class="special-score-wrap">
-                      <input type="number" class="special-score-input" id="stat-endurance" value="5" min="1" max="30" oninput="updateStatScore('endurance', this.value)">
-                    </div>
-                    <div class="special-mod-wrap">
-                      <span class="special-mod-label">MOD</span>
-                      <input type="text" class="special-modifier-input" id="mod-endurance" value="+0" oninput="updateStatMod('endurance', this.value)" title="Modificatore Robustezza (Modificabile)">
-                    </div>
-                  </div>
-
-                  <!-- C - CARISMA -->
-                  <div class="special-card has-tooltip" data-keyword="carisma">
-                    <div class="special-letter">C</div>
-                    <div class="special-name">CARISMA</div>
-                    <div class="special-score-wrap">
-                      <input type="number" class="special-score-input" id="stat-charisma" value="5" min="1" max="30" oninput="updateStatScore('charisma', this.value)">
-                    </div>
-                    <div class="special-mod-wrap">
-                      <span class="special-mod-label">MOD</span>
-                      <input type="text" class="special-modifier-input" id="mod-charisma" value="+0" oninput="updateStatMod('charisma', this.value)" title="Modificatore Carisma (Modificabile)">
-                    </div>
-                  </div>
-
-                  <!-- I - INTELLIGENZA -->
-                  <div class="special-card has-tooltip" data-keyword="intelligenza">
-                    <div class="special-letter">I</div>
-                    <div class="special-name">INTELLIGENZA</div>
-                    <div class="special-score-wrap">
-                      <input type="number" class="special-score-input" id="stat-intelligence" value="5" min="1" max="30" oninput="updateStatScore('intelligence', this.value)">
-                    </div>
-                    <div class="special-mod-wrap">
-                      <span class="special-mod-label">MOD</span>
-                      <input type="text" class="special-modifier-input" id="mod-intelligence" value="+0" oninput="updateStatMod('intelligence', this.value)" title="Modificatore Intelligenza (Modificabile)">
-                    </div>
-                  </div>
-
-                  <!-- A - AGILITÀ -->
-                  <div class="special-card has-tooltip" data-keyword="agilita">
-                    <div class="special-letter">A</div>
-                    <div class="special-name">AGILITÀ</div>
-                    <div class="special-score-wrap">
-                      <input type="number" class="special-score-input" id="stat-agility" value="5" min="1" max="30" oninput="updateStatScore('agility', this.value)">
-                    </div>
-                    <div class="special-mod-wrap">
-                      <span class="special-mod-label">MOD</span>
-                      <input type="text" class="special-modifier-input" id="mod-agility" value="+0" oninput="updateStatMod('agility', this.value)" title="Modificatore Agilità (Modificabile)">
-                    </div>
-                  </div>
-
-                  <!-- L - FORTUNA -->
-                  <div class="special-card has-tooltip" data-keyword="fortuna">
-                    <div class="special-letter">L</div>
-                    <div class="special-name">FORTUNA</div>
-                    <div class="special-score-wrap">
-                      <input type="number" class="special-score-input" id="stat-luck" value="5" min="1" max="30" oninput="updateStatScore('luck', this.value)">
-                    </div>
-                    <div class="special-mod-wrap">
-                      <span class="special-mod-label">MOD</span>
-                      <input type="text" class="special-modifier-input" id="mod-luck" value="+0" oninput="updateStatMod('luck', this.value)" title="Modificatore Fortuna (Modificabile)">
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 2. PERK & TALENTI (SOTTO GLI SPECIAL, DISTESI IN ORIZZONTALE) -->
-              <div class="col-inner-box perks-horizontal-box m-collapsible" data-mobile-cat="perks">
-                <div class="box-title-bar">
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <span>PERK & TALENTI</span>
-                    <span class="core-col-badge badge-perks">TALENTI</span>
-                  </div>
-                  <div class="no-print" style="display:flex; gap:6px;">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleAllPerksLang()" title="Cambia la lingua di tutti i perk tra Italiano e Inglese Manuale" style="font-size:12px; font-weight:800;">🌐 Lingua IT / EN</button>
-                    <button type="button" class="btn btn-sm" id="btn-add-perk-comp" onclick="addPerkCompendium()">+ Compendio</button>
-                    <button type="button" class="btn btn-sm" id="btn-add-perk-custom" onclick="addPerkCustom()">+ Custom</button>
-                  </div>
-                </div>
-                <div class="perks-list perks-grid-horizontal" id="perks-list">
-                  <!-- Populated dynamically by app.js -->
-                </div>
-              </div>
-
-              <!-- CONNETTORE DIVISORE (FALLOUT STYLE) -->
-              <div class="special-to-skills-connector" style="margin: 4px 0 10px 0;">
-                <div class="connector-line">
-                  <span>ABILITÀ UFFICIALI (14 SKILL)</span>
-                </div>
-                <div class="connector-sub">Gli attributi determinano la base di ogni abilità. Il Background conferisce +2 a 3 abilità Tag selezionate.</div>
-              </div>
-
-              <!-- SOTTO: SKILL (TABELLA COMPLETA A TUTTA LARGHEZZA) -->
-              <div class="col-inner-box skills-box m-collapsible" data-mobile-cat="core">
-                <div class="box-title-bar">
-                  <span>ABILITÀ UFFICIALI (14 SKILL)</span>
-                  <span style="font-size:11px; color:var(--text-dim);">SPECIAL + PUNTI + TAG (+2)</span>
-                </div>
-                
-                <!-- Skills Table Header -->
-                <div class="skills-header-row">
-                  <span style="width:32px; text-align:center; font-weight:bold; color:var(--accent-glow);" title="Abilità di Background (+2): Seleziona le 3 abilità scelte dal tuo Background al 1° Livello (Manuale Pag. 4 e 19)">BG</span>
-                  <span style="flex:1;">ABILITÀ</span>
-                  <span style="width:38px; text-align:center;">ATTR</span>
-                  <span style="width:44px; text-align:center;" title="Bonus Caratteristica + Fortuna/2">BASE</span>
-                  <span style="width:10px; text-align:center;">+</span>
-                  <span style="width:42px; text-align:center;" title="Punti Abilità Assegnati">PUNTI</span>
-                  <span style="width:10px; text-align:center;">+</span>
-                  <span style="width:42px; text-align:center;" title="Punti Extra (Equip/Master/Tag)">EXTRA</span>
-                  <span style="width:10px; text-align:center;">=</span>
-                  <span style="width:52px; text-align:center; font-weight:bold;">TOTALE</span>
-                </div>
-
-                <div class="skills-table" id="skills-list-body">
-                  <!-- 14 Skills injected dynamically by app.js -->
-                </div>
-
-                <div style="font-size:11px; color:var(--text-dim); margin-top:8px; line-height:1.4;">
-                  * <strong>BG (+2)</strong>: Le 3 abilità scelte dal Background al 1° livello ricevono un bonus permanente di +2 (Manuale pag. 4, 19).<br>
-                  * Formula: <strong>Base (Mod. Attr + Mod. Fortuna) + Punti + BG (+2) + Extra = TOTALE</strong>. Clicca su [ATTR] per alternare l'attributo ove previsto.
-                </div>
-
-                <!-- Quick Navigation Shortcuts (Mobile Only) -->
-                <div class="mobile-nav-shortcuts">
-                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('perks')">🎖️ Vai a Perk &amp; Tratti</button>
-                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('weapons')">⚔️ Vai alle Armi</button>
-                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('armors')">🛡️ Vai alle Armature</button>
-                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('survival')">☢️ Vai a Sopravvivenza</button>
-                </div>
-              </div>
-
-              <!-- 5. TRATTI & ABILITÀ DI RAZZA + TRATTI DEL PERSONAGGIO (SOTTO LA SECONDA COLONNA, DISTESI FINO ALLA FINE) -->
-              <div class="traits-dual-row">
-                
-                <!-- 1. TRATTI & ABILITÀ DI RAZZA -->
-                <div class="col-inner-box traits-racial-col m-collapsible" data-mobile-cat="perks">
-                  <div class="box-title-bar" style="display:flex; justify-content:space-between; align-items:center;">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                      <span>TRATTI &amp; ABILITÀ DI RAZZA</span>
-                      <span class="core-col-badge badge-racial">ORIGINE</span>
-                    </div>
-                    <div class="no-print">
-                      <button type="button" class="btn btn-sm" id="btn-add-custom-racial-trait" onclick="addCustomRacialTrait()">+ Tratto Master</button>
-                    </div>
-                  </div>
-                  <div class="racial-bonuses-box" id="racial-bonuses-box">
-                    <div class="racial-innate-container" id="racial-innate-container">
-                      <!-- Injected by app.js: Innate racial traits -->
-                    </div>
-                    <div class="racial-optional-container">
-                      <div style="font-size:12px; color:var(--text-bright); text-transform:uppercase; font-weight:800; letter-spacing:0.5px; margin:6px 0 4px 0;">
-                        Varianti &amp; Opzioni Master:
-                      </div>
-                      <div id="racial-optional-list" class="racial-optional-list">
-                        <!-- Checkboxes injected by app.js -->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 2. TRATTI DEL PERSONAGGIO (TRAITS) -->
-                <div class="col-inner-box traits-generic-col m-collapsible" data-mobile-cat="perks">
-                  <div class="box-title-bar" style="display:flex; justify-content:space-between; align-items:center;">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                      <span>TRATTI DEL PERSONAGGIO</span>
-                      <span class="core-col-badge badge-traits">TRAITS</span>
-                    </div>
-                    <div class="no-print" style="display:flex; gap:5px;">
-                      <button type="button" class="btn btn-sm" id="btn-add-trait-comp" onclick="addTraitCompendium()">+ Compendio</button>
-                      <button type="button" class="btn btn-sm" id="btn-add-trait-custom" onclick="addTraitCustom()">+ Custom</button>
-                    </div>
-                  </div>
-                  <div class="traits-list" id="traits-list-container">
-                    <!-- Populated dynamically by app.js with Rank controls -->
-                  </div>
-
-                  <!-- Quick Navigation Shortcuts (Mobile Only) -->
-                  <div class="mobile-nav-shortcuts">
-                    <button type="button" class="btn btn-secondary" onclick="switchMobileSection('core')">👤 Torna a Stat &amp; Skill</button>
-                    <button type="button" class="btn btn-secondary" onclick="switchMobileSection('weapons')">⚔️ Vai alle Armi</button>
-                    <button type="button" class="btn btn-secondary" onclick="switchMobileSection('armors')">🛡️ Vai alle Armature</button>
-                    <button type="button" class="btn btn-secondary" onclick="switchMobileSection('survival')">☢️ Sopravvivenza</button>
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
+          <div class="vital-sub-badge">
+            <span>SP Temp:</span>
+            <input type="number" id="current-sp" class="input-field" value="0" min="0" max="99" style="width:42px; padding:2px; text-align:center; font-weight:700;" title="Punti Ferita Temporanei" aria-label="Punti Ferita Temporanei">
+            <span>/</span>
+            <input type="number" id="max-sp" class="input-field" value="0" min="0" max="99" style="width:42px; padding:2px; text-align:center;" title="SP Massimi" aria-label="SP Massimi">
           </div>
-        </section>
+        </fieldset>
 
-        <!-- ===============================================================
-             SEZIONE 2: COMBAT (ARMI IMPUGNATE, TO HIT, DAMAGE, ARMATURA & VITALI)
-             =============================================================== -->
+        <!-- 2. PUNTI AZIONE (AP) -->
+        <fieldset class="tactical-vital-card card-ap">
+          <legend class="vital-legend">
+            <svg class="tactical-icon icon-ap" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span>Punti Azione (AP)</span>
+          </legend>
+          <div class="vital-split-row">
+            <input type="number" id="current-ap" class="vital-massive-input" value="10" min="0" max="99" title="Punti Azione Attuali" aria-label="Punti Azione Attuali">
+            <span style="font-size:2rem; font-weight:700; color:var(--text-dim);">/</span>
+            <input type="number" id="max-ap" class="vital-massive-input" value="10" min="1" max="99" title="Punti Azione Massimi" aria-label="Punti Azione Massimi">
+          </div>
+          <div class="vital-sub-badge">
+            <span>Riserva/Riciclati:</span>
+            <input type="number" id="recycled-ap" class="input-field" value="0" min="0" max="99" style="width:46px; padding:2px; text-align:center; font-weight:700;" title="AP Riciclati o Riserva" aria-label="AP Riciclati">
+          </div>
+        </fieldset>
+
+        <!-- 3. CLASSE ARMATURA / DIFESA (CA) -->
+        <fieldset class="tactical-vital-card card-ac">
+          <legend class="vital-legend">
+            <svg class="tactical-icon icon-ac" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>Difesa / CA</span>
+          </legend>
+          <div class="vital-split-row">
+            <input type="number" id="val-ac" class="vital-massive-input" value="10" min="0" max="99" title="Classe Armatura / Difesa" aria-label="Classe Armatura o Difesa">
+          </div>
+          <div class="vital-sub-badge">
+            <span>Difficolt&agrave; colpo nemico</span>
+          </div>
+        </fieldset>
+
+        <!-- 4. SOGLIA DANNI (DT) -->
+        <fieldset class="tactical-vital-card card-dt">
+          <legend class="vital-legend">
+            <svg class="tactical-icon icon-dt" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>Soglia Danni (DT)</span>
+          </legend>
+          <div class="vital-split-row">
+            <input type="number" id="val-dt" class="vital-massive-input" value="0" min="0" max="99" title="Soglia Danni Totale" aria-label="Soglia Danni Totale">
+          </div>
+          <div class="vital-sub-badge">
+            <span>Danni sottratti prima della RD</span>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- MODULI PERIFERICI SECONDARI (RIMPICCIOLITI) -->
+      <div class="peripheral-stats-grid" style="margin-bottom: 16px;">
+        <div class="peripheral-stat-item">
+          <label for="val-combat-seq">Seq. Combattimento</label>
+          <input type="number" id="val-combat-seq" class="input-field" value="0" title="Iniziativa">
+        </div>
+        <div class="peripheral-stat-item">
+          <label for="val-healing-rate">Tasso Guarigione</label>
+          <input type="number" id="val-healing-rate" class="input-field" value="3" title="HP riposo">
+        </div>
+        <div class="peripheral-stat-item">
+          <label for="val-passive-sense">Percezione Passiva</label>
+          <input type="number" id="val-passive-sense" class="input-field" value="12" title="Attenzione passiva">
+        </div>
+        <div class="peripheral-stat-item">
+          <label for="input-party-nerve">Nervi Saldi</label>
+          <input type="number" id="input-party-nerve" class="input-field" value="0" title="Bonus party">
+        </div>
+        <div class="peripheral-stat-item">
+          <label for="input-group-sneak">Furtivit&agrave; Gruppo</label>
+          <input type="number" id="input-group-sneak" class="input-field" value="0" title="Furtività combinata">
+        </div>
+        <div class="peripheral-stat-item">
+          <label for="val-discount">Sconto Mercante</label>
+          <input type="number" id="val-discount" class="input-field" value="0" title="Sconto %">
+        </div>
+      </div>
+
         <section class="sheet-row" id="row-combat" data-row="combat">
           <div class="sheet-row-heading">
             <span class="sheet-row-badge">COMBAT</span>
@@ -772,140 +236,7 @@
             <!-- COLONNA SINISTRA (~380px): RISORSE VITALI, PAPERDOLL & KARMA -->
             <div class="sheet-col sheet-col-left combat-sidebar-col">
               <!-- Parametri Vitali -->
-              <div class="col-inner-box vitals-box m-collapsible" data-mobile-cat="desktop-only">
-                <div class="box-title-bar">
-                  <span>PARAMETRI VITALI & RISORSE</span>
-                  <span class="core-col-badge" style="background:rgba(16,185,129,0.12); color:#10b981; border:1px solid rgba(16,185,129,0.3);">ONLINE</span>
-                </div>
-                <div class="vitals-column">
-                  <!-- Primary Vitals (HP, SP, AP) -->
-                  <div class="vitals-grid">
-                    <!-- Punti Stamina -->
-                    <div class="vital-widget has-tooltip" data-keyword="sp">
-                      <div class="vital-title">STAMINA (SP)</div>
-                      <div class="vital-values">
-                        <input type="number" class="vital-input" id="current-sp" value="10" title="SP Attuali">
-                        <span class="vital-sep">/</span>
-                        <input type="number" class="vital-input" id="max-sp" value="10" title="SP Massimi (Modificabile)">
-                      </div>
-                    </div>
-
-                    <!-- Punti Ferita -->
-                    <div class="vital-widget has-tooltip" data-keyword="hp">
-                      <div class="vital-title">FERITA (HP)</div>
-                      <div class="vital-values">
-                        <input type="number" class="vital-input" id="current-hp" value="10" title="HP Attuali">
-                        <span class="vital-sep">/</span>
-                        <input type="number" class="vital-input" id="max-hp" value="10" title="HP Massimi (Modificabile)">
-                      </div>
-                    </div>
-
-                    <!-- Punti Azione -->
-                    <div class="vital-widget has-tooltip" data-keyword="ap">
-                      <div class="vital-title">AZIONE (AP)</div>
-                      <div class="vital-values">
-                        <input type="number" class="vital-input" id="current-ap" value="10" title="AP Attuali">
-                        <span class="vital-sep">/</span>
-                        <input type="number" class="vital-input" id="max-ap" value="10" title="AP Massimi (Modificabile)">
-                      </div>
-                    </div>
-                  </div>
-
-
-<!-- Secondary Derived (Classe Armatura, Soglia Danni, Tasso Guarigione, Combat Seq, AP Riciclati, Perc Passiva, DC Rad) -->
-
-<div class="derived-stats-grid">
-
-<!-- Classe Armatura (CA) -->
-<div class="derived-card has-tooltip" data-keyword="classe-armatura" title="Classe Armatura (CA): Difficoltà per essere colpiti in combattimento">
-  <div class="derived-label" style="font-weight:800; color:var(--accent-secondary, #1d4ed8);">Classe Armat.</div>
-  <input type="number" class="derived-input" id="combat-val-ac" value="10" style="font-weight:900; color:var(--accent-secondary, #1d4ed8);">
-</div>
-
-<!-- Soglia Danni (DT) -->
-<div class="derived-card has-tooltip" data-keyword="soglia-danni" title="Soglia Danni (DT): Riduzione fissa del danno assorbita dall'armatura">
-  <div class="derived-label" style="font-weight:800; color:var(--accent, #b45309);">Soglia Danni</div>
-  <input type="number" class="derived-input" id="combat-val-dt" value="0" style="font-weight:900; color:var(--accent, #b45309);">
-</div>
-
-<div class="derived-card has-tooltip" data-keyword="robustezza">
-
-<div class="derived-label" title="Tasso di Guarigione">Tasso Guarig.</div>
-
-<input type="number" class="derived-input" id="val-healing-rate" value="3">
-
-</div>
-
-<div class="derived-card has-tooltip" data-keyword="percezione">
-
-<div class="derived-label">Sequenza Comb.</div>
-
-<input type="number" class="derived-input" id="val-combat-seq" value="0">
-
-</div>
-
-<div class="derived-card has-tooltip" data-tooltip="Punti Azione riciclati (la metà non spesa dal turno precedente)">
-
-<div class="derived-label">AP Riciclati</div>
-
-<input type="number" id="recycled-ap" class="derived-input" value="0" min="0" max="15">
-
-</div>
-
-<div class="derived-card has-tooltip" data-tooltip="Percezione Passiva: 12 + Mod. Percezione.">
-
-<div class="derived-label">Perc. Passiva</div>
-
-<input type="number" class="derived-input" id="val-passive-sense" value="12">
-
-</div>
-
-<div class="derived-card has-tooltip" data-keyword="robustezza">
-
-<div class="derived-label">DC Radiazioni</div>
-
-<input type="number" class="derived-input" id="val-rad-dc" value="12">
-
-</div>
-
-</div>
-          <!-- Statistiche di Gruppo (Party Nerve & Group Sneak) -->
-
-<div class="party-stats-row">
-
-<div class="party-card">
-
-<div class="derived-label">Sanguefreddo Gruppo</div>
-
-<input type="number" id="input-party-nerve" class="input-field" value="0" style="text-align:center; font-weight:bold; padding:2px;">
-
-<span style="font-size:10px; color:var(--text-dim);">Somma mod CAR / 2</span>
-
-</div>
-
-<div class="party-card">
-
-<div class="derived-label">Sneak di Gruppo</div>
-
-<input type="number" id="input-group-sneak" class="input-field" value="0" style="text-align:center; font-weight:bold; padding:2px;">
-
-<span style="font-size:10px; color:var(--text-dim);">Media mod Sneak</span>
-
-</div>
-
-<div class="party-card">
-
-<div class="derived-label">Sconto Mercante</div>
-
-<div class="derived-val" id="val-discount">% Barter</div>
-
-<span style="font-size:10px; color:var(--text-dim);">1 volta per riposo</span>
-
-</div>
-
-</div>
-        </div>
-      </div>
+              <!-- Vitals moved to top massive banner -->
 
               <!-- ===============================================================
                    RESISTENZE, IMMUNITÀ & SUSCETTIBILITÀ (SOPRA LO STATO ANATOMICO ARTI)
@@ -913,7 +244,7 @@
               <div class="col-inner-box resistances-prominent-box m-collapsible" data-mobile-cat="armors" id="resistances-container-box" style="margin-top: 10px;">
                 <div class="box-title-bar">
                   <div style="display:flex; align-items:center; gap:6px;">
-                    <span>🛡️ RESISTENZE, IMMUNITÀ & SUSCETTIBILITÀ</span>
+                    <span><svg class="tactical-icon icon-shield" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> RESISTENZE, IMMUNITÀ & SUSCETTIBILITÀ</span>
                   </div>
                   <div style="display:flex; align-items:center; gap:6px;">
                     <span class="core-col-badge badge-defense" style="background:rgba(59,130,246,0.12); color:#2563eb; border:1px solid rgba(59,130,246,0.3);">DIFESE & BUFF</span>
@@ -974,85 +305,7 @@
               </div>
 
               <!-- Paperdoll Arti Anatomici -->
-              <div class="col-inner-box paperdoll-box m-collapsible" data-mobile-cat="armors">
-                <div class="box-title-bar">
-                  <span>STATO ANATOMICO ARTI</span>
-                  <span class="core-col-badge badge-traits">DANNI & MENOMAZIONI</span>
-                </div>
-                <!-- Anatomical Human Paperdoll Card (Stato & Condizione Arti) -->
-                <div class="anatomical-card" id="anatomical-body-card">
-
-<div class="anatomical-header">
-
-<span> STATO ARTI & ANATOMIA</span>
-
-<span style="font-size:10px; color:var(--text-dim);">[Clicca per alternare: Sano / Menomato / Reciso]</span>
-
-</div>
-
-
-<div class="anatomical-body-wrap">
-
-<svg class="body-silhouette-svg" viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">
-
-<!-- Head -->
-
-<circle id="limb-head" class="limb-path limb-healthy" cx="50" cy="18" r="11" onclick="toggleLimb('head')" />
-
-<!-- Torso -->
-
-<path id="limb-torso" class="limb-path limb-healthy" d="M38,32 L62,32 L60,70 L40,70 Z" onclick="toggleLimb('torso')" />
-
-<!-- Left Arm (visual right) -->
-
-<path id="limb-armL" class="limb-path limb-healthy" d="M64,34 L76,46 L82,72 L76,74 L70,52 L62,38 Z" onclick="toggleLimb('armL')" />
-
-<!-- Right Arm (visual left) -->
-
-<path id="limb-armR" class="limb-path limb-healthy" d="M36,34 L24,46 L18,72 L24,74 L30,52 L38,38 Z" onclick="toggleLimb('armR')" />
-
-<!-- Left Leg (visual right) -->
-
-<path id="limb-legL" class="limb-path limb-healthy" d="M52,72 L61,72 L64,106 L66,124 L56,124 L54,104 L52,72 Z" onclick="toggleLimb('legL')" />
-
-<!-- Right Leg (visual left) -->
-
-<path id="limb-legR" class="limb-path limb-healthy" d="M39,72 L48,72 L48,104 L44,124 L34,124 L36,106 L39,72 Z" onclick="toggleLimb('legR')" />
-
-</svg>
-
-</div>
-
-
-<!-- Quick action limb buttons -->
-
-<div class="limbs-quick-grid" id="limbs-quick-grid">
-
-<button type="button" class="limb-quick-btn status-healthy" id="btn-limb-head" onclick="toggleLimb('head')">TESTA: SANA</button>
-
-<button type="button" class="limb-quick-btn status-healthy" id="btn-limb-torso" onclick="toggleLimb('torso')">TORSO: SANO</button>
-
-<button type="button" class="limb-quick-btn status-healthy" id="btn-limb-armL" onclick="toggleLimb('armL')">BRACCIO SX: SANO</button>
-
-<button type="button" class="limb-quick-btn status-healthy" id="btn-limb-armR" onclick="toggleLimb('armR')">BRACCIO DX: SANO</button>
-
-<button type="button" class="limb-quick-btn status-healthy" id="btn-limb-legL" onclick="toggleLimb('legL')">GAMBA SX: SANA</button>
-
-<button type="button" class="limb-quick-btn status-healthy" id="btn-limb-legR" onclick="toggleLimb('legR')">GAMBA DX: SANA</button>
-
-</div>
-
-
-<!-- Penalties summary banner -->
-
-<div class="limb-penalty-banner" id="limb-penalties-summary">
-
-[OK] Nessuna menomazione: corpo in piena efficienza operativa.
-
-</div>
-
-                </div>
-              </div>
+              <!-- Paperdoll moved to Tab 3 -->
 
               <!-- 3. OGGETTI EQUIPAGGIATI & ACCESSO RAPIDO (SOTTO LO STATO ANATOMICO ARTI) -->
               <div class="col-inner-box combat-quick-box m-collapsible" data-mobile-cat="weapons" style="margin-top:10px;">
@@ -1120,13 +373,9 @@
 
 <span>Armi Equipaggiate</span>
 
-<div class="no-print" style="display:flex; gap:4px; flex-wrap:wrap;">
+<div class="no-print" style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
 
-<button type="button" class="btn btn-sm btn-primary" id="btn-add-weapon-firearm" onclick="addWeaponFirearm()">+ Arma da Fuoco</button>
-
-<button type="button" class="btn btn-sm btn-primary" id="btn-add-weapon-melee" onclick="addWeaponMelee()">+ Corpo a Corpo</button>
-
-<button type="button" class="btn btn-sm" id="btn-add-weapon-compendium" onclick="addWeaponCompendium()">+ Da Compendio</button>
+<button type="button" class="btn btn-sm btn-primary" id="btn-equip-weapon-inv" onclick="openEquipWeaponModal()" title="Equipaggia un'arma presente nel tuo equipaggiamento/zaino" style="font-weight:700;"><svg class="tactical-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg> + Equipaggia da Equipaggiamento</button>
 
 </div>
 
@@ -1153,9 +402,9 @@
 
   <!-- Quick Navigation Shortcuts (Mobile Only) -->
                 <div class="mobile-nav-shortcuts">
-                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('armors')">🛡️ Vai ad Armature &amp; PA</button>
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('armors')"><svg class="tactical-icon icon-shield" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Vai ad Armature &amp; PA</button>
                   <button type="button" class="btn btn-secondary" onclick="switchMobileSection('core')">👤 Torna a Stat/Skill</button>
-                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('survival')">☢️ Sopravvivenza</button>
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('survival')"><svg class="tactical-icon icon-rad" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="12" r="2.5"/><path d="M12 2a10 10 0 0 1 8.66 5l-4.33 2.5a5 5 0 0 0-4.33-2.5V2z"/><path d="M22 12a10 10 0 0 1-5 8.66l-2.5-4.33a5 5 0 0 0 2.5-4.33H22z"/><path d="M7 16.33 4.5 20.66A10 10 0 0 1 2 12h5a5 5 0 0 0 2.5 4.33l-2.5-.01z"/></svg> Sopravvivenza</button>
                 </div>
               </div>
 
@@ -1164,16 +413,25 @@
               <div class="col-inner-box combat-armor-box m-collapsible" data-mobile-cat="armors" style="margin-top:14px;">
                 <div class="box-title-bar">
                   <div style="display:flex; align-items:center; gap:8px;">
-                    <span>🛡️ ARMATURA & PROTEZIONE</span>
+                    <span><svg class="tactical-icon icon-shield" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> ARMATURA & PROTEZIONE</span>
                     <span class="core-col-badge badge-racial">DIFESA</span>
                   </div>
                   <span style="font-size:11px; color:var(--text-dim);">AC &bull; DT &bull; RESISTENZE &bull; POWER ARMOR</span>
                 </div>
                 <div class="armor-widget" style="border:none; padding:0; background:transparent;">
 
-<div style="display:flex; justify-content:space-between; align-items:center;">
+<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
 
 <span style="font-weight:bold; font-size:13px; text-transform:uppercase; color:var(--text-bright);">Armatura & Protezione</span>
+
+<div class="no-print" style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+  <button type="button" class="btn btn-sm btn-primary" id="btn-equip-armor-inv" onclick="openEquipArmorModal()" title="Indossa un'armatura presente nel tuo equipaggiamento/zaino" style="font-weight:700;">
+    <svg class="tactical-icon icon-shield" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> 🛡️ Indossa da Equipaggiamento
+  </button>
+  <button type="button" class="btn btn-sm btn-danger" id="btn-unequip-armor" onclick="unequipArmorToInventory()" title="Rimuovi l'armatura e riponila nello zaino">
+    ✕ Riponi
+  </button>
+</div>
 
 <div style="display:flex; gap:8px;">
 
@@ -1181,7 +439,7 @@
 
 <span class="badge-label">AC</span>
 
-<input type="number" id="val-ac" class="badge-input" value="10">
+<input type="number" id="combat-val-ac" class="badge-input" value="10">
 
 </div>
 
@@ -1189,12 +447,17 @@
 
 <span class="badge-label">DT</span>
 
-<input type="number" id="val-dt" class="badge-input" value="0">
+<input type="number" id="combat-val-dt" class="badge-input" value="0">
 
 </div>
 
 </div>
 
+</div>
+
+<div id="armor-weight-badge-row" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; font-size:11.5px; color:var(--text-dim); background:rgba(77,163,255,0.06); border:1px solid rgba(77,163,255,0.2); border-radius:4px; padding:5px 10px;">
+  <span>🛡️ <strong>Regola Peso Armatura:</strong> Le armature indossate pesano la metà sul carico trasportabile.</span>
+  <span id="armor-weight-display" style="font-weight:bold; color:#60a5fa;">Carico base: 2 | Indossata: 1.0</span>
 </div>
 
 
@@ -1747,20 +1010,637 @@ Tratti Leggendari Telaio PA
 
 
                 </div>
+
+                <!-- 3. OGGETTI & ACCESSORI EQUIPAGGIATI (SOTTO L'ARMATURA CON NOTE / STAT EXTRA) -->
+                <div class="col-inner-box combat-equipped-gear-box m-collapsible" data-mobile-cat="armors" style="margin-top:14px;" id="combat-equipped-gear-box">
+                  <div class="box-title-bar">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span>🎒 OGGETTI &amp; ACCESSORI EQUIPAGGIATI</span>
+                      <span class="core-col-badge badge-traits">SLOT ATTIVI</span>
+                    </div>
+                    <div class="no-print" style="display:flex; gap:6px; align-items:center;">
+                      <button type="button" class="btn btn-sm btn-primary" id="btn-equip-gear-inv" onclick="openEquipGearModal()" title="Equipaggia un oggetto presente nello zaino" style="font-weight:700;">
+                        <svg class="tactical-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg> + Equipaggia da Equipaggiamento
+                      </button>
+                      <button type="button" class="btn btn-sm" id="btn-add-custom-gear" onclick="addCustomEquippedGear()" title="Aggiungi slot accessorio manuale">
+                        + Slot Manuale
+                      </button>
+                    </div>
+                  </div>
+
+                  <div style="font-size:11.5px; color:var(--text-dim); margin-bottom:8px; line-height:1.4;">
+                    Gli oggetti qui indicati sono quelli attualmente indossati o attivi sul personaggio (presi dal tuo equipaggiamento). Usa il campo <strong>NOTE / STAT EXTRA</strong> per indicare bonus numerici (+1 PER, visore notturno, resistenza veleno, ecc.).
+                  </div>
+
+                  <div id="combat-equipped-gear-list" style="display:flex; flex-direction:column; gap:8px;">
+                    <!-- Injected dynamically by app.js renderEquippedGear() -->
+                  </div>
+                </div>
+
                 <!-- Quick Navigation Shortcuts (Mobile Only) -->
                 <div class="mobile-nav-shortcuts">
                   <button type="button" class="btn btn-secondary" onclick="switchMobileSection('weapons')">⚔️ Vai alle Armi</button>
-                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('survival')">☢️ Vai a Sopravvivenza</button>
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('survival')"><svg class="tactical-icon icon-rad" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="12" r="2.5"/><path d="M12 2a10 10 0 0 1 8.66 5l-4.33 2.5a5 5 0 0 0-4.33-2.5V2z"/><path d="M22 12a10 10 0 0 1-5 8.66l-2.5-4.33a5 5 0 0 0 2.5-4.33H22z"/><path d="M7 16.33 4.5 20.66A10 10 0 0 1 2 12h5a5 5 0 0 0 2.5 4.33l-2.5-.01z"/></svg> Vai a Sopravvivenza</button>
                   <button type="button" class="btn btn-secondary" onclick="switchMobileSection('core')">👤 Torna a Stat/Skill</button>
                 </div>
               </div>
 
             </div>
         </section>
+      </div>
 
-        <!-- ===============================================================
-             SEZIONE 3: INVENTARIO (CARICO, OGGETTI, TAPPI & PIP-BOY)
-             =============================================================== -->
+      <!-- =====================================================================
+           TAB 2: PERSONAGGIO (SPECIAL, ABILITÀ, TRATTI, PERK, RAZZA, BG STORICO)
+           ===================================================================== -->
+      <div class="sheet-tab-panel" id="panel-character" role="tabpanel" aria-labelledby="tab-btn-character" style="display:none;">
+        <section class="sheet-row" id="row-core" data-row="core">
+          <div class="sheet-row-heading">
+            <span class="sheet-row-badge">CORE</span>
+            <h2>SEZIONE CORE: IDENTITÀ, SPECIAL, ABILITÀ, TRATTI & PERK</h2>
+          </div>
+
+          <div class="sheet-row-cols core-three-columns">
+            <!-- ===============================================================
+                 COLONNA SINISTRA: FOTO, IDENTITÀ, RAZZA, BG & SOPRAVVIVENZA
+                 =============================================================== -->
+            <div class="sheet-col sheet-col-left core-sidebar-col">
+              
+              <!-- 1. FOTO PERSONAGGIO (IN ALTO A SINISTRA) -->
+              <div class="col-inner-box photo-box m-collapsible" data-mobile-cat="core">
+                <div class="box-title-bar">
+                  <span>FOTO PERSONAGGIO</span>
+                  <span style="font-size:11px; color:var(--text-dim);">AVATAR</span>
+                </div>
+                <div class="photo-card">
+                  <div class="portrait-frame" id="portrait-display" title="Clicca per caricare una foto o trascinala qui">
+                    <!-- Populated by app.js -->
+                  </div>
+                  <input type="file" id="portrait-file-input" accept="image/*" style="display: none;">
+                  <div class="portrait-actions no-print" style="margin-top:6px; display:flex; gap:6px;">
+                    <button type="button" class="btn btn-sm" onclick="document.getElementById('portrait-file-input').click()" style="flex:1;">Sfoglia Foto</button>
+                    <button type="button" class="btn btn-sm btn-danger" id="btn-clear-photo" title="Rimuovi Foto">Rimuovi</button>
+                  </div>
+                  <div class="no-print" style="width: 100%; margin-top: 6px;">
+                    <select id="avatar-preset-select" class="input-field" style="font-size: 12px; padding: 4px;">
+                      <option value="">-- Avatar Predefiniti --</option>
+                      <option value="vaultboy">Vault Boy (Vault-Tec)</option>
+                      <option value="ghoul">Ghoul</option>
+                      <option value="synth">Gen-2 Synth</option>
+                      <option value="supermutant">Super Mutante</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- 3. RAZZA / ORIGINE & SOTTOTIPO -->
+              <div class="col-inner-box race-box m-collapsible" data-mobile-cat="core">
+                <div class="box-title-bar">
+                  <span>RAZZA / ORIGINE</span>
+                  <span style="font-size:11px; color:var(--text-dim);">SPECIE</span>
+                </div>
+                <div class="form-grid" style="display:flex; flex-direction:column; gap:8px;">
+                  <div class="input-group">
+                    <label for="char-race">Razza / Origine</label>
+                    <select id="char-race" class="input-field" onchange="onRaceChange(this.value)">
+                      <option value="human">Umano (Human)</option>
+                      <option value="ghoul">Ghoul</option>
+                      <option value="gen2_synth">Synth Gen-2</option>
+                      <option value="robot">Robot (Handy / Protectron / Robobrain)</option>
+                      <option value="super_mutant">Super Mutante</option>
+                    </select>
+                  </div>
+                  <div class="input-group">
+                    <label for="char-race-variant">Sottotipo / Variante</label>
+                    <select id="char-race-variant" class="input-field" onchange="onRaceVariantChange(this.value)"></select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 4. BG DI PARTENZA -->
+              <div class="col-inner-box bg-box m-collapsible" data-mobile-cat="core">
+                <div class="box-title-bar">
+                  <span>BG DI PARTENZA</span>
+                  <span style="font-size:11px; color:var(--text-dim);">BACKGROUND</span>
+                </div>
+                <div class="form-grid" style="display:flex; flex-direction:column; gap:8px;">
+                  <div class="input-group">
+                    <label for="char-background">Background Storico</label>
+                    <select id="char-background" class="input-field">
+                      <option value="cultist">Cultista (Cultist)</option>
+                      <option value="doctor">Dottore (Doctor)</option>
+                      <option value="drifter">Vagabondo (Drifter)</option>
+                      <option value="entertainer">Intrattenitore (Entertainer)</option>
+                      <option value="farmer">Agricoltore (Farmer)</option>
+                      <option value="guard">Guardia (Guard)</option>
+                      <option value="hermit">Eremita (Hermit)</option>
+                      <option value="journalist">Giornalista (Journalist)</option>
+                      <option value="laborer">Bracciante (Laborer)</option>
+                      <option value="mechanic">Meccanico (Mechanic)</option>
+                      <option value="mercenary">Mercenario (Mercenary)</option>
+                      <option value="pastor">Pastore (Pastor)</option>
+                      <option value="pilgrim">Pellegrino (Pilgrim)</option>
+                      <option value="pit_fighter">Gladiatore (Pit Fighter)</option>
+                      <option value="scientist">Scienziato (Scientist)</option>
+                      <option value="scribe">Scriba della Confraternita</option>
+                      <option value="soldier">Soldato / Guardia RNC</option>
+                      <option value="trader">Commerciante (Trader)</option>
+                      <option value="vault_dweller" selected>Abitante Vault (Vault Dweller)</option>
+                      <option value="wastelander">Abitante Zona (Wastelander)</option>
+                      <option value="custom">Personalizzato (Custom)</option>
+                    </select>
+                  </div>
+                  <!-- Background Tag Skills Preview & Apply Button -->
+                  <div id="bg-skills-preview" class="bg-skills-preview"></div>
+                </div>
+              </div>
+
+              <!-- 5. PARAMETRI VITALI & RISORSE (CORE) -->
+              <!-- core-vitals-box moved/hidden -->
+
+              <!-- 5b. RESISTENZE, IMMUNITÀ & SUSCETTIBILITÀ (CORE - SOPRA LO STATO ANATOMICO ARTI) -->
+              <!-- core resistances hidden -->
+
+              <!-- 6. STATO ANATOMICO ARTI (CORE) -->
+              <!-- core-paperdoll-box moved/hidden -->
+
+              <!-- 7. SEZIONE SOPRAVVIVENZA -->
+              <!-- survival-box moved/hidden -->
+
+            </div>
+
+            <!-- ===============================================================
+                 COLONNA CENTRALE: SPECIAL (ATTRIBUTI BASE) & ABILITÀ (14 SKILL)
+                 =============================================================== -->
+            <div class="sheet-col sheet-col-center core-center-col">
+              
+              <!-- 1. TAPPI KARMA NUKA-COLA (SOPRA I PUNTI SPECIAL) -->
+              <div class="col-inner-box karma-prominent-box m-collapsible" data-mobile-cat="core">
+                <div class="box-title-bar">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span>⭐ TAPPI KARMA NUKA-COLA</span>
+                    <span id="karma-status-badge" class="core-col-badge badge-perks" style="background:#fee2e2; color:#991b1b; border:1px solid #fca5a5;">1 ATTIVO</span>
+                  </div>
+                  <div id="karma-breakdown-text" style="font-size:12px; color:var(--text-dim);" title="Tappi Karma Nuka-Cola">
+                    Capacità: <strong id="karma-caps-val" style="color:var(--text-bright);">1</strong> / <strong id="karma-caps-max">3</strong> Tappi Karma
+                  </div>
+                </div>
+                <div class="karma-bar-horizontal" style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:4px 0;">
+                  <div id="karma-caps-container" class="karma-caps-container karma-caps-row" style="display:flex; gap:8px; align-items:center;">
+                    <!-- Injected by app.js -->
+                  </div>
+                  <div class="karma-controls-row no-print" style="display:flex; align-items:center; gap:6px;">
+                    <button type="button" class="btn btn-sm" id="btn-sub-karma" title="Riduci Tappi">-</button>
+                    <button type="button" class="btn btn-sm" id="btn-add-karma" title="Aumenta Tappi">+</button>
+                    <button type="button" class="btn btn-sm" id="karma-flip-btn" style="margin-left:4px;">ATTIVA/SPENDI</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. S.P.E.C.I.A.L. (50% DI VISIBILITÀ / LA BASE DEL PG) -->
+              <div class="col-inner-box special-prominent-box m-collapsible" data-mobile-cat="core">
+                <div class="box-title-bar">
+                  <span class="special-title-heading">S &bull; P &bull; E &bull; C &bull; I &bull; A &bull; L</span>
+                  <div class="special-points-pool" id="special-pool-info">Totale Punti: 35/38</div>
+                </div>
+
+                <div class="special-seven-grid">
+                  <!-- S - FORZA -->
+                  <div class="special-card has-tooltip" data-keyword="forza">
+                    <div class="special-letter">S</div>
+                    <div class="special-name">FORZA</div>
+                    <div class="special-score-wrap">
+                      <input type="number" class="special-score-input" id="stat-strength" value="5" min="1" max="30" oninput="updateStatScore('strength', this.value)">
+                    </div>
+                    <div class="special-mod-wrap">
+                      <span class="special-mod-label">MOD</span>
+                      <input type="text" class="special-modifier-input" id="mod-strength" value="+0" oninput="updateStatMod('strength', this.value)" title="Modificatore Forza (Modificabile)">
+                    </div>
+                  </div>
+
+                  <!-- P - PERCEZIONE -->
+                  <div class="special-card has-tooltip" data-keyword="percezione">
+                    <div class="special-letter">P</div>
+                    <div class="special-name">PERCEZIONE</div>
+                    <div class="special-score-wrap">
+                      <input type="number" class="special-score-input" id="stat-perception" value="5" min="1" max="30" oninput="updateStatScore('perception', this.value)">
+                    </div>
+                    <div class="special-mod-wrap">
+                      <span class="special-mod-label">MOD</span>
+                      <input type="text" class="special-modifier-input" id="mod-perception" value="+0" oninput="updateStatMod('perception', this.value)" title="Modificatore Percezione (Modificabile)">
+                    </div>
+                  </div>
+
+                  <!-- E - ROBUSTEZZA -->
+                  <div class="special-card has-tooltip" data-keyword="robustezza">
+                    <div class="special-letter">E</div>
+                    <div class="special-name">ROBUSTEZZA</div>
+                    <div class="special-score-wrap">
+                      <input type="number" class="special-score-input" id="stat-endurance" value="5" min="1" max="30" oninput="updateStatScore('endurance', this.value)">
+                    </div>
+                    <div class="special-mod-wrap">
+                      <span class="special-mod-label">MOD</span>
+                      <input type="text" class="special-modifier-input" id="mod-endurance" value="+0" oninput="updateStatMod('endurance', this.value)" title="Modificatore Robustezza (Modificabile)">
+                    </div>
+                  </div>
+
+                  <!-- C - CARISMA -->
+                  <div class="special-card has-tooltip" data-keyword="carisma">
+                    <div class="special-letter">C</div>
+                    <div class="special-name">CARISMA</div>
+                    <div class="special-score-wrap">
+                      <input type="number" class="special-score-input" id="stat-charisma" value="5" min="1" max="30" oninput="updateStatScore('charisma', this.value)">
+                    </div>
+                    <div class="special-mod-wrap">
+                      <span class="special-mod-label">MOD</span>
+                      <input type="text" class="special-modifier-input" id="mod-charisma" value="+0" oninput="updateStatMod('charisma', this.value)" title="Modificatore Carisma (Modificabile)">
+                    </div>
+                  </div>
+
+                  <!-- I - INTELLIGENZA -->
+                  <div class="special-card has-tooltip" data-keyword="intelligenza">
+                    <div class="special-letter">I</div>
+                    <div class="special-name">INTELLIGENZA</div>
+                    <div class="special-score-wrap">
+                      <input type="number" class="special-score-input" id="stat-intelligence" value="5" min="1" max="30" oninput="updateStatScore('intelligence', this.value)">
+                    </div>
+                    <div class="special-mod-wrap">
+                      <span class="special-mod-label">MOD</span>
+                      <input type="text" class="special-modifier-input" id="mod-intelligence" value="+0" oninput="updateStatMod('intelligence', this.value)" title="Modificatore Intelligenza (Modificabile)">
+                    </div>
+                  </div>
+
+                  <!-- A - AGILITÀ -->
+                  <div class="special-card has-tooltip" data-keyword="agilita">
+                    <div class="special-letter">A</div>
+                    <div class="special-name">AGILITÀ</div>
+                    <div class="special-score-wrap">
+                      <input type="number" class="special-score-input" id="stat-agility" value="5" min="1" max="30" oninput="updateStatScore('agility', this.value)">
+                    </div>
+                    <div class="special-mod-wrap">
+                      <span class="special-mod-label">MOD</span>
+                      <input type="text" class="special-modifier-input" id="mod-agility" value="+0" oninput="updateStatMod('agility', this.value)" title="Modificatore Agilità (Modificabile)">
+                    </div>
+                  </div>
+
+                  <!-- L - FORTUNA -->
+                  <div class="special-card has-tooltip" data-keyword="fortuna">
+                    <div class="special-letter">L</div>
+                    <div class="special-name">FORTUNA</div>
+                    <div class="special-score-wrap">
+                      <input type="number" class="special-score-input" id="stat-luck" value="5" min="1" max="30" oninput="updateStatScore('luck', this.value)">
+                    </div>
+                    <div class="special-mod-wrap">
+                      <span class="special-mod-label">MOD</span>
+                      <input type="text" class="special-modifier-input" id="mod-luck" value="+0" oninput="updateStatMod('luck', this.value)" title="Modificatore Fortuna (Modificabile)">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. PERK & TALENTI (SOTTO GLI SPECIAL, DISTESI IN ORIZZONTALE) -->
+              <div class="col-inner-box perks-horizontal-box m-collapsible" data-mobile-cat="perks">
+                <div class="box-title-bar">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span>PERK & TALENTI</span>
+                    <span class="core-col-badge badge-perks">TALENTI</span>
+                  </div>
+                  <div class="no-print" style="display:flex; gap:6px;">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleAllPerksLang()" title="Cambia la lingua di tutti i perk tra Italiano e Inglese Manuale" style="font-size:12px; font-weight:800;">🌐 Lingua IT / EN</button>
+                    <button type="button" class="btn btn-sm" id="btn-add-perk-comp" onclick="addPerkCompendium()">+ Compendio</button>
+                    <button type="button" class="btn btn-sm" id="btn-add-perk-custom" onclick="addPerkCustom()">+ Custom</button>
+                  </div>
+                </div>
+                <div class="perks-list perks-grid-horizontal" id="perks-list">
+                  <!-- Populated dynamically by app.js -->
+                </div>
+              </div>
+
+              <!-- CONNETTORE DIVISORE (FALLOUT STYLE) -->
+              <div class="special-to-skills-connector" style="margin: 4px 0 10px 0;">
+                <div class="connector-line">
+                  <span>ABILITÀ UFFICIALI (14 SKILL)</span>
+                </div>
+                <div class="connector-sub">Gli attributi determinano la base di ogni abilità. Il Background conferisce +2 a 3 abilità Tag selezionate.</div>
+              </div>
+
+              <!-- SOTTO: SKILL (TABELLA COMPLETA A TUTTA LARGHEZZA) -->
+              <div class="col-inner-box skills-box m-collapsible" data-mobile-cat="core">
+                <div class="box-title-bar">
+                  <span>ABILITÀ UFFICIALI (14 SKILL)</span>
+                  <span style="font-size:11px; color:var(--text-dim);">SPECIAL + PUNTI + TAG (+2)</span>
+                </div>
+                
+                <!-- Skills Table Header -->
+                <div class="skills-header-row">
+                  <span style="width:32px; text-align:center; font-weight:bold; color:var(--accent-glow);" title="Abilità di Background (+2): Seleziona le 3 abilità scelte dal tuo Background al 1° Livello (Manuale Pag. 4 e 19)">BG</span>
+                  <span style="flex:1;">ABILITÀ</span>
+                  <span style="width:38px; text-align:center;">ATTR</span>
+                  <span style="width:44px; text-align:center;" title="Bonus Caratteristica + Fortuna/2">BASE</span>
+                  <span style="width:10px; text-align:center;">+</span>
+                  <span style="width:42px; text-align:center;" title="Punti Abilità Assegnati">PUNTI</span>
+                  <span style="width:10px; text-align:center;">+</span>
+                  <span style="width:42px; text-align:center;" title="Punti Extra (Equip/Master/Tag)">EXTRA</span>
+                  <span style="width:10px; text-align:center;">=</span>
+                  <span style="width:52px; text-align:center; font-weight:bold;">TOTALE</span>
+                </div>
+
+                <div class="skills-table" id="skills-list-body">
+                  <!-- 14 Skills injected dynamically by app.js -->
+                </div>
+
+                <div style="font-size:11px; color:var(--text-dim); margin-top:8px; line-height:1.4;">
+                  * <strong>BG (+2)</strong>: Le 3 abilità scelte dal Background al 1° livello ricevono un bonus permanente di +2 (Manuale pag. 4, 19).<br>
+                  * Formula: <strong>Base (Mod. Attr + Mod. Fortuna) + Punti + BG (+2) + Extra = TOTALE</strong>. Clicca su [ATTR] per alternare l'attributo ove previsto.
+                </div>
+
+                <!-- Quick Navigation Shortcuts (Mobile Only) -->
+                <div class="mobile-nav-shortcuts">
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('perks')">🎖️ Vai a Perk &amp; Tratti</button>
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('weapons')">⚔️ Vai alle Armi</button>
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('armors')"><svg class="tactical-icon icon-shield" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Vai alle Armature</button>
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('survival')"><svg class="tactical-icon icon-rad" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="12" r="2.5"/><path d="M12 2a10 10 0 0 1 8.66 5l-4.33 2.5a5 5 0 0 0-4.33-2.5V2z"/><path d="M22 12a10 10 0 0 1-5 8.66l-2.5-4.33a5 5 0 0 0 2.5-4.33H22z"/><path d="M7 16.33 4.5 20.66A10 10 0 0 1 2 12h5a5 5 0 0 0 2.5 4.33l-2.5-.01z"/></svg> Vai a Sopravvivenza</button>
+                </div>
+              </div>
+
+              <!-- 5. TRATTI & ABILITÀ DI RAZZA + TRATTI DEL PERSONAGGIO (SOTTO LA SECONDA COLONNA, DISTESI FINO ALLA FINE) -->
+              <div class="traits-dual-row">
+                
+                <!-- 1. TRATTI & ABILITÀ DI RAZZA -->
+                <div class="col-inner-box traits-racial-col m-collapsible" data-mobile-cat="perks">
+                  <div class="box-title-bar" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span>TRATTI &amp; ABILITÀ DI RAZZA</span>
+                      <span class="core-col-badge badge-racial">ORIGINE</span>
+                    </div>
+                    <div class="no-print">
+                      <button type="button" class="btn btn-sm" id="btn-add-custom-racial-trait" onclick="addCustomRacialTrait()">+ Tratto Master</button>
+                    </div>
+                  </div>
+                  <div class="racial-bonuses-box" id="racial-bonuses-box">
+                    <div class="racial-innate-container" id="racial-innate-container">
+                      <!-- Injected by app.js: Innate racial traits -->
+                    </div>
+                    <div class="racial-optional-container">
+                      <div style="font-size:12px; color:var(--text-bright); text-transform:uppercase; font-weight:800; letter-spacing:0.5px; margin:6px 0 4px 0;">
+                        Varianti &amp; Opzioni Master:
+                      </div>
+                      <div id="racial-optional-list" class="racial-optional-list">
+                        <!-- Checkboxes injected by app.js -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2. TRATTI DEL PERSONAGGIO (TRAITS) -->
+                <div class="col-inner-box traits-generic-col m-collapsible" data-mobile-cat="perks">
+                  <div class="box-title-bar" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span>TRATTI DEL PERSONAGGIO</span>
+                      <span class="core-col-badge badge-traits">TRAITS</span>
+                    </div>
+                    <div class="no-print" style="display:flex; gap:5px;">
+                      <button type="button" class="btn btn-sm" id="btn-add-trait-comp" onclick="addTraitCompendium()">+ Compendio</button>
+                      <button type="button" class="btn btn-sm" id="btn-add-trait-custom" onclick="addTraitCustom()">+ Custom</button>
+                    </div>
+                  </div>
+                  <div class="traits-list" id="traits-list-container">
+                    <!-- Populated dynamically by app.js with Rank controls -->
+                  </div>
+
+                  <!-- Quick Navigation Shortcuts (Mobile Only) -->
+                  <div class="mobile-nav-shortcuts">
+                    <button type="button" class="btn btn-secondary" onclick="switchMobileSection('core')">👤 Torna a Stat &amp; Skill</button>
+                    <button type="button" class="btn btn-secondary" onclick="switchMobileSection('weapons')">⚔️ Vai alle Armi</button>
+                    <button type="button" class="btn btn-secondary" onclick="switchMobileSection('armors')"><svg class="tactical-icon icon-shield" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Vai alle Armature</button>
+                    <button type="button" class="btn btn-secondary" onclick="switchMobileSection('survival')"><svg class="tactical-icon icon-rad" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="12" r="2.5"/><path d="M12 2a10 10 0 0 1 8.66 5l-4.33 2.5a5 5 0 0 0-4.33-2.5V2z"/><path d="M22 12a10 10 0 0 1-5 8.66l-2.5-4.33a5 5 0 0 0 2.5-4.33H22z"/><path d="M7 16.33 4.5 20.66A10 10 0 0 1 2 12h5a5 5 0 0 0 2.5 4.33l-2.5-.01z"/></svg> Sopravvivenza</button>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- =====================================================================
+           TAB 3: SOPRAVVIVENZA (STATO ARTI, INVENTARIO, RADIAZIONI, FAME/SETE)
+           ===================================================================== -->
+      <div class="sheet-tab-panel" id="panel-survival" role="tabpanel" aria-labelledby="tab-btn-survival" style="display:none;">
+        
+      <div class="survival-dashboard-grid" style="display:grid; grid-template-columns: 460px minmax(0, 1fr); gap:20px; margin-bottom:20px;">
+        <!-- STATO DEGLI ARTI CON SEGMENTED CONTROLS -->
+        <div class="col-inner-box anatomical-card" id="anatomical-body-card">
+          <div class="box-title-bar">
+            <span>STATO ARTI &amp; ANATOMIA OPERATIVA</span>
+            <span style="font-size:11px; color:var(--text-dim);">SELEZIONE RAPIDA</span>
+          </div>
+          <div style="display:grid; grid-template-columns: 130px 1fr; gap:16px; align-items:center;">
+            <!-- Sagoma corporea SVG -->
+            <div class="anatomical-body-wrap" style="text-align:center;">
+              <svg class="body-silhouette-svg" viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg" style="max-height:160px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6));">
+                <circle id="limb-head" class="limb-path limb-healthy" cx="50" cy="18" r="11" onclick="toggleLimb('head')" title="Testa" />
+                <path id="limb-torso" class="limb-path limb-healthy" d="M38,32 L62,32 L60,70 L40,70 Z" onclick="toggleLimb('torso')" title="Torso" />
+                <path id="limb-armL" class="limb-path limb-healthy" d="M64,34 L76,46 L82,72 L76,74 L70,52 L62,38 Z" onclick="toggleLimb('armL')" title="Braccio Sinistro" />
+                <path id="limb-armR" class="limb-path limb-healthy" d="M36,34 L24,46 L18,72 L24,74 L30,52 L38,38 Z" onclick="toggleLimb('armR')" title="Braccio Destro" />
+                <path id="limb-legL" class="limb-path limb-healthy" d="M52,72 L61,72 L64,106 L66,124 L56,124 L54,104 L52,72 Z" onclick="toggleLimb('legL')" title="Gamba Sinistra" />
+                <path id="limb-legR" class="limb-path limb-healthy" d="M39,72 L48,72 L48,104 L44,124 L34,124 L36,106 L39,72 Z" onclick="toggleLimb('legR')" title="Gamba Destra" />
+              </svg>
+            </div>
+
+            <!-- Segmented controls per ciascun arto -->
+            <div class="limbs-segmented-container">
+              <!-- TESTA -->
+              <div class="limb-control-row">
+                <div class="limb-label-wrap"><span class="limb-name">Testa</span></div>
+                <div class="segmented-control" role="radiogroup" aria-label="Condizione Testa">
+                  <input type="radio" id="limb-ctrl-head-healthy" name="limb-ctrl-head" value="healthy" checked onchange="setLimbState('head', 'healthy')">
+                  <label for="limb-ctrl-head-healthy" class="seg-btn seg-healthy">Sano</label>
+                  <input type="radio" id="limb-ctrl-head-crippled" name="limb-ctrl-head" value="crippled" onchange="setLimbState('head', 'crippled')">
+                  <label for="limb-ctrl-head-crippled" class="seg-btn seg-crippled">Menomato</label>
+                  <input type="radio" id="limb-ctrl-head-severed" name="limb-ctrl-head" value="severed" onchange="setLimbState('head', 'severed')">
+                  <label for="limb-ctrl-head-severed" class="seg-btn seg-severed">Reciso</label>
+                </div>
+              </div>
+
+              <!-- TORSO -->
+              <div class="limb-control-row">
+                <div class="limb-label-wrap"><span class="limb-name">Torso</span></div>
+                <div class="segmented-control" role="radiogroup" aria-label="Condizione Torso">
+                  <input type="radio" id="limb-ctrl-torso-healthy" name="limb-ctrl-torso" value="healthy" checked onchange="setLimbState('torso', 'healthy')">
+                  <label for="limb-ctrl-torso-healthy" class="seg-btn seg-healthy">Sano</label>
+                  <input type="radio" id="limb-ctrl-torso-crippled" name="limb-ctrl-torso" value="crippled" onchange="setLimbState('torso', 'crippled')">
+                  <label for="limb-ctrl-torso-crippled" class="seg-btn seg-crippled">Menomato</label>
+                  <input type="radio" id="limb-ctrl-torso-severed" name="limb-ctrl-torso" value="severed" onchange="setLimbState('torso', 'severed')">
+                  <label for="limb-ctrl-torso-severed" class="seg-btn seg-severed">Reciso</label>
+                </div>
+              </div>
+
+              <!-- BRACCIO SX -->
+              <div class="limb-control-row">
+                <div class="limb-label-wrap"><span class="limb-name">Braccio SX</span></div>
+                <div class="segmented-control" role="radiogroup" aria-label="Condizione Braccio Sinistro">
+                  <input type="radio" id="limb-ctrl-armL-healthy" name="limb-ctrl-armL" value="healthy" checked onchange="setLimbState('armL', 'healthy')">
+                  <label for="limb-ctrl-armL-healthy" class="seg-btn seg-healthy">Sano</label>
+                  <input type="radio" id="limb-ctrl-armL-crippled" name="limb-ctrl-armL" value="crippled" onchange="setLimbState('armL', 'crippled')">
+                  <label for="limb-ctrl-armL-crippled" class="seg-btn seg-crippled">Menomato</label>
+                  <input type="radio" id="limb-ctrl-armL-severed" name="limb-ctrl-armL" value="severed" onchange="setLimbState('armL', 'severed')">
+                  <label for="limb-ctrl-armL-severed" class="seg-btn seg-severed">Reciso</label>
+                </div>
+              </div>
+
+              <!-- BRACCIO DX -->
+              <div class="limb-control-row">
+                <div class="limb-label-wrap"><span class="limb-name">Braccio DX</span></div>
+                <div class="segmented-control" role="radiogroup" aria-label="Condizione Braccio Destro">
+                  <input type="radio" id="limb-ctrl-armR-healthy" name="limb-ctrl-armR" value="healthy" checked onchange="setLimbState('armR', 'healthy')">
+                  <label for="limb-ctrl-armR-healthy" class="seg-btn seg-healthy">Sano</label>
+                  <input type="radio" id="limb-ctrl-armR-crippled" name="limb-ctrl-armR" value="crippled" onchange="setLimbState('armR', 'crippled')">
+                  <label for="limb-ctrl-armR-crippled" class="seg-btn seg-crippled">Menomato</label>
+                  <input type="radio" id="limb-ctrl-armR-severed" name="limb-ctrl-armR" value="severed" onchange="setLimbState('armR', 'severed')">
+                  <label for="limb-ctrl-armR-severed" class="seg-btn seg-severed">Reciso</label>
+                </div>
+              </div>
+
+              <!-- GAMBA SX -->
+              <div class="limb-control-row">
+                <div class="limb-label-wrap"><span class="limb-name">Gamba SX</span></div>
+                <div class="segmented-control" role="radiogroup" aria-label="Condizione Gamba Sinistra">
+                  <input type="radio" id="limb-ctrl-legL-healthy" name="limb-ctrl-legL" value="healthy" checked onchange="setLimbState('legL', 'healthy')">
+                  <label for="limb-ctrl-legL-healthy" class="seg-btn seg-healthy">Sano</label>
+                  <input type="radio" id="limb-ctrl-legL-crippled" name="limb-ctrl-legL" value="crippled" onchange="setLimbState('legL', 'crippled')">
+                  <label for="limb-ctrl-legL-crippled" class="seg-btn seg-crippled">Menomato</label>
+                  <input type="radio" id="limb-ctrl-legL-severed" name="limb-ctrl-legL" value="severed" onchange="setLimbState('legL', 'severed')">
+                  <label for="limb-ctrl-legL-severed" class="seg-btn seg-severed">Reciso</label>
+                </div>
+              </div>
+
+              <!-- GAMBA DX -->
+              <div class="limb-control-row">
+                <div class="limb-label-wrap"><span class="limb-name">Gamba DX</span></div>
+                <div class="segmented-control" role="radiogroup" aria-label="Condizione Gamba Destra">
+                  <input type="radio" id="limb-ctrl-legR-healthy" name="limb-ctrl-legR" value="healthy" checked onchange="setLimbState('legR', 'healthy')">
+                  <label for="limb-ctrl-legR-healthy" class="seg-btn seg-healthy">Sano</label>
+                  <input type="radio" id="limb-ctrl-legR-crippled" name="limb-ctrl-legR" value="crippled" onchange="setLimbState('legR', 'crippled')">
+                  <label for="limb-ctrl-legR-crippled" class="seg-btn seg-crippled">Menomato</label>
+                  <input type="radio" id="limb-ctrl-legR-severed" name="limb-ctrl-legR" value="severed" onchange="setLimbState('legR', 'severed')">
+                  <label for="limb-ctrl-legR-severed" class="seg-btn seg-severed">Reciso</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Riepilogo penalità arti -->
+          <div class="limb-penalty-banner" id="limb-penalties-summary" style="margin-top:12px;">
+            [OK] Nessuna menomazione: corpo in piena efficienza operativa.
+          </div>
+        </div>
+
+        <!-- 2. TRACCE DI SOPRAVVIVENZA & RADIAZIONI (CON PROGRESSIVE DISCLOSURE) -->
+        <div>
+          <div class="col-inner-box survival-box m-collapsible" data-mobile-cat="survival">
+                <div class="box-title-bar">
+                  <span>SEZIONE SOPRAVVIVENZA</span>
+                  <span style="font-size:11px; color:var(--text-dim);">CONDIZIONI</span>
+                </div>
+                <div class="survival-panel-inner" style="display:flex; flex-direction:column; gap:8px;">
+                  <div style="font-size:11px; color:var(--text-dim); margin-bottom:2px;">Tracce di Sopravvivenza & Radiazioni (clicca sui quadrati):</div>
+                  <!-- Fame -->
+                  <div class="survival-row">
+                    <span class="survival-label">Fame (0-10):</span>
+                    <div class="pips-row" id="hunger-pips"></div>
+                  </div>
+                  <!-- Disidratazione -->
+                  <div class="survival-row">
+                    <span class="survival-label">Disidratazione:</span>
+                    <div class="pips-row" id="dehydration-pips"></div>
+                  </div>
+                  <!-- Stanchezza -->
+                  <div class="survival-row">
+                    <span class="survival-label">Stanchezza:</span>
+                    <div class="pips-row" id="exhaustion-pips"></div>
+                  </div>
+                  <!-- Fatica -->
+                  <div class="survival-row">
+                    <span class="survival-label">Fatica (0-9):</span>
+                    <div class="pips-row" id="fatigue-pips"></div>
+                  </div>
+                  <!-- Radiazioni -->
+                  <div class="survival-row">
+                    <span class="survival-label" style="color:var(--warning);">Radiazioni:</span>
+                    <div class="pips-row" id="rad-pips"></div>
+                  </div>
+                  <!-- Riepilogo & Calcolo Malus Sopravvivenza -->
+                  <div id="survival-malus-summary" class="survival-malus-summary"></div>
+
+                  <!-- RADIAZIONI & CONTAMINAZIONE (PAG. 124) -->
+                  <div class="radiation-detailed-panel" id="radiation-detailed-panel" style="margin-top:6px; padding:8px; background:rgba(217, 119, 6, 0.08); border:1px solid rgba(217, 119, 6, 0.3); border-radius:6px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                      <span style="font-weight:800; font-size:12px; color:var(--accent-amber, #d97706); display:flex; align-items:center; gap:4px;">
+                        <svg class="tactical-icon icon-rad" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="12" r="2.5"/><path d="M12 2a10 10 0 0 1 8.66 5l-4.33 2.5a5 5 0 0 0-4.33-2.5V2z"/><path d="M22 12a10 10 0 0 1-5 8.66l-2.5-4.33a5 5 0 0 0 2.5-4.33H22z"/><path d="M7 16.33 4.5 20.66A10 10 0 0 1 2 12h5a5 5 0 0 0 2.5 4.33l-2.5-.01z"/></svg> CONTAMINAZIONE & CD RAD (PAG. 124)
+                      </span>
+                      <span id="radiation-dc-badge" style="font-size:11px; font-weight:800; background:#fef3c7; color:#b45309; padding:1px 6px; border-radius:3px; border:1px solid #fde68a;">
+                        CD ATTUALE: 12
+                      </span>
+                    </div>
+                    <div style="font-size:11px; color:var(--text-dim); line-height:1.4; margin-bottom:6px;" id="radiation-dc-explanation">
+                      Formula: <strong>12 - Modificatore Costituzione</strong>. Ogni successo in zona irradiata aumenta la CD di <strong>+2</strong> fino a totale decontaminazione.
+                    </div>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                      <button type="button" class="btn btn-xs btn-outline-warning" onclick="rollRadiationCheck()" style="font-size:11px; font-weight:800; padding:3px 8px; flex:1;" title="Tira 1d20 contro la tua CD Radiazioni attuale">
+                         Test Radiazioni
+                      </button>
+                      <button type="button" class="btn btn-xs btn-outline-info" onclick="toggleRadiationSeverityGuide()" style="font-size:11px; font-weight:800; padding:3px 8px;" title="Mostra tabella frequenza test per gravità zona 1-7">
+                        ℹ️ Tabella Gravità
+                      </button>
+                      <button type="button" class="btn btn-xs btn-outline-success" onclick="cleanseRadiationDoses()" style="font-size:11px; font-weight:800; padding:3px 8px;" title="Usa RadAway o decontaminati: azzera i Rads e resetta l'accumulo di CD">
+                        💊 Rimuovi Rads
+                      </button>
+                    </div>
+                    <!-- Tabella Gravità Espandibile -->
+                    <div id="radiation-severity-guide" style="display:none; margin-top:6px; font-size:10.5px; background:rgba(0,0,0,0.25); padding:6px; border-radius:4px; line-height:1.35; color:var(--text-bright);">
+                      <div style="font-weight:800; margin-bottom:4px; color:var(--accent-amber);">Frequenza Test d20 per Livello Gravità Zona:</div>
+                      <div>• <strong>Livello 1</strong>: Ogni 1 ora (0.05 Rads/s)</div>
+                      <div>• <strong>Livello 2</strong>: Ogni 30 minuti (0.1 Rads/s)</div>
+                      <div>• <strong>Livello 3</strong>: Ogni 10 minuti (0.3 Rads/s)</div>
+                      <div>• <strong>Livello 4</strong>: Ogni 3 minuti (1 Rads/s)</div>
+                      <div>• <strong>Livello 5</strong>: Ogni 1 minuto (3 Rads/s)</div>
+                      <div>• <strong>Livello 6</strong>: Ogni 30 secondi (5 Rads/s)</div>
+                      <div>• <strong>Livello 7</strong>: Ogni 6 secondi / 1 round (30 Rads/s - Ground Zero)</div>
+                      <div style="margin-top:4px; color:#ef4444; font-weight:700;">⚠ Al 10° livello di Rads o 0 HP da rad: Morte. Tira Fortuna (CD 20): con successo rinasci Ghoul (1 HP); con meno di 5 rinasci Ghoul Ferale!</div>
+                    </div>
+                    <!-- Avviso se Rads >= 10 o pulsante Ghoul -->
+                    <div id="radiation-critical-alert" style="display:none; margin-top:6px;"></div>
+                  </div>
+                </div>
+              </div>
+          <!-- ACCORDION PROGRESSIVE DISCLOSURE: REGOLE RADIAZIONI (PAG. 124) -->
+          <div class="rules-disclosure-box">
+            <button type="button" class="btn-rules-disclosure" id="btn-toggle-rad-rules" aria-expanded="false" aria-controls="rad-rules-content" onclick="toggleRulesAccordion('rad-rules-content', this)">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <svg class="tactical-icon icon-help" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <span>[ ? ] Formule Contaminazione &amp; Frequenza Gravit&agrave; (pag. 124)</span>
+              </div>
+              <span class="disclosure-arrow">▼</span>
+            </button>
+            <div id="rad-rules-content" class="rules-disclosure-content" hidden>
+              <p style="margin:0 0 8px 0;"><strong>Formula CD Radiazioni:</strong> <code>12 - Modificatore Costituzione</code>. Ogni successo consecutivo in area irradiata incrementa la CD di <strong>+2</strong> fino a completa decontaminazione tramite RadAway o procedura medica.</p>
+              <div class="rad-gravity-table">
+                <div class="rad-grav-row"><strong>Livello 1:</strong> Ogni 1 ora (0.05 Rads/s)</div>
+                <div class="rad-grav-row"><strong>Livello 2:</strong> Ogni 30 minuti (0.1 Rads/s)</div>
+                <div class="rad-grav-row"><strong>Livello 3:</strong> Ogni 10 minuti (0.3 Rads/s)</div>
+                <div class="rad-grav-row"><strong>Livello 4:</strong> Ogni 3 minuti (1 Rads/s)</div>
+                <div class="rad-grav-row"><strong>Livello 5:</strong> Ogni 1 minuto (3 Rads/s)</div>
+                <div class="rad-grav-row"><strong>Livello 6:</strong> Ogni 30 secondi (5 Rads/s)</div>
+                <div class="rad-grav-row"><strong>Livello 7:</strong> Ogni 6 secondi / round (Ground Zero)</div>
+              </div>
+              <p style="margin:8px 0 0 0; color:#ef5350; font-weight:700;">⚠ Al 10° livello di Radiazioni o a 0 HP da radiazioni: Morte istantanea (Tiro Salvezza CD 20 per risveglio come Ghoul, con fallimento critico &lt; 5 Ghoul Ferale).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
         <section class="sheet-row" id="row-inv" data-row="inv" data-mobile-cat="inventory">
           <div class="sheet-row-heading">
             <span class="sheet-row-badge">INVENTARIO</span>
@@ -1903,11 +1783,13 @@ Tratti Leggendari Telaio PA
 
 <span>Inventario & Equipaggiamento</span>
 
-<div class="no-print" style="display:flex; gap:6px;">
+<div class="no-print" style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
 
-<button type="button" class="btn btn-sm btn-primary" id="btn-add-item" onclick="addInventoryItem()">+ Aggiungi Oggetto</button>
+<button type="button" class="btn btn-sm btn-success" id="btn-add-inv-compendium" onclick="openInventoryCompendiumPicker()" title="Carica armi, armature, attrezzatura e munizioni dal Compendio Ufficiale nel tuo inventario" style="font-weight:700;">
+  📖 Carica da Compendio / Regolamento
+</button>
 
-<button type="button" class="btn btn-sm" id="btn-add-inv-compendium" onclick="addCompendiumItemToInventory()">+ Da Compendio</button>
+<button type="button" class="btn btn-sm btn-primary" id="btn-add-item" onclick="addInventoryItem()">+ Oggetto Manuale</button>
 
 </div>
 
@@ -1999,10 +1881,12 @@ Tratti Leggendari Telaio PA
 
           </div>
         </section>
+      </div>
 
-        <!-- ===============================================================
-             SEZIONE 4: RELAZIONI (BIOMETRIA, PERSONALITÀ, STORIA GDR, COMPAGNI & NEMICI)
-             =============================================================== -->
+      <!-- =====================================================================
+           TAB 4: INTERPRETAZIONE (BIOMETRIA, PERSONALITÀ, STORIA, RELAZIONI & DONI)
+           ===================================================================== -->
+      <div class="sheet-tab-panel" id="panel-interpretazione" role="tabpanel" aria-labelledby="tab-btn-interpretazione" style="display:none;">
         <section class="sheet-row" id="row-rel" data-row="rel" data-mobile-cat="notes">
           <div class="sheet-row-heading collapsible-header" onclick="togglePersonalProfile()" style="cursor:pointer;" title="Clicca per aprire/chiudere il profilo">
             <span class="sheet-row-badge">RELAZIONI</span>
@@ -2259,37 +2143,34 @@ Tratti Leggendari Telaio PA
             </div>
           </div>
         </section>
-
-      </div> <!-- END sheet-grid-3x2 -->
-
-      <!-- TAB VERTICALI SUL BORDO DESTRO (CORE, COMBAT, INVENTARIO, RELAZIONI, TUTTO) -->
-      <aside class="vertical-tabs-edge no-print" aria-label="Navigazione Schede">
-        <button type="button" class="vtab-tab tab-core active" data-target="row-core" onclick="selectVerticalTab('row-core')" title="Scheda Core: SPECIAL, Skills, Tratti & Perk">
-          <span class="vtab-badge">1</span>
-          <span class="vtab-label">CORE</span>
-        </button>
-        <button type="button" class="vtab-tab tab-combat" data-target="row-combat" onclick="selectVerticalTab('row-combat')" title="Scheda Combat: Armi, To Hit, Danno, Armatura & Vitali">
-          <span class="vtab-badge">2</span>
-          <span class="vtab-label">COMBAT</span>
-        </button>
-        <button type="button" class="vtab-tab tab-inv" data-target="row-inv" onclick="selectVerticalTab('row-inv')" title="Scheda Inventario: Carico, Tappi, Oggetti & Pip-Boy">
-          <span class="vtab-badge">3</span>
-          <span class="vtab-label">INVENTARIO</span>
-        </button>
-        <button type="button" class="vtab-tab tab-rel" data-target="row-rel" onclick="selectVerticalTab('row-rel')" title="Scheda Relazioni: Biometria, Personalità, Storia & Compagni">
-          <span class="vtab-badge">4</span>
-          <span class="vtab-label">RELAZIONI</span>
-        </button>
-        <button type="button" class="vtab-tab tab-all" data-target="all" onclick="selectVerticalTab('all')" title="Visualizza Tutte le Sezioni (Vista Completa / Stampa)">
-          <span class="vtab-badge">★</span>
-          <span class="vtab-label">TUTTO</span>
-        </button>
-      </aside>
+      </div>
 
     </div> <!-- END sheet-binder-frame -->
   </main>
 
-  <!-- Backward-compatibility and dashboard dummy anchors (guaranteeing 0 JS errors) -->
+  <!-- MOBILE BOTTOM DOCK (4 PULSANTI RAPIDI) -->
+  <nav class="fallout-mobile-dock no-print" id="fallout-mobile-dock" aria-label="Navigazione Mobile Rapida">
+    <button type="button" class="mobile-dock-btn active" id="m-dock-btn-combat" onclick="switchMainTab('combat')" aria-selected="true">
+      <svg class="tactical-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
+      <span>COMBAT</span>
+    </button>
+    <button type="button" class="mobile-dock-btn" id="m-dock-btn-character" onclick="switchMainTab('character')" aria-selected="false">
+      <svg class="tactical-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>PG</span>
+    </button>
+    <button type="button" class="mobile-dock-btn" id="m-dock-btn-survival" onclick="switchMainTab('survival')" aria-selected="false">
+      <svg class="tactical-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+      <span>VITA</span>
+    </button>
+    <button type="button" class="mobile-dock-btn" id="m-dock-btn-interpretazione" onclick="switchMainTab('interpretazione')" aria-selected="false">
+      <svg class="tactical-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>RUOLO</span>
+    </button>
+  </nav>
+
+  <!-- =========================================================================
+       MODALI OPERATIVI & ANCHOR LEGACY (PRESERVATI INTEGRALMENTE)
+       ========================================================================= -->
   <div style="display:none;" id="legacy-dash-anchors">
     <div id="codex-left-sidebar" class="codex-sidebar-left"></div>
     <div id="codex-top-tabs" class="codex-tabs-bar"></div>
@@ -2320,8 +2201,6 @@ Tratti Leggendari Telaio PA
     <div id="top-ap-bar"></div><div id="top-ap-pct"></div>
   </div>
 
-  <!-- Helper hidden elements -->
-<input type="file" id="import-file-input" accept=".json" style="display:none;" onchange="importCharacterJSON(event)">
   <!-- COMPENDIUM MODAL -->
   <div class="picker-overlay no-print" id="compendium-modal" style="display:none;" onclick="if(event.target===this) closeCompendiumModal()">
     <div class="picker-dialog" style="max-width:850px; width:95vw; max-height:85vh; display:flex; flex-direction:column;">
@@ -2349,7 +2228,7 @@ Tratti Leggendari Telaio PA
     <div class="picker-dialog" style="max-width:720px; width:95vw; max-height:90vh; display:flex; flex-direction:column;">
       <div class="picker-header" style="background:#15803d; color:#ffffff; padding:12px 18px; display:flex; justify-content:space-between; align-items:center; border-top-left-radius:8px; border-top-right-radius:8px;">
         <div style="font-weight:bold; font-family:var(--font-display); font-size:17px; letter-spacing:1px; display:flex; align-items:center; gap:8px;">
-          <span>🎲</span>
+          <span></span>
           <span id="dice-modal-title">SISTEMA DADI PIP-BOY 2d20 & DANNO</span>
         </div>
         <button type="button" class="btn btn-sm" onclick="closeDiceModal()" style="background:rgba(255,255,255,0.2); color:#ffffff; border:1.5px solid rgba(255,255,255,0.5); font-weight:800; font-size:13px; padding:5px 12px; border-radius:5px; display:flex; align-items:center; gap:6px; cursor:pointer;" title="Chiudi finestra (ESC)">
@@ -2362,7 +2241,7 @@ Tratti Leggendari Telaio PA
       <div style="display:flex; gap:6px; padding:10px 14px; background:var(--bg-tertiary); border-bottom:1px solid var(--border-color);">
         <button type="button" class="btn btn-sm dice-tab-btn active" id="tab-dice-2d20" onclick="switchDiceTab('2d20')">🎯 Prova Abilità (2d20)</button>
         <button type="button" class="btn btn-sm dice-tab-btn" id="tab-dice-cd" onclick="switchDiceTab('cd')">💥 Dadi Danno (CD)</button>
-        <button type="button" class="btn btn-sm dice-tab-btn" id="tab-dice-gen" onclick="switchDiceTab('gen')">🎲 Dadi Generici</button>
+        <button type="button" class="btn btn-sm dice-tab-btn" id="tab-dice-gen" onclick="switchDiceTab('gen')"> Dadi Generici</button>
       </div>
 
       <div style="padding:16px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:16px;">
@@ -2413,7 +2292,7 @@ Tratti Leggendari Telaio PA
               <span id="dice-tn-display" style="font-size:19px; font-weight:900; color:var(--accent-secondary);">10</span>
               <span id="dice-tag-display" style="margin-left:8px; font-size:12px; font-weight:bold; color:var(--accent-amber);"></span>
             </div>
-            <button type="button" class="btn btn-primary" onclick="roll2d20Check()" style="font-weight:900; letter-spacing:0.5px; padding:8px 20px;">🎲 LANCIA 2d20</button>
+            <button type="button" class="btn btn-primary" onclick="roll2d20Check()" style="font-weight:900; letter-spacing:0.5px; padding:8px 20px;"> LANCIA 2d20</button>
           </div>
 
           <!-- 2d20 Results Area -->
@@ -2469,7 +2348,7 @@ Tratti Leggendari Telaio PA
       <!-- MODAL FOOTER ACTION BAR: CHIUDI E TORNA ALLA SCHEDA -->
       <div class="picker-footer" style="padding:12px 18px; background:var(--bg-tertiary); border-top:1.5px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; border-bottom-left-radius:8px; border-bottom-right-radius:8px;">
         <div style="font-size:12.5px; color:var(--text-dim); display:flex; align-items:center; gap:6px;">
-          <span>💡 Premi <strong>ESC</strong> o clicca sullo sfondo per chiudere.</span>
+          <span> Premi <strong>ESC</strong> o clicca sullo sfondo per chiudere.</span>
         </div>
         <button type="button" class="btn btn-primary btn-close-dice-modal" onclick="closeDiceModal()" style="font-size:14px; font-weight:800; padding:9px 22px; display:inline-flex; align-items:center; gap:8px; cursor:pointer;" title="Chiudi e torna alla scheda principale">
           <span>⬅</span>
@@ -2647,7 +2526,7 @@ Tratti Leggendari Telaio PA
     <div class="picker-dialog" style="max-width:440px;">
       <div class="picker-header">
         <div style="font-weight:bold; font-family:var(--font-display); font-size:16px; color:var(--text-bright);">
-          ⚡ IMPIANTO NEMEO: SELEZIONA 3 RESISTENZE
+          <svg class="tactical-icon icon-ap" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> IMPIANTO NEMEO: SELEZIONA 3 RESISTENZE
         </div>
         <button type="button" class="btn btn-sm btn-icon" onclick="closeNemeanConfigModal()" title="Chiudi">✕</button>
       </div>
@@ -2996,7 +2875,7 @@ Tratti Leggendari Telaio PA
 
      <!-- Modal Header -->
      <div style="background:linear-gradient(135deg,#052e16 0%,#14532d 100%); padding:24px 30px; border-bottom:2px solid #4ade80; display:flex; align-items:center; gap:16px;">
-       <div style="font-size:37px; filter:drop-shadow(0 0 10px #4ade80);">☢️</div>
+       <div style="font-size:37px; filter:drop-shadow(0 0 10px #4ade80);"><svg class="tactical-icon icon-rad" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="12" r="2.5"/><path d="M12 2a10 10 0 0 1 8.66 5l-4.33 2.5a5 5 0 0 0-4.33-2.5V2z"/><path d="M22 12a10 10 0 0 1-5 8.66l-2.5-4.33a5 5 0 0 0 2.5-4.33H22z"/><path d="M7 16.33 4.5 20.66A10 10 0 0 1 2 12h5a5 5 0 0 0 2.5 4.33l-2.5-.01z"/></svg></div>
        <div>
          <div style="font-size:12px; letter-spacing:3px; color:#86efac; text-transform:uppercase; font-weight:700;">VAULT-TEC SYSTEM v3.5</div>
          <div style="font-size:23px; font-weight:900; color:#4ade80; letter-spacing:2px; text-shadow:0 0 15px rgba(74,222,128,0.5);">CREAZIONE PERSONAGGIO</div>
@@ -3084,7 +2963,7 @@ Tratti Leggendari Telaio PA
 
          <!-- Skills Preview -->
          <div id="wiz-skills-preview" style="background:#0a0f0a; border:2px solid #fbbf24; border-radius:8px; padding:14px; display:none;">
-           <div style="font-size:12px; font-weight:800; color:#fbbf24; letter-spacing:2px; text-transform:uppercase; margin-bottom:10px;">⚡ BONUS ABILITÀ BACKGROUND</div>
+           <div style="font-size:12px; font-weight:800; color:#fbbf24; letter-spacing:2px; text-transform:uppercase; margin-bottom:10px;"><svg class="tactical-icon icon-ap" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> BONUS ABILITÀ BACKGROUND</div>
            <div id="wiz-skills-list" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
            <div style="font-size:11px; color:#6b7280; margin-top:10px;">Queste abilità riceveranno +2 automaticamente. Potrai modificarle in seguito nella scheda.</div>
          </div>
@@ -3100,7 +2979,7 @@ Tratti Leggendari Telaio PA
              style="background:linear-gradient(135deg,#b45309,#d97706); color:#fff; border:none; border-radius:6px; padding:14px 36px; font-family:'Courier New',monospace; font-size:15px; font-weight:900; letter-spacing:3px; cursor:pointer; text-transform:uppercase; opacity:0.5; transition:all 0.2s; box-shadow:0 0 20px rgba(217,119,6,0.3);"
              onmouseover="if(!this.disabled){this.style.background='linear-gradient(135deg,#d97706,#f59e0b)'; this.style.boxShadow='0 0 30px rgba(251,191,36,0.5)'}"
              onmouseout="this.style.background='linear-gradient(135deg,#b45309,#d97706)'; this.style.boxShadow='0 0 20px rgba(217,119,6,0.3)'">
-             ☢ INIZIA AVVENTURA
+             <svg class="tactical-icon icon-rad" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="12" r="2.5"/><path d="M12 2a10 10 0 0 1 8.66 5l-4.33 2.5a5 5 0 0 0-4.33-2.5V2z"/><path d="M22 12a10 10 0 0 1-5 8.66l-2.5-4.33a5 5 0 0 0 2.5-4.33H22z"/><path d="M7 16.33 4.5 20.66A10 10 0 0 1 2 12h5a5 5 0 0 0 2.5 4.33l-2.5-.01z"/></svg> INIZIA AVVENTURA
            </button>
          </div>
        </div>
@@ -3132,11 +3011,11 @@ Tratti Leggendari Telaio PA
       <span class="m-btn-label">ARMI</span>
     </button>
     <button type="button" class="mobile-nav-btn" data-m-target="armors" onclick="switchMobileSection('armors')">
-      <span class="m-btn-icon">🛡️</span>
+      <span class="m-btn-icon"><svg class="tactical-icon icon-shield" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
       <span class="m-btn-label">ARMATURE</span>
     </button>
     <button type="button" class="mobile-nav-btn" data-m-target="survival" onclick="switchMobileSection('survival')">
-      <span class="m-btn-icon">☢️</span>
+      <span class="m-btn-icon"><svg class="tactical-icon icon-rad" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><circle cx="12" cy="12" r="2.5"/><path d="M12 2a10 10 0 0 1 8.66 5l-4.33 2.5a5 5 0 0 0-4.33-2.5V2z"/><path d="M22 12a10 10 0 0 1-5 8.66l-2.5-4.33a5 5 0 0 0 2.5-4.33H22z"/><path d="M7 16.33 4.5 20.66A10 10 0 0 1 2 12h5a5 5 0 0 0 2.5 4.33l-2.5-.01z"/></svg></span>
       <span class="m-btn-label">SOPRAVV.</span>
     </button>
     <button type="button" class="mobile-nav-btn" data-m-target="inventory" onclick="switchMobileSection('inventory')">
@@ -3148,6 +3027,7 @@ Tratti Leggendari Telaio PA
       <span class="m-btn-label">TUTTO</span>
     </button>
   </nav>
+
 
 </body>
 </html>

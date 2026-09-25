@@ -1251,27 +1251,134 @@ const FALLOUT_RULES_DATA = {
       "cost": "60c"
     },
     {
-      "id": "mod_serrated_blade",
-      "name": "Lama Seghettata (Serrated Edge)",
+      "id": "mod_sharpened_serrated",
+      "name": "Lama Affilata / Seghettata (Sharpened/Serrated)",
+      "slots": 1,
+      "weight": 0.5,
+      "appliesTo": [
+        "melee",
+        "unarmed"
+      ],
+      "effect": "L'arma guadagna la proprietà Dilaniante (Mangle). Infligge ferite gravi e sanguinamento persistente.",
+      "cost": "55c"
+    },
+    {
+      "id": "mod_stealth_blade",
+      "name": "Lama Furtiva (Stealth Blade)",
       "slots": 1,
       "weight": 0.5,
       "appliesTo": [
         "melee"
       ],
-      "effect": "Applica sanguinamento persistente (Dilaniante / Mangle): infligge 1d4 danni per 2 turni al bersaglio.",
-      "cost": "40c"
+      "effect": "+2 dadi di danno agli attacchi furtivi (Sneak attack) e colpi critici aumentati.",
+      "cost": "75c"
     },
     {
-      "id": "mod_stun_pack",
-      "name": "Elettrodi Stordenti (Stun Pack)",
-      "slots": 2,
+      "id": "mod_strengthen",
+      "name": "Rinforzata (Strengthened)",
+      "slots": 1,
+      "weight": 1,
+      "appliesTo": [
+        "melee",
+        "unarmed",
+        "all"
+      ],
+      "effect": "L'arma guadagna la proprietà Durevole (Durable). Modifica permanente.",
+      "cost": "120c"
+    },
+    {
+      "id": "mod_double_sided",
+      "name": "Doppia Lama / Doppio Taglio (Double Sided)",
+      "slots": 1,
+      "weight": 2,
+      "appliesTo": [
+        "melee"
+      ],
+      "effect": "L'arma guadagna Difensiva (Defensive) e A Due Mani (Two Handed). Carico raddoppiato, Req FOR +1.",
+      "cost": "25c"
+    },
+    {
+      "id": "mod_heavy_weighted",
+      "name": "Pesante / Contrappeso (Heavy / Weighted)",
+      "slots": 1,
       "weight": 1,
       "appliesTo": [
         "melee",
         "unarmed"
       ],
-      "effect": "Scarica voltaica all'impatto: il bersaglio colpito deve superare un test END o rimane stordito per 1 turno.",
+      "effect": "Costo AP +1 (max 6), Carico +50%, Req FOR +1. Guadagna Bilanciata (Weighted). Moltiplicatore critico o dado danno +1. Permanente.",
+      "cost": "65c"
+    },
+    {
+      "id": "mod_upgraded_strike",
+      "name": "Migliorata (Upgraded)",
+      "slots": 1,
+      "weight": 0.5,
+      "appliesTo": [
+        "melee",
+        "unarmed"
+      ],
+      "effect": "Ogni volta che tiri un 1 o un 2 sui dadi di danno dell'arma, il danno su quel dado aumenta di +2. Permanente.",
+      "cost": "165c"
+    },
+    {
+      "id": "mod_light_build",
+      "name": "Struttura Leggera (Light Build)",
+      "slots": 1,
+      "weight": -1,
+      "appliesTo": [
+        "melee",
+        "unarmed"
+      ],
+      "effect": "Costo in AP -1 (minimo 3 AP), Carico dimezzato (-50%), Req FOR -1. Guadagna Rompibile (Breakable). Permanente.",
+      "cost": "55c"
+    },
+    {
+      "id": "mod_ergonomic_grip",
+      "name": "Impugnatura Ergonomica (Ergonomic Grip)",
+      "slots": 1,
+      "weight": 0.5,
+      "appliesTo": [
+        "melee",
+        "unarmed",
+        "all"
+      ],
+      "effect": "La soglia per mettere a segno un colpo critico diminuisce di 1 (es. da 20 a 19-20).",
+      "cost": "110c"
+    },
+    {
+      "id": "mod_stun_pack",
+      "name": "Elettrodi Stordenti / Elettrificata (Stun Pack / Shock)",
+      "slots": 1,
+      "weight": 1,
+      "appliesTo": [
+        "melee",
+        "unarmed"
+      ],
+      "effect": "Aggiunge danno da Energia e proprietà Stordente (Stun): il bersaglio colpito deve superare un test END o rimane stordito per 1 turno.",
       "cost": "75c"
+    },
+    {
+      "id": "mod_heating_coil",
+      "name": "Bobina Riscaldante / Bruciante (Heating Coil)",
+      "slots": 1,
+      "weight": 1,
+      "appliesTo": [
+        "melee"
+      ],
+      "effect": "Aggiunge danno da Fuoco e proprietà Bruciante (Burning): infligge danni da combustione continuati.",
+      "cost": "80c"
+    },
+    {
+      "id": "mod_poisoned_edge",
+      "name": "Lama Avvelenata (Poisoned Edge)",
+      "slots": 1,
+      "weight": 0.5,
+      "appliesTo": [
+        "melee"
+      ],
+      "effect": "Applica Veleno persistente al bersaglio colpito (danni da tossina continuati per 2 turni).",
+      "cost": "60c"
     },
     {
       "id": "mod_spiked_head",
@@ -1279,43 +1386,11 @@ const FALLOUT_RULES_DATA = {
       "slots": 1,
       "weight": 1,
       "appliesTo": [
-        "melee"
+        "melee",
+        "unarmed"
       ],
       "effect": "+1 danno perforante fisso e conferisce probabilità di lacerazione critica.",
       "cost": "35c"
-    },
-    {
-      "id": "mod_lead_weighted",
-      "name": "Contrappeso in Piombo (Lead Weighted)",
-      "slots": 2,
-      "weight": 3,
-      "appliesTo": [
-        "melee"
-      ],
-      "effect": "I tiri di 1 sui dadi di danno diventano automaticamente 2. Aumenta l'impatto contundente.",
-      "cost": "45c"
-    },
-    {
-      "id": "mod_ergonomic_grip",
-      "name": "Impugnatura Ergonomica (Ergonomic Grip)",
-      "slots": 2,
-      "weight": 0.5,
-      "appliesTo": [
-        "all"
-      ],
-      "effect": "Migliora l'ergonomia e il bilanciamento: il danno da colpo critico aumenta di 1 dado.",
-      "cost": "60c"
-    },
-    {
-      "id": "mod_strengthen",
-      "name": "Rinforzo Strutturale (Strengthened)",
-      "slots": 3,
-      "weight": 2,
-      "appliesTo": [
-        "all"
-      ],
-      "effect": "L'arma guadagna le proprietà Robusta e Difensiva. Maggiore resistenza a usura e rotture.",
-      "cost": "80c"
     },
     {
       "id": "mod_lucky_charm",

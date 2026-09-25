@@ -220,6 +220,7 @@ const DEFAULT_CHARACTER = {
   ],
   caps: 85,
   carryMax: 50,
+  equippedGear: [],
   pipboy: {
     owned: false,
     model: "pb3000mk4",
@@ -581,6 +582,7 @@ function renderAll() {
   renderVitals();
   renderBodyPaperdoll();
   renderArmor();
+  renderEquippedGear();
   renderPowerArmor();
   renderResistancesSection();
   renderWeapons();
@@ -1001,6 +1003,12 @@ function renderBodyPaperdoll() {
     if (btnEl) {
       btnEl.className = `limb-quick-btn status-${status}`;
       btnEl.textContent = `${limbLabels[key]}: ${statusText}`;
+    }
+
+    // Mirror to Segmented Control Radio Buttons
+    const segRadio = document.getElementById(`limb-ctrl-${key}-${status}`);
+    if (segRadio) {
+      segRadio.checked = true;
     }
 
     // Mirror to Core (Tab 1) Paperdoll
@@ -2242,6 +2250,25 @@ function renderArmor() {
   const qualEl = document.getElementById("armor-quality-select");
   if (qualEl) qualEl.value = character.armor.quality === "legendary" ? "legendary" : "standard";
 
+  const armorWeightDisplay = document.getElementById("armor-weight-display");
+  if (armorWeightDisplay) {
+    const armMatch = (FALLOUT_RULES_DATA.armors || []).find(a => 
+      a.id === character.armor.type || 
+      (a.name && a.name.toLowerCase() === (character.armor.name || "").toLowerCase())
+    );
+    let baseWeight = 2;
+    if (character.armor.load !== undefined && character.armor.load !== null) {
+      baseWeight = parseFloat(character.armor.load) || 0;
+    } else if (armMatch) {
+      baseWeight = armMatch.load !== undefined ? parseFloat(armMatch.load) : (parseFloat(armMatch.weight) || 0);
+    } else {
+      const typeDefaults = { cloth: 2, a_vault_suit: 2, leather: 7, a_leather_armor: 7, multilayered: 10, metal: 20, a_metal_armor: 20, ballistic_weave: 5, combat: 15, a_combat_armor: 15, synth: 12, a_synth_armor: 12, steel: 25, marine: 30, a_marine_armor: 30 };
+      baseWeight = typeDefaults[character.armor.type] || 6;
+    }
+    const wornLoad = Math.round((baseWeight / 2) * 10) / 10;
+    armorWeightDisplay.textContent = `Carico base: ${baseWeight} | Indossata: ${wornLoad} (Dimezzato)`;
+  }
+
   const legBox = document.getElementById("armor-legendary-box");
   const legList = document.getElementById("armor-legendary-list");
   const legSlotsVal = document.getElementById("armor-legendary-slots-val");
@@ -2595,8 +2622,8 @@ function getWeaponCompatibility(w) {
   const wAmmo = (w.ammo || w.ammoType || "").toLowerCase();
   const wQuality = (w.quality || "").toLowerCase();
 
-  const isLegendary = wQuality === "legendary" || wQuality === "leggendaria" || wName.includes("★") || wProps.includes("leggendari");
-  const isMelee = wType.includes("mischia") || wType.includes("corpo") || wType.includes("melee") || wType.includes("disarmato") || wType.includes("unarmed") || wAmmo === "nessuna" || wAmmo === "none" || wAmmo === "-" || wName.includes("lama") || wName.includes("coltello") || wName.includes("spada") || wName.includes("mazza") || wName.includes("sledge") || wName.includes("wrench") || wName.includes("chiave") || wName.includes("bastone");
+  const isLegendary = wQuality === "legendary" || wQuality === "leggendaria" || wName.includes("★") || wProps.includes("leggendari") || (Array.isArray(w.legendaryEffects) && w.legendaryEffects.length > 0 && w.legendaryEffects.some(e => e && e.trim() !== ""));
+  const isMelee = (w.governingSkill === "meleeWeapons" || w.governingSkill === "unarmed" || wType.includes("mischia") || wType.includes("corpo") || wType.includes("melee") || wType.includes("disarmato") || wType.includes("unarmed") || wName.includes("lama") || wName.includes("coltello") || wName.includes("pugnale") || wName.includes("dagger") || wName.includes("knife") || wName.includes("spada") || wName.includes("mazza") || wName.includes("sledge") || wName.includes("wrench") || wName.includes("chiave") || wName.includes("bastone") || ((wAmmo === "nessuna" || wAmmo === "none" || wAmmo === "-") && !wType.includes("pistol") && !wType.includes("fucil") && !wType.includes("firearm") && !wType.includes("gun") && !wType.includes("energi")));
   const isUnarmed = wType.includes("disarmato") || wType.includes("unarmed") || wName.includes("pugno") || wName.includes("fist") || wName.includes("tirapugni");
   const isEnergy = wType.includes("energia") || wType.includes("laser") || wType.includes("plasma") || wType.includes("gamma") || wType.includes("cryo") || wType.includes("gauss") || wAmmo.includes("cell") || wAmmo.includes("ec") || wName.includes("laser") || wName.includes("plasma") || wName.includes("gauss");
   const isHeavy = wType.includes("pesante") || wType.includes("heavy") || wName.includes("minigun") || wName.includes("lanciamissili") || wName.includes("fat man") || wName.includes("lanciafiamme") || wAmmo.includes("missile") || wAmmo.includes("5mm") || wAmmo.includes("mini nuke") || wAmmo.includes("fuel");
@@ -2641,8 +2668,12 @@ function isWeaponModAllowed(w, mod) {
   const app = Array.isArray(mod.appliesTo) ? mod.appliesTo.map(x => x.toLowerCase()) : [String(mod.appliesTo || "all").toLowerCase()];
   if (app.includes("all") || app.includes("any") || app.includes("tutte")) return true;
 
-  // Armi non da fuoco (Mischia/Disarmato) non possono installare mod da fuoco/caricatori/silenziatori
-  if (!comp.isRanged && (app.includes("firearms") || app.includes("ballistic") || app.includes("energy") || app.includes("shotgun") || app.includes("rifle") || app.includes("handgun") || app.includes("revolver") || app.includes("heavy"))) {
+  // Compatibilità per armi da mischia e corpo a corpo (prioritaria)
+  if (comp.isMelee && (app.includes("melee") || app.includes("mischia") || app.includes("blade") || app.includes("knife") || app.includes("pugnale"))) return true;
+  if (comp.isUnarmed && (app.includes("unarmed") || app.includes("disarmato"))) return true;
+
+  // Armi non da fuoco (Mischia/Disarmato) non possono installare mod da fuoco/caricatori/canne
+  if (!comp.isRanged && (app.includes("firearms") || app.includes("ballistic") || app.includes("shotgun") || app.includes("rifle") || app.includes("handgun") || app.includes("revolver") || app.includes("heavy"))) {
     return false;
   }
 
@@ -3233,8 +3264,8 @@ function renderWeapons() {
         <!-- Weapon Installed Mods Section (+) -->
         <div class="weapon-mods-section">
           <div class="weapon-mods-header">
-            <span style="font-weight:800; font-size:12px; text-transform:uppercase;">Modifiche Installate (${(w.installedMods || []).reduce((sum, m) => sum + (m.slots || 1), 0)}/${isLegendary ? 8 : (isMelee ? 4 : 6)} Slot)</span>
-            <button type="button" class="btn btn-sm no-print" onclick="openWeaponModPicker(${idx})">+ Aggiungi Modifica</button>
+            <span style="font-weight:800; font-size:12px; text-transform:uppercase;">Modifiche Installate (${(w.installedMods || []).reduce((sum, m) => sum + (m.slots || 1), 0)}/${isLegendary ? 8 : (isMelee ? 1 : 6)} Slot${isMelee && !isLegendary ? " • Max 1 Mischia" : ""})</span>
+            <button type="button" class="btn btn-sm no-print" onclick="openWeaponModPicker(${idx})" ${isMelee && !isLegendary && (w.installedMods || []).length >= 1 ? 'title="Limite massimo di 1 upgrade raggiunto per armi corpo a corpo non leggendarie"' : ""}>+ Aggiungi Modifica</button>
           </div>
           <div class="installed-mods-list">
             ${renderInstalledModsList(w.installedMods, idx)}
@@ -3396,13 +3427,6 @@ function updateWeaponAmmo(weaponIdx, ammoName) {
   character.weapons[weaponIdx].selectedAmmo = ammoName;
   const descEl = document.getElementById(`ammo-effect-${weaponIdx}`);
   if (descEl) descEl.textContent = getAmmoEffectDescription(ammoName);
-  saveCharacter();
-}
-
-function removeWeaponMod(weaponIdx, modIdx) {
-  if (!character.weapons[weaponIdx]) return;
-  character.weapons[weaponIdx].installedMods.splice(modIdx, 1);
-  renderWeapons();
   saveCharacter();
 }
 
@@ -3601,35 +3625,6 @@ function deleteTrait(idx) {
 // =============================================================================
 // PERKS ENGINE & S.P.E.C.I.A.L. AVAILABILITY CHECKER
 // =============================================================================
-
-function isPerkAvailable(perk) {
-  if (!perk) return { available: true, reason: "" };
-
-  const charLvl = parseInt(character.info.level, 10) || 1;
-
-  // Level check
-  if (perk.reqLvl && charLvl < perk.reqLvl) {
-    return { available: false, reason: `Richiede Livello ${perk.reqLvl} (Attuale ${charLvl})` };
-  }
-
-  // Stat check
-  if (perk.reqStat && perk.reqVal) {
-    const statKey = perk.reqStat.toLowerCase();
-    const charStatVal = parseInt(character.special[statKey], 10) || 5;
-    if (charStatVal < perk.reqVal) {
-      const statLabelMap = {
-        strength: "Forza", perception: "Percezione", endurance: "Robustezza",
-        charisma: "Carisma", intelligence: "Intelligenza", agility: "Agilità", luck: "Fortuna"
-      };
-      return { 
-        available: false, 
-        reason: `Richiede ${statLabelMap[statKey] || perk.reqStat} ${perk.reqVal}+ (Attuale ${charStatVal})` 
-      };
-    }
-  }
-
-  return { available: true, reason: "Requisiti Soddisfatti" };
-}
 
 function findCompendiumPerk(p) {
   if (!p) return null;
@@ -4019,7 +4014,11 @@ function updateInventoryAndCarry() {
 
   (character.inventory || []).forEach(it => {
     const qty = parseFloat(it.qty) || 1;
-    const load = parseFloat(it.load) || 0;
+    let load = parseFloat(it.load) || 0;
+    // Se un'armatura è segnata come equipaggiata nello zaino, pesa la metà
+    if (it.equipped && (it.isEquippable === "armor" || (it.notes && it.notes.toLowerCase().includes("armatura")))) {
+      load = load / 2;
+    }
     totalLoad += load * qty;
   });
 
@@ -4027,10 +4026,35 @@ function updateInventoryAndCarry() {
     totalLoad += parseFloat(w.load) || 0;
   });
 
-  if (character.armor && character.armor.type) {
-    const armMatch = (FALLOUT_RULES_DATA.armors || []).find(a => a.id === character.armor.type);
-    if (armMatch && armMatch.weight) {
-      totalLoad += parseFloat(armMatch.weight);
+  (character.equippedGear || []).forEach(g => {
+    if (!g.invId) {
+      totalLoad += parseFloat(g.load) || 1;
+    }
+  });
+
+  // Regola Ufficiale Fallout: Le armature INDOSSATE pesano la metà sul carico trasportabile
+  let wornArmorBaseLoad = 0;
+  if (character.armor && character.armor.type && character.armor.type !== "none") {
+    const armMatch = (FALLOUT_RULES_DATA.armors || []).find(a => 
+      a.id === character.armor.type || 
+      (a.name && a.name.toLowerCase() === (character.armor.name || "").toLowerCase())
+    );
+    if (character.armor.load !== undefined && character.armor.load !== null) {
+      wornArmorBaseLoad = parseFloat(character.armor.load) || 0;
+    } else if (armMatch) {
+      wornArmorBaseLoad = armMatch.load !== undefined ? parseFloat(armMatch.load) : (parseFloat(armMatch.weight) || 0);
+    } else {
+      const typeDefaults = { cloth: 2, a_vault_suit: 2, leather: 7, a_leather_armor: 7, multilayered: 10, metal: 20, a_metal_armor: 20, ballistic_weave: 5, combat: 15, a_combat_armor: 15, synth: 12, a_synth_armor: 12, steel: 25, marine: 30, a_marine_armor: 30 };
+      wornArmorBaseLoad = typeDefaults[character.armor.type] || 6;
+    }
+
+    // PESO DIMEZZATO PERCHÉ INDOSSATA:
+    const wornLoad = Math.round((wornArmorBaseLoad / 2) * 10) / 10;
+    totalLoad += wornLoad;
+
+    const armorWeightDisplay = document.getElementById("armor-weight-display");
+    if (armorWeightDisplay) {
+      armorWeightDisplay.textContent = `Carico base: ${wornArmorBaseLoad} | Indossata: ${wornLoad} (Dimezzato)`;
     }
   }
 
@@ -4300,21 +4324,28 @@ function equipArmorFromInventory(invIdx) {
   const item = character.inventory[invIdx];
   if (!item) return;
 
-  const aMatch = (FALLOUT_RULES_DATA.armors || []).find(a => a.name.toLowerCase() === item.name.toLowerCase() || a.id === item.armorData?.type) || {
+  const aMatch = (FALLOUT_RULES_DATA.armors || []).find(a => 
+    a.name.toLowerCase() === item.name.toLowerCase() || 
+    a.id === item.armorData?.type ||
+    a.id === item.id
+  ) || {
     id: "leather",
     name: item.name,
-    ac: 11,
-    dt: 1,
+    baseAc: 1,
+    baseDt: 1,
     slots: 6,
-    weight: item.load || 15
+    load: item.load || 15
   };
+
+  const oldBaseLoad = character.armor.load !== undefined ? character.armor.load : 
+    ((FALLOUT_RULES_DATA.armors || []).find(a => a.id === character.armor.type) || {}).load || 10;
 
   if (character.armor && character.armor.name && character.armor.type !== "none") {
     character.inventory.push({
       id: "i_" + Date.now(),
       name: character.armor.name,
       qty: 1,
-      load: (FALLOUT_RULES_DATA.armors.find(a => a.id === character.armor.type) || { weight: 10 }).weight,
+      load: oldBaseLoad,
       cost: "100c",
       notes: `Armatura: AC ${character.vitals.ac}, DT ${character.vitals.dt}`,
       isEquippable: "armor",
@@ -4325,26 +4356,38 @@ function equipArmorFromInventory(invIdx) {
   character.armor.name = item.armorData?.name || item.name;
   character.armor.type = item.armorData?.type || aMatch.id || "cloth";
   character.armor.quality = item.armorData?.quality || "standard";
+  character.armor.load = item.load !== undefined ? item.load : (aMatch.load || 10);
   character.armor.legendaryEffect = item.armorData?.legendaryEffect || "";
   character.armor.legendaryEffects = item.armorData?.legendaryEffects || [];
   character.armor.installedUpgrades = item.armorData?.installedUpgrades || [];
   character.armor.decay = item.armorData?.decay || 0;
 
+  if (aMatch.baseAc !== undefined) {
+    character.vitals.ac = 10 + (aMatch.baseAc || 0);
+  }
+  if (aMatch.baseDt !== undefined) {
+    character.vitals.dt = aMatch.baseDt || 0;
+  }
+
   character.inventory.splice(invIdx, 1);
   renderArmor();
   renderInventory();
   updateDerivedValues();
+  updateInventoryAndCarry();
   saveCharacter();
 }
 
 function unequipArmorToInventory() {
   if (!character.armor || character.armor.type === "none" || character.armor.type === "cloth") return;
 
+  const oldBaseLoad = character.armor.load !== undefined ? character.armor.load : 
+    ((FALLOUT_RULES_DATA.armors || []).find(a => a.id === character.armor.type) || {}).load || 10;
+
   character.inventory.push({
     id: "i_" + Date.now(),
     name: character.armor.name,
     qty: 1,
-    load: (FALLOUT_RULES_DATA.armors.find(a => a.id === character.armor.type) || { weight: 10 }).weight,
+    load: oldBaseLoad,
     cost: "100c",
     notes: `Armatura: AC ${character.vitals.ac}, DT ${character.vitals.dt}`,
     isEquippable: "armor",
@@ -4353,16 +4396,21 @@ function unequipArmorToInventory() {
 
   character.armor.name = "Abiti Semplici";
   character.armor.type = "cloth";
+  character.armor.load = 2;
   character.armor.quality = "standard";
   character.armor.legendaryEffect = "";
   character.armor.legendaryEffects = [];
   character.armor.installedUpgrades = [];
   character.armor.decay = 0;
+  character.vitals.ac = 10;
+  character.vitals.dt = 0;
 
   renderArmor();
   renderInventory();
   updateDerivedValues();
+  updateInventoryAndCarry();
   saveCharacter();
+  showToast("🛡️ Armatura riposta nello zaino. Carico aggiornato a peso intero!", "info");
 }
 
 // =============================================================================
@@ -4953,8 +5001,19 @@ function openWeaponModPicker(weaponIdx) {
   if (!Array.isArray(w.installedMods)) w.installedMods = [];
 
   const comp = getWeaponCompatibility(w);
-  const maxSlots = comp.isLegendary ? 8 : (comp.isMelee ? 4 : 6);
+  // Regola: Le armi corpo a corpo a meno che non siano leggendarie possono avere un solo UPGRADE
+  const maxSlots = comp.isLegendary ? 8 : (comp.isMelee ? 1 : 6);
   const usedSlots = (w.installedMods || []).reduce((sum, m) => sum + (m.slots || 1), 0);
+  const usedCount = (w.installedMods || []).length;
+
+  if (comp.isMelee && !comp.isLegendary && (usedCount >= 1 || usedSlots >= 1)) {
+    if (typeof showToast === "function") {
+      showToast(`⚠️ <strong>Limite Raggiunto:</strong> Le armi corpo a corpo non leggendarie possono avere <strong>un solo upgrade</strong>. Rimuovi la modifica esistente con ✕ prima di installarne una nuova (oppure rendi l'arma Leggendaria).`, "warning");
+    } else {
+      alert("⚠️ Limite Raggiunto: Le armi corpo a corpo non leggendarie possono avere un solo upgrade. Rimuovi la modifica esistente con ✕ prima di installarne una nuova.");
+    }
+    return;
+  }
 
   const filteredMods = (FALLOUT_RULES_DATA.weaponMods || []).filter(mod => {
     // 1. Cannot install duplicate of already installed mod
@@ -4962,7 +5021,7 @@ function openWeaponModPicker(weaponIdx) {
     if (alreadyIn) return false;
 
     // 2. Slot cost check
-    const modSlots = mod.slots || 1;
+    const modSlots = (comp.isMelee && !comp.isLegendary) ? 1 : (mod.slots || 1);
     if (usedSlots + modSlots > maxSlots) return false;
 
     // 3. Strict Compatibility Check via isWeaponModAllowed
@@ -4971,18 +5030,26 @@ function openWeaponModPicker(weaponIdx) {
 
   if (filteredMods.length === 0) {
     if (usedSlots >= maxSlots) {
-      alert(`⚠️ Slot modifiche esauriti per quest'arma (${usedSlots}/${maxSlots}). Rimuovi una modifica esistente con ✕ prima di aggiungerne una nuova.`);
+      const msg = (comp.isMelee && !comp.isLegendary)
+        ? `⚠️ Le armi corpo a corpo non leggendarie possono avere un solo upgrade (${usedSlots}/${maxSlots}). Rimuovi la modifica esistente con ✕ prima di aggiungerne una nuova.`
+        : `⚠️ Slot modifiche esauriti per quest'arma (${usedSlots}/${maxSlots}). Rimuovi una modifica esistente con ✕ prima di aggiungerne una nuova.`;
+      if (typeof showToast === "function") {
+        showToast(msg, "warning");
+      } else {
+        alert(msg);
+      }
     } else {
       alert(`Nessuna modifica compatibile disponibile per ${w.name} (o hai già installato tutte le mod ammesse).`);
     }
     return;
   }
 
-  openPickerModal(`MODIFICHE PER ${w.name.toUpperCase()} (Slot: ${usedSlots}/${maxSlots})`, filteredMods, (mod) => {
+  const titleSuffix = comp.isMelee && !comp.isLegendary ? " - Max 1 Upgrade Mischia" : "";
+  openPickerModal(`MODIFICHE PER ${w.name.toUpperCase()} (Slot: ${usedSlots}/${maxSlots}${titleSuffix})`, filteredMods, (mod) => {
     w.installedMods.push({
       id: mod.id,
       name: mod.name,
-      slots: mod.slots || 1,
+      slots: (comp.isMelee && !comp.isLegendary) ? 1 : (mod.slots || 1),
       effect: mod.effect || "",
       weight: mod.weight || 0,
       value: mod.value || 0
@@ -5108,35 +5175,393 @@ function addPerkCustom() {
   saveCharacter();
 }
 
-function addWeaponCompendium(category) {
+function getInventoryWeapons() {
+  if (!character || !Array.isArray(character.inventory)) return [];
+  return character.inventory.map((item, idx) => ({ item, idx })).filter(({ item }) => {
+    if (item.isEquippable === "armor") return false;
+    const n = (item.name || "").toLowerCase();
+    const notes = (item.notes || "").toLowerCase();
+    if (notes.startsWith("armatura:") || n.includes("armatura") || n.includes("corazza") || n.includes("tuta")) return false;
+
+    if (item.isEquippable === "weapon" || item.weaponData) return true;
+    if (notes.includes("arma:") || notes.includes("danno:") || notes.includes(" ap")) return true;
+    const commonWNames = ["pistola", "fucile", "mitragliatore", "coltello", "pugnale", "mazza", "spada", "laser", "plasma", "revolver", "doppietta", "carabina", "lanciafiamme", "fat man", "minigun", "tubo", "shiv", "machete", "bastone", "hunting rifle", "combat knife", "10mm"];
+    if (commonWNames.some(cw => n.includes(cw))) return true;
+    return (FALLOUT_RULES_DATA.weapons || []).some(w => w.name.toLowerCase() === n);
+  });
+}
+window.getInventoryWeapons = getInventoryWeapons;
+
+function getInventoryArmors() {
+  if (!character || !Array.isArray(character.inventory)) return [];
+  return character.inventory.map((item, idx) => ({ item, idx })).filter(({ item }) => {
+    if (item.isEquippable === "armor" || item.armorData) return true;
+    const n = (item.name || "").toLowerCase();
+    const notes = (item.notes || "").toLowerCase();
+    if (notes.includes("armatura") || notes.includes("corazza") || notes.includes("tuta") || notes.includes("protezione")) return true;
+    const commonANames = ["armatura", "corazza", "tuta", "giubbotto", "elmo", "pettorale", "veste", "cappotto", "leather", "combat armor", "metal armor", "vault suit"];
+    if (commonANames.some(ca => n.includes(ca))) return true;
+    return (FALLOUT_RULES_DATA.armors || []).some(a => a.name.toLowerCase() === n);
+  });
+}
+window.getInventoryArmors = getInventoryArmors;
+
+function openEquipWeaponModal() {
   if (!character.weapons) character.weapons = [];
-  const allWeapons = FALLOUT_RULES_DATA.weapons || [];
-  const filtered = category ? allWeapons.filter(w => (w.type || "").toLowerCase().includes(category.toLowerCase())) : allWeapons;
-  openPickerModal("AGGIUNGI ARMA DA COMPENDIO", filtered, (w) => {
-    character.weapons.push({
-      id: "w_" + Date.now(),
-      name: w.name,
-      type: w.type,
-      skill: w.skill || "armi_leggere",
-      damage: w.damage || "1d6",
-      ap: w.ap || 4,
-      range: w.range || "C",
-      ammo: w.ammo || "Nessuna",
-      installedMods: [],
-      legendaryTraits: []
+  const invWeapons = getInventoryWeapons();
+
+  if (invWeapons.length === 0) {
+    if (typeof showToast === "function") {
+      showToast("⚠️ Nessuna arma disponibile nel tuo equipaggiamento. Vai nella scheda <strong>Sopravvivenza / Inventario</strong> per caricarne dal Compendio!", "warning");
+    } else {
+      alert("Nessuna arma disponibile nel tuo equipaggiamento. Vai nella scheda Sopravvivenza / Inventario per caricarne dal Compendio!");
+    }
+    return;
+  }
+
+  const items = invWeapons.map(({ item, idx }) => ({
+    invIdx: idx,
+    name: `🎒 ${item.name}`,
+    category: `[NEL TUO EQUIPAGGIAMENTO] • ${item.weaponData?.type || item.type || "Arma"}`,
+    cost: `Q.tà: ${item.qty || 1} • Carico: ${item.load || 4}`,
+    desc: `Danno: ${item.weaponData?.damage || "1d6"} | AP: ${item.weaponData?.ap || 4} | Gittata: ${item.weaponData?.rangeMult || "C"} | ${item.notes || ""}`,
+    req: item.weaponData?.reqStr ? `FOR ${item.weaponData.reqStr}` : "-"
+  }));
+
+  openPickerModal(`EQUIPAGGIA ARMA DALL'EQUIPAGGIAMENTO (${items.length} disponibili nello zaino)`, items, (selected) => {
+    equipWeaponFromInventory(selected.invIdx);
+    if (typeof showToast === "function") {
+      showToast(`⚔️ <strong>${selected.name.replace("🎒 ", "")}</strong> equipaggiata dall'inventario!`, "success");
+    }
+  });
+}
+window.openEquipWeaponModal = openEquipWeaponModal;
+
+function openEquipArmorModal() {
+  const invArmors = getInventoryArmors();
+
+  if (invArmors.length === 0) {
+    if (typeof showToast === "function") {
+      showToast("⚠️ Nessuna armatura disponibile nel tuo equipaggiamento. Vai nella scheda <strong>Sopravvivenza / Inventario</strong> per caricarne dal Compendio!", "warning");
+    } else {
+      alert("Nessuna armatura disponibile nel tuo equipaggiamento. Vai nella scheda Sopravvivenza / Inventario per caricarne dal Compendio!");
+    }
+    return;
+  }
+
+  const items = invArmors.map(({ item, idx }) => {
+    const rawLoad = item.load !== undefined ? item.load : 10;
+    const halfLoad = Math.round((rawLoad / 2) * 10) / 10;
+    return {
+      invIdx: idx,
+      name: `🎒 ${item.name}`,
+      category: `[NEL TUO EQUIPAGGIAMENTO] • ${item.armorData?.type || "Armatura"}`,
+      cost: `Carico base: ${rawLoad} ➔ Indossata: ${halfLoad}`,
+      desc: `🛡️ ${item.notes || "Armatura pronta per essere indossata."} (Regola: indossata pesa la metà)`,
+      req: item.armorData?.strReq ? `FOR ${item.armorData.strReq}` : "-"
+    };
+  });
+
+  openPickerModal(`INDOSSA ARMATURA DALL'EQUIPAGGIAMENTO (${items.length} disponibili nello zaino)`, items, (selected) => {
+    equipArmorFromInventory(selected.invIdx);
+    if (typeof showToast === "function") {
+      showToast(`🛡️ <strong>${selected.name.replace("🎒 ", "")}</strong> indossata dall'equipaggiamento! (Peso dimezzato)`, "success");
+    }
+  });
+}
+window.openEquipArmorModal = openEquipArmorModal;
+window.openArmorCompendiumModal = openEquipArmorModal;
+
+// =============================================================================
+// OGGETTI & ACCESSORI EQUIPAGGIATI (SOTTO L'ARMATURA IN COMBATTIMENTO)
+// =============================================================================
+
+function renderEquippedGear() {
+  const container = document.getElementById("combat-equipped-gear-list");
+  if (!container) return;
+
+  if (!Array.isArray(character.equippedGear)) {
+    character.equippedGear = [];
+  }
+
+  if (character.equippedGear.length === 0) {
+    container.innerHTML = `
+      <div style="padding:14px; text-align:center; color:var(--text-dim); background:var(--bg-tertiary); border:1px dashed var(--border-color); border-radius:6px; font-size:12.5px;">
+        Nessun oggetto o accessorio equipaggiato. Clicca su <strong>+ Equipaggia da Equipaggiamento</strong> per attivare un oggetto dallo zaino.
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = character.equippedGear.map((g, idx) => `
+    <div class="equipped-gear-card" style="background:var(--bg-card); border:1.5px solid var(--border-color); border-radius:6px; padding:10px 12px; display:flex; flex-direction:column; gap:6px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:14px;">🎒</span>
+          <strong style="font-size:13.5px; color:var(--text-bright);">${escapeHtml(g.name || "Oggetto")}</strong>
+          ${g.load ? `<span style="font-size:11px; color:var(--text-dim); font-family:var(--font-mono); font-weight:700;">(Carico: ${g.load})</span>` : ""}
+        </div>
+        <button type="button" class="btn btn-sm btn-danger no-print" onclick="unequipGear(${idx})" title="Riponi nello zaino" style="padding:3px 8px; font-size:11px;">✕ Riponi nello Zaino</button>
+      </div>
+      <div class="input-group" style="margin:0;">
+        <label style="font-size:10.5px; font-weight:800; color:var(--accent); text-transform:uppercase; letter-spacing:0.04em;">Note / Stat Extra (Effetti, Bonus, Resistenze):</label>
+        <input type="text" class="input-field" value="${escapeHtml(g.extraStats || "")}" placeholder="Es. +1 PER contro abbagliamento, Visione Notturna, +10 Carico Max, Resistenza Radiazioni +10..." onchange="updateEquippedGearNote(${idx}, this.value)" style="font-size:12px; font-weight:600; padding:6px 10px;">
+      </div>
+    </div>
+  `).join("");
+}
+window.renderEquippedGear = renderEquippedGear;
+
+function updateEquippedGearNote(idx, val) {
+  if (!character.equippedGear || !character.equippedGear[idx]) return;
+  character.equippedGear[idx].extraStats = val;
+  saveCharacter();
+}
+window.updateEquippedGearNote = updateEquippedGearNote;
+
+function openEquipGearModal() {
+  if (!character.equippedGear) character.equippedGear = [];
+  const equippedInvIds = character.equippedGear.map(g => g.invId).filter(Boolean);
+
+  const availableItems = (character.inventory || []).map((item, idx) => ({ item, idx })).filter(({ item }) => {
+    // Escludi armi e armature (hanno i loro slot dedicati)
+    if (item.isEquippable === "weapon" || item.isEquippable === "armor") return false;
+    const n = (item.name || "").toLowerCase();
+    const notes = (item.notes || "").toLowerCase();
+    if (notes.startsWith("arma:") || notes.startsWith("armatura:")) return false;
+    // Escludi oggetti già equipaggiati
+    if (equippedInvIds.includes(item.id)) return false;
+    return true;
+  });
+
+  if (availableItems.length === 0) {
+    if (typeof showToast === "function") {
+      showToast("⚠️ Nessun oggetto/accessorio disponibile nello zaino. Vai nella scheda <strong>Sopravvivenza / Inventario</strong> per caricarne dal Compendio!", "warning");
+    } else {
+      alert("Nessun oggetto disponibile nello zaino. Vai nella scheda Sopravvivenza / Inventario per caricarne dal Compendio!");
+    }
+    return;
+  }
+
+  const pickerItems = availableItems.map(({ item, idx }) => ({
+    invIdx: idx,
+    invId: item.id,
+    name: `🎒 ${item.name}`,
+    category: `[NEL TUO EQUIPAGGIAMENTO] • Carico: ${item.load || 1}`,
+    cost: `Q.tà: ${item.qty || 1} • ${item.cost || ""}`,
+    desc: item.notes || "Accessorio/attrezzo pronto per essere equipaggiato."
+  }));
+
+  openPickerModal(`EQUIPAGGIA OGGETTO DALL'EQUIPAGGIAMENTO (${pickerItems.length} disponibili)`, pickerItems, (selected) => {
+    const rawItem = character.inventory[selected.invIdx];
+    character.equippedGear.push({
+      id: "eg_" + Date.now(),
+      name: rawItem ? rawItem.name : selected.name.replace("🎒 ", ""),
+      load: rawItem ? rawItem.load : 1,
+      extraStats: rawItem ? rawItem.notes : "",
+      invId: selected.invId
     });
-    renderWeapons();
-    updateDerivedValues();
+    if (rawItem) rawItem.equipped = true;
+
+    renderEquippedGear();
+    renderInventory();
+    updateInventoryAndCarry();
+    saveCharacter();
+    if (typeof showToast === "function") {
+      showToast(`🎒 <strong>${selected.name.replace("🎒 ", "")}</strong> equipaggiato negli slot attivi!`, "success");
+    }
+  });
+}
+window.openEquipGearModal = openEquipGearModal;
+
+function addCustomEquippedGear() {
+  if (!character.equippedGear) character.equippedGear = [];
+  const name = prompt("Nome dell'Accessorio / Oggetto Equipaggiato:");
+  if (!name) return;
+  const extraStats = prompt("Note / Stat Extra (es. +1 PER, +10 Carico, Visore Notturno):") || "";
+  character.equippedGear.push({
+    id: "eg_" + Date.now(),
+    name,
+    load: 1,
+    extraStats,
+    invId: null
+  });
+  renderEquippedGear();
+  updateInventoryAndCarry();
+  saveCharacter();
+}
+window.addCustomEquippedGear = addCustomEquippedGear;
+
+function unequipGear(idx) {
+  if (!character.equippedGear || !character.equippedGear[idx]) return;
+  const g = character.equippedGear[idx];
+  if (g.invId) {
+    const it = (character.inventory || []).find(x => x.id === g.invId);
+    if (it) it.equipped = false;
+  }
+  character.equippedGear.splice(idx, 1);
+  renderEquippedGear();
+  renderInventory();
+  updateInventoryAndCarry();
+  saveCharacter();
+  if (typeof showToast === "function") {
+    showToast(`🎒 <strong>${g.name}</strong> rimosso dagli slot attivi e riposto nello zaino.`, "info");
+  }
+}
+window.unequipGear = unequipGear;
+
+// =============================================================================
+// CARICAMENTO OGGETTI DAL COMPENDIO (NELLA SCHEDA INVENTARIO / EQUIPAGGIAMENTO)
+// =============================================================================
+
+function openInventoryCompendiumPicker() {
+  if (!character.inventory) character.inventory = [];
+
+  const allWeapons = (FALLOUT_RULES_DATA.weapons || []).map(w => ({
+    compType: "weapon",
+    raw: w,
+    name: `⚔️ ${w.name}`,
+    category: `[ARMA] • ${w.type || "Arma"}`,
+    cost: w.cost || "",
+    desc: `Danno: ${w.damage || "-"} | AP: ${w.ap || "-"} | Carico: ${w.load || 4} | ${w.properties || ""}`,
+    req: w.strReq ? `FOR ${w.strReq}` : "-"
+  }));
+
+  const allArmors = (FALLOUT_RULES_DATA.armors || []).map(a => {
+    const rawLoad = a.load !== undefined ? a.load : (a.weight || 10);
+    return {
+      compType: "armor",
+      raw: a,
+      name: `🛡️ ${a.name}`,
+      category: `[ARMATURA] • ${a.type || "Armatura"}`,
+      cost: a.cost || "",
+      desc: `AC: +${a.baseAc} | DT: +${a.baseDt} | Carico nello zaino: ${rawLoad} (Indossata pesa solo ${Math.round((rawLoad/2)*10)/10}!) | ${a.desc || ""}`,
+      req: a.strReq ? `FOR ${a.strReq}` : "-"
+    };
+  });
+
+  const allGear = (FALLOUT_RULES_DATA.gear || []).map(g => ({
+    compType: "gear",
+    raw: g,
+    name: `🎒 ${g.name}`,
+    category: `[ATTREZZATURA / CURA] • ${g.category || "Oggetto"}`,
+    cost: g.cost || "",
+    desc: `Carico: ${g.weight || g.load || 0.5} | ${g.effect || g.desc || ""}`,
+    req: "-"
+  }));
+
+  const allAmmo = (FALLOUT_RULES_DATA.ammo || FALLOUT_RULES_DATA.specialAmmo || []).map(m => ({
+    compType: "ammo",
+    raw: m,
+    name: `⚡ ${m.name}`,
+    category: `[MUNIZIONI] • ${m.type || "Munizioni"}`,
+    cost: m.cost || "",
+    desc: m.desc || m.effect || "Munizioni per armi da fuoco ed energia.",
+    req: "-"
+  }));
+
+  const combined = allWeapons.concat(allArmors, allGear, allAmmo);
+
+  openPickerModal(`CARICA NEL TUO EQUIPAGGIAMENTO DAL COMPENDIO (${combined.length} elementi)`, combined, (selected) => {
+    if (selected.compType === "weapon") {
+      const w = selected.raw;
+      character.inventory.push({
+        id: "inv_" + Date.now(),
+        name: w.name,
+        qty: 1,
+        load: w.load || 4,
+        cost: w.cost || "50c",
+        notes: `Arma: Danno ${w.damage}, AP ${w.ap}, ${w.properties || ""}`,
+        isEquippable: "weapon",
+        weaponData: {
+          name: w.name,
+          type: w.type || "Arma",
+          ap: w.ap || 4,
+          damage: w.damage || "1d6",
+          baseDamage: w.damage || "1d6",
+          skillBonus: 0,
+          perkBonus: 0,
+          condPenalty: 0,
+          rangeMult: w.range || "x8 / x16",
+          crit: w.crit || "20, 1d6",
+          ammoType: w.ammo || "-",
+          selectedAmmo: "Standard",
+          ammoCurrent: 0,
+          ammoMax: 0,
+          reqStr: w.strReq || 3,
+          hands: (w.properties && w.properties.toLowerCase().includes("due mani")) ? 2 : 1,
+          properties: w.properties || "",
+          installedMods: [],
+          legendaryTraits: [],
+          decay: 0,
+          load: w.load || 4
+        }
+      });
+      showToast(`⚔️ <strong>${w.name}</strong> aggiunta all'equipaggiamento! Ora puoi equipaggiarla in Combattimento.`, "success");
+    } else if (selected.compType === "armor") {
+      const a = selected.raw;
+      const rawLoad = a.load !== undefined ? a.load : (a.weight || 10);
+      character.inventory.push({
+        id: "inv_" + Date.now(),
+        name: a.name,
+        qty: 1,
+        load: rawLoad,
+        cost: a.cost || "100c",
+        notes: `Armatura: AC +${a.baseAc}, DT +${a.baseDt}, Tipo ${a.type}`,
+        isEquippable: "armor",
+        armorData: {
+          name: a.name,
+          type: a.id,
+          quality: "standard",
+          load: rawLoad,
+          baseAc: a.baseAc,
+          baseDt: a.baseDt
+        }
+      });
+      showToast(`🛡️ <strong>${a.name}</strong> aggiunta all'equipaggiamento! Ora puoi indossarla in Combattimento.`, "success");
+    } else if (selected.compType === "gear") {
+      const g = selected.raw;
+      character.inventory.push({
+        id: "inv_" + Date.now(),
+        name: g.name,
+        qty: 1,
+        load: g.weight || g.load || 0.5,
+        cost: g.cost || "25c",
+        notes: g.effect || g.desc || "",
+        isEquippable: "gear"
+      });
+      showToast(`🎒 <strong>${g.name}</strong> aggiunta allo zaino!`, "success");
+    } else {
+      const m = selected.raw;
+      character.inventory.push({
+        id: "inv_" + Date.now(),
+        name: m.name,
+        qty: 10,
+        load: 1,
+        cost: m.cost || "10c",
+        notes: m.desc || m.effect || "Munizioni",
+        isEquippable: "ammo"
+      });
+      showToast(`⚡ <strong>${m.name}</strong> (x10) aggiunte allo zaino!`, "success");
+    }
+
+    renderInventory();
+    updateInventoryAndCarry();
     saveCharacter();
   });
 }
+window.openInventoryCompendiumPicker = openInventoryCompendiumPicker;
+window.addCompendiumItemToInventory = openInventoryCompendiumPicker;
+
+function addWeaponCompendium(category) {
+  openEquipWeaponModal();
+}
 
 function addWeaponFirearm() {
-  addWeaponCompendium("arma da fuoco");
+  openEquipWeaponModal();
 }
 
 function addWeaponMelee() {
-  addWeaponCompendium("mischia");
+  openEquipWeaponModal();
 }
 
 function addInvCompendium() {
@@ -7300,8 +7725,12 @@ function saveCharacter() {
     localStorage.setItem("fallout_ttrpg_character", JSON.stringify(character));
     const ind = document.getElementById("save-status-indicator");
     if (ind) {
-      ind.textContent = "SALVATO [OK]";
-      ind.className = "save-status saved";
+      ind.textContent = "SALVATO AUTOMATICO [OK]";
+      ind.className = "tactical-save-toast is-visible";
+      clearTimeout(ind._fadeTimer);
+      ind._fadeTimer = setTimeout(() => {
+        ind.className = "tactical-save-toast";
+      }, 2500);
     }
   } catch (e) {
     console.error("Save error", e);
@@ -8670,41 +9099,174 @@ window.wizSelectBg = wizSelectBg;
 window.wizFinalize = wizFinalize;
 
 // =============================================================================
-// VERTICAL TAB NAVIGATION (CORE / COMBAT / INVENTARIO / RELAZIONI / TUTTO)
+// MODERN TACTICAL 3-TAB SYSTEM & SEGMENTED CONTROLS ENGINE
 // =============================================================================
-function selectVerticalTab(targetId) {
-  const tabs = document.querySelectorAll(".vtab-tab");
-  tabs.forEach(t => {
-    if (t.getAttribute("data-target") === targetId) {
-      t.classList.add("active");
-    } else {
-      t.classList.remove("active");
+
+function switchMainTab(tabKey) {
+  const validTabs = ["combat", "character", "survival", "interpretazione"];
+  const target = validTabs.includes(tabKey) ? tabKey : "combat";
+
+  validTabs.forEach(t => {
+    const panel = document.getElementById(`panel-${t}`);
+    const navBtn = document.getElementById(`tab-btn-${t}`);
+    const dockBtn = document.getElementById(`m-dock-btn-${t}`);
+    const isActive = (t === target);
+
+    if (panel) {
+      if (isActive) {
+        panel.classList.add("active");
+        panel.style.display = "block";
+      } else {
+        panel.classList.remove("active");
+        panel.style.display = "none";
+      }
+    }
+    if (navBtn) {
+      navBtn.classList.toggle("active", isActive);
+      navBtn.setAttribute("aria-selected", isActive ? "true" : "false");
+    }
+    if (dockBtn) {
+      dockBtn.classList.toggle("active", isActive);
+      dockBtn.setAttribute("aria-selected", isActive ? "true" : "false");
     }
   });
 
-  const sectionIds = ["row-core", "row-combat", "row-inv", "row-rel", "row-gdr", "row-tech"];
-
-  if (targetId === "all") {
-    sectionIds.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.style.display = "block";
-    });
-  } else {
-    sectionIds.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.style.display = (id === targetId) ? "block" : "none";
-      }
-    });
+  // A11y Screen Reader Announcement
+  const announcer = document.getElementById("a11y-live-announcer");
+  if (announcer) {
+    const tabNames = {
+      combat: "Pannello Combattimento: Dati Critici, Vitals e Armi",
+      character: "Pannello Personaggio: SPECIAL, Abilità, Tratti e Background",
+      survival: "Pannello Sopravvivenza: Stato Arti, Radiazioni e Inventario",
+      interpretazione: "Pannello Interpretazione: Biometria, Personalità, Storia, Relazioni e Doni"
+    };
+    announcer.textContent = tabNames[target] || target;
   }
-  if (typeof window.scrollTo === "function") window.scrollTo({ top: 0, behavior: "smooth" });
-  try { localStorage.setItem("fallout_vtab_active", targetId); } catch(e){}
+
+  try { localStorage.setItem("fallout_active_main_tab", target); } catch(e){}
+  if (typeof window !== "undefined" && typeof window.scrollTo === "function") {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+window.switchMainTab = switchMainTab;
+
+// Backward-compatibility wrappers for legacy calls
+function selectVerticalTab(targetId) {
+  const map = {
+    "row-combat": "combat",
+    "combat": "combat",
+    "weapons": "combat",
+    "armors": "combat",
+    "row-core": "character",
+    "character": "character",
+    "row-rel": "interpretazione",
+    "notes": "interpretazione",
+    "rel": "interpretazione",
+    "bio": "interpretazione",
+    "roleplay": "interpretazione",
+    "rp": "interpretazione",
+    "interpretazione": "interpretazione",
+    "row-inv": "survival",
+    "survival": "survival",
+    "inventory": "survival"
+  };
+  const tab = map[targetId] || "combat";
+  switchMainTab(tab);
 }
 window.selectVerticalTab = selectVerticalTab;
 
-// =============================================================================
-// FALLOUT MOBILE UX/UI ENGINE (ACCORDION & 5-SECTION SWITCHER)
-// =============================================================================
+function switchMobileSection(sectionKey) {
+  const map = {
+    "core": "character",
+    "perks": "character",
+    "notes": "interpretazione",
+    "rel": "interpretazione",
+    "bio": "interpretazione",
+    "roleplay": "interpretazione",
+    "interpretazione": "interpretazione",
+    "weapons": "combat",
+    "armors": "combat",
+    "survival": "survival",
+    "inventory": "survival"
+  };
+  const tab = map[sectionKey] || "combat";
+  switchMainTab(tab);
+}
+window.switchMobileSection = switchMobileSection;
+
+// Segmented Controls for Body Limbs
+function setLimbState(limbKey, status) {
+  if (!character.limbs) {
+    character.limbs = { head: "healthy", torso: "healthy", armL: "healthy", armR: "healthy", legL: "healthy", legR: "healthy" };
+  }
+
+  // Synth Adamantium Skeleton Perk check
+  if (typeof hasPerkOrTrait === "function" && (hasPerkOrTrait("adamantium_skeleton") || hasPerkOrTrait("scheletro d'adamantio") || hasPerkOrTrait("adamantium skeleton"))) {
+    if (status !== "healthy") {
+      showToast("🛡️ <strong>Scheletro d'Adamantio (Perk Synth):</strong> Immunità totale a condizioni e menomazioni agli arti!", "info");
+      syncLimbControls();
+      return;
+    }
+  }
+
+  // Robot Robobrain all-terrain rollers check
+  const isRobot = (character.info.race || "").toLowerCase() === "robot";
+  const raceVar = character.info.raceVariant || "";
+  if (isRobot && raceVar === "robot_robobrain" && (limbKey === "legL" || limbKey === "legR") && status === "severed") {
+    showToast("🧠 <strong>Robobrain:</strong> I Cingoli per Qualsiasi Terreno non possono essere recisi!", "warning");
+    character.limbs[limbKey] = "healthy";
+    renderBodyPaperdoll();
+    syncLimbControls();
+    updateDerivedValues();
+    saveCharacter();
+    return;
+  }
+
+  character.limbs[limbKey] = status;
+  renderBodyPaperdoll();
+  syncLimbControls();
+  updateDerivedValues();
+  saveCharacter();
+}
+window.setLimbState = setLimbState;
+
+function syncLimbControls() {
+  if (!character || !character.limbs) return;
+  const limbKeys = ["head", "torso", "armL", "armR", "legL", "legR"];
+  limbKeys.forEach(k => {
+    const st = character.limbs[k] || "healthy";
+    const radio = document.getElementById(`limb-ctrl-${k}-${st}`);
+    if (radio) {
+      radio.checked = true;
+    }
+  });
+}
+window.syncLimbControls = syncLimbControls;
+
+// Progressive Disclosure Accordion Toggle
+function toggleRulesAccordion(panelId, btn) {
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  const isHidden = panel.hasAttribute("hidden") || panel.style.display === "none";
+  if (isHidden) {
+    panel.removeAttribute("hidden");
+    panel.style.display = "block";
+    if (btn) {
+      btn.setAttribute("aria-expanded", "true");
+      const arrow = btn.querySelector(".disclosure-arrow");
+      if (arrow) arrow.textContent = "▲";
+    }
+  } else {
+    panel.setAttribute("hidden", "");
+    panel.style.display = "none";
+    if (btn) {
+      btn.setAttribute("aria-expanded", "false");
+      const arrow = btn.querySelector(".disclosure-arrow");
+      if (arrow) arrow.textContent = "▼";
+    }
+  }
+}
+window.toggleRulesAccordion = toggleRulesAccordion;
 
 function updateMobileHUD() {
   if (typeof document === "undefined") return;
@@ -8715,13 +9277,13 @@ function updateMobileHUD() {
 
   if (!character || !character.vitals) return;
 
-  const curHp = character.vitals.currentHp !== undefined ? character.vitals.currentHp : (document.getElementById("core-current-hp") ? document.getElementById("core-current-hp").value : "--");
-  const maxHp = character.vitals.maxHp !== undefined ? character.vitals.maxHp : (document.getElementById("core-max-hp") ? document.getElementById("core-max-hp").value : "--");
-  const curAp = character.vitals.currentAp !== undefined ? character.vitals.currentAp : (document.getElementById("core-current-ap") ? document.getElementById("core-current-ap").value : "--");
-  const maxAp = character.vitals.maxAp !== undefined ? character.vitals.maxAp : (document.getElementById("core-max-ap") ? document.getElementById("core-max-ap").value : "--");
+  const curHp = character.vitals.currentHp !== undefined ? character.vitals.currentHp : (document.getElementById("current-hp") ? document.getElementById("current-hp").value : "--");
+  const maxHp = character.vitals.maxHp !== undefined ? character.vitals.maxHp : (document.getElementById("max-hp") ? document.getElementById("max-hp").value : "--");
+  const curAp = character.vitals.currentAp !== undefined ? character.vitals.currentAp : (document.getElementById("current-ap") ? document.getElementById("current-ap").value : "--");
+  const maxAp = character.vitals.maxAp !== undefined ? character.vitals.maxAp : (document.getElementById("max-ap") ? document.getElementById("max-ap").value : "--");
   const dt = character.vitals.dt !== undefined ? character.vitals.dt : (document.getElementById("val-dt") ? document.getElementById("val-dt").value : "0");
   const rads = character.vitals.rads !== undefined ? character.vitals.rads : 0;
-  const radDc = character.vitals.radDc !== undefined ? character.vitals.radDc : (document.getElementById("core-val-rad-dc") ? document.getElementById("core-val-rad-dc").value : "12");
+  const radDc = character.vitals.radDc !== undefined ? character.vitals.radDc : (document.getElementById("val-rad-dc") ? document.getElementById("val-rad-dc").value : "12");
 
   if (hpEl) hpEl.textContent = `PF ${curHp}/${maxHp}`;
   if (apEl) apEl.textContent = `PA ${curAp}/${maxAp}`;
@@ -8729,71 +9291,6 @@ function updateMobileHUD() {
   if (radEl) radEl.textContent = `Rad ${rads} (CD ${radDc})`;
 }
 window.updateMobileHUD = updateMobileHUD;
-
-function switchMobileSection(sectionKey) {
-  if (typeof document === "undefined") return;
-  // Update mobile nav buttons state
-  const navBtns = document.querySelectorAll("#fallout-mobile-dock .mobile-nav-btn");
-  navBtns.forEach(btn => {
-    if (btn.getAttribute("data-m-target") === sectionKey) {
-      btn.classList.add("active");
-    } else {
-      btn.classList.remove("active");
-    }
-  });
-
-  const catElements = document.querySelectorAll("[data-mobile-cat]");
-  
-  if (sectionKey === "all") {
-    catElements.forEach(el => {
-      const cat = el.getAttribute("data-mobile-cat");
-      if (cat !== "desktop-only") {
-        el.classList.remove("m-cat-hidden");
-      } else {
-        el.classList.add("m-cat-hidden");
-      }
-    });
-    ["row-core", "row-combat", "row-inv", "row-rel"].forEach(id => {
-      const row = document.getElementById(id);
-      if (row) row.style.display = "block";
-    });
-  } else {
-    catElements.forEach(el => {
-      const cat = el.getAttribute("data-mobile-cat");
-      if (cat === sectionKey) {
-        el.classList.remove("m-cat-hidden");
-      } else {
-        el.classList.add("m-cat-hidden");
-      }
-    });
-
-    const rowMap = {
-      core: ["row-core"],
-      perks: ["row-core"],
-      survival: ["row-core"],
-      weapons: ["row-combat"],
-      armors: ["row-combat"],
-      inventory: ["row-inv"],
-      notes: ["row-rel"]
-    };
-
-    const targetRows = rowMap[sectionKey] || ["row-core"];
-    ["row-core", "row-combat", "row-inv", "row-rel"].forEach(id => {
-      const row = document.getElementById(id);
-      if (row) {
-        row.style.display = targetRows.includes(id) ? "block" : "none";
-      }
-    });
-  }
-
-  // Smooth scroll to top of content on mobile switch
-  if (typeof window !== "undefined" && window.innerWidth <= 900) {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  try { localStorage.setItem("fallout_mobile_active_section", sectionKey); } catch(e){}
-}
-window.switchMobileSection = switchMobileSection;
 
 function toggleMobileTopTools() {
   if (typeof document === "undefined") return;
@@ -8826,32 +9323,14 @@ function initMobileAccordion() {
 }
 window.initMobileAccordion = initMobileAccordion;
 
-// Initialize active vertical tab or mobile section on load
+// Initialize active 3-tab system, limbs and HUD on load
 document.addEventListener("DOMContentLoaded", () => {
   initMobileAccordion();
   updateMobileHUD();
+  syncLimbControls();
 
-  if (typeof window !== "undefined" && window.innerWidth <= 900) {
-    const savedMobileSection = localStorage.getItem("fallout_mobile_active_section") || "core";
-    switchMobileSection(savedMobileSection);
-  } else {
-    const savedTab = localStorage.getItem("fallout_vtab_active") || "row-core";
-    selectVerticalTab(savedTab);
-  }
-
-  if (typeof window !== "undefined") {
-    window.addEventListener("resize", () => {
-      if (window.innerWidth <= 900) {
-        const savedMobileSection = localStorage.getItem("fallout_mobile_active_section") || "core";
-        switchMobileSection(savedMobileSection);
-      } else {
-        document.querySelectorAll(".m-box-collapsed").forEach(el => el.classList.remove("m-box-collapsed"));
-        document.querySelectorAll(".m-cat-hidden").forEach(el => el.classList.remove("m-cat-hidden"));
-        const savedTab = localStorage.getItem("fallout_vtab_active") || "row-core";
-        selectVerticalTab(savedTab);
-      }
-    });
-  }
+  const savedTab = localStorage.getItem("fallout_active_main_tab") || "combat";
+  switchMainTab(savedTab);
 });
 
 window.openLevelUpModal = openLevelUpWizard;

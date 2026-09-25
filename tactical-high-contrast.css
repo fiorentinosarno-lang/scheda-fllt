@@ -1,0 +1,1408 @@
+/* =============================================================================
+   FALLOUT TTRPG - MODERN TACTICAL / HIGH CONTRAST (WCAG AAA) THEME
+   Massima Leggibilità & Usabilità • Zero Pip-Boy CRT/Scanline • Ergonomia Estrema
+   ============================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+:root {
+  /* Tipografia ad altissima leggibilità */
+  --font-family-base: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Palette Scura ad Alto Contrasto (WCAG AAA) */
+  --bg-primary: #121212;
+  --bg-secondary: #181818;
+  --bg-panel: #1e1e1e;
+  --bg-card: #252525;
+  --bg-card-hover: #2e2e2e;
+  --bg-input: #161616;
+  --bg-input-focus: #222222;
+
+  /* Colori Testo */
+  --text-main: #f5f5f5;      /* 16.6:1 su #121212 (WCAG AAA) */
+  --text-dim: #a0a0a0;       /* 7.3:1 su #121212 (WCAG AAA) */
+  --text-bright: #ffffff;    /* 18:1 su #121212 (WCAG AAA) */
+  --text-inverse: #121212;
+
+  /* Colori Semantici di Stato */
+  --semantic-hp: #ff7a7a;    /* Rosso opaco per PF */
+  --semantic-hp-bg: rgba(255, 122, 122, 0.12);
+  --semantic-hp-border: #ef5350;
+
+  --semantic-ap: #ffd54f;    /* Giallo ambra per PA */
+  --semantic-ap-bg: rgba(255, 213, 79, 0.12);
+  --semantic-ap-border: #ffca28;
+
+  --semantic-rad: #ffa726;   /* Arancione/Ambra per Radiazioni */
+  --semantic-rad-bg: rgba(255, 167, 38, 0.12);
+  --semantic-rad-border: #fb8c00;
+
+  --semantic-ac: #81d4fa;    /* Azzurro per Difesa / CA */
+  --semantic-ac-bg: rgba(129, 212, 250, 0.12);
+  --semantic-ac-border: #4fc3f7;
+
+  --semantic-dt: #cfd8dc;    /* Platino per Soglia Danni DT */
+  --semantic-dt-bg: rgba(207, 216, 220, 0.12);
+  --semantic-dt-border: #b0bec5;
+
+  --semantic-success: #81c784;
+  --semantic-warning: #ffb74d;
+  --semantic-danger: #ef5350;
+
+  /* Bordi & Struttura */
+  --border-color: #333333;
+  --border-light: #444444;
+  --border-highlight: #4da3ff;
+  --focus-ring: #4da3ff;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+
+  --line-height-base: 1.5;
+  --line-height-tight: 1.25;
+}
+
+/* =============================================================================
+   RESET & APPLICAZIONE TEMA GLOBALE AD ALTA SPECIFICITÀ
+   ============================================================================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  text-shadow: none !important;
+}
+
+html,
+body,
+body[data-theme],
+body[data-theme="vault"],
+body[data-theme="paper"],
+body[data-theme="enclave"] {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-primary) !important;
+  background: var(--bg-primary) !important;
+  color: var(--text-main) !important;
+  font-family: var(--font-family-base) !important;
+  font-size: 13.5px;
+  line-height: var(--line-height-base) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scanlines e CRT glow eliminati */
+.scanlines, .crt-flicker, .crt-glow {
+  display: none !important;
+}
+
+/* A11Y Focus Visible */
+:focus-visible {
+  outline: 2px solid var(--focus-ring) !important;
+  outline-offset: 2px !important;
+}
+
+button:focus-visible, 
+input:focus-visible, 
+select:focus-visible, 
+textarea:focus-visible {
+  outline: 2px solid var(--focus-ring) !important;
+  outline-offset: 2px !important;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Tipografia */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-base) !important;
+  font-weight: 800 !important;
+  color: var(--text-bright) !important;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.01em;
+}
+
+p, span, div, td, li, dd {
+  line-height: 1.5;
+}
+
+label, .vital-legend, legend, th, dt {
+  font-weight: 700 !important;
+  color: var(--text-main);
+  letter-spacing: 0.02em;
+}
+
+/* Icone SVG */
+.tactical-icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.tactical-icon.icon-hp { color: var(--semantic-hp); }
+.tactical-icon.icon-ap { color: var(--semantic-ap); }
+.tactical-icon.icon-rad { color: var(--semantic-rad); }
+.tactical-icon.icon-ac { color: var(--semantic-ac); }
+.tactical-icon.icon-dt { color: var(--semantic-dt); }
+.tactical-icon.icon-help { color: var(--semantic-ap); }
+
+/* =============================================================================
+   CONTAINER MASTER: RISOLUZIONE DISALLINEAMENTO CRITICO
+   ============================================================================= */
+
+.app-container {
+  max-width: 1440px !important;
+  margin: 0 auto !important;
+  padding: 16px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* CORREZIONE CHIAVE: il frame deve essere BLOCK e occupare il 100%, non flex-row! */
+.sheet-binder-frame,
+body[data-theme] .sheet-binder-frame {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 20px !important;
+  position: static !important;
+  overflow: visible !important;
+  box-shadow: none !important;
+}
+
+/* Rimuove cornici e header retro interni */
+.sheet-row {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 0 16px 0 !important;
+  box-shadow: none !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.sheet-row-heading,
+.sheet-grid-3x2,
+.vertical-tabs-edge {
+  display: none !important;
+}
+
+/* =============================================================================
+   NAVIGAZIONE A 3 TAB SUPERIORE (100% LARGHEZZA)
+   ============================================================================= */
+
+.tactical-tab-navigation {
+  display: flex !important;
+  flex-direction: row !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 6px !important;
+  gap: 8px !important;
+  margin-bottom: 22px !important;
+}
+
+.tactical-tab-btn {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  padding: 12px 16px !important;
+  background: transparent !important;
+  color: var(--text-dim) !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--radius-md) !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+.tactical-tab-btn:hover {
+  background: var(--bg-card) !important;
+  color: var(--text-bright) !important;
+}
+
+.tactical-tab-btn.active {
+  background: var(--bg-card) !important;
+  color: var(--text-bright) !important;
+  border-color: var(--border-highlight) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+.tactical-tab-btn .tab-badge {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  padding: 2px 8px !important;
+  border-radius: 12px !important;
+  background: var(--bg-secondary) !important;
+  color: var(--text-dim) !important;
+}
+
+.tactical-tab-btn.active .tab-badge {
+  background: rgba(77, 163, 255, 0.2) !important;
+  color: #90caf9 !important;
+}
+
+/* Pannelli Tab */
+.sheet-tab-panel {
+  display: none;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.sheet-tab-panel.active {
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  animation: fadeInPanel 0.2s ease-in-out;
+}
+
+@keyframes fadeInPanel {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================================================
+   TAB 1: COMBATTIMENTO - DATI PRIMARI ENORMI & GRIGLIA A 2 COLONNE
+   ============================================================================= */
+
+.primary-vitals-container {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 14px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-bottom: 16px !important;
+}
+
+.tactical-vital-card {
+  background: var(--bg-panel) !important;
+  border: 2px solid var(--border-color) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  margin: 0 !important;
+  min-height: 140px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.tactical-vital-card .vital-legend {
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-bottom: 8px !important;
+  padding: 0 !important;
+}
+
+.tactical-vital-card.card-hp {
+  border-color: rgba(255, 122, 122, 0.5) !important;
+  background: linear-gradient(180deg, rgba(255, 122, 122, 0.09) 0%, var(--bg-panel) 100%) !important;
+}
+.tactical-vital-card.card-hp .vital-legend { color: var(--semantic-hp) !important; }
+
+.tactical-vital-card.card-ap {
+  border-color: rgba(255, 213, 79, 0.5) !important;
+  background: linear-gradient(180deg, rgba(255, 213, 79, 0.09) 0%, var(--bg-panel) 100%) !important;
+}
+.tactical-vital-card.card-ap .vital-legend { color: var(--semantic-ap) !important; }
+
+.tactical-vital-card.card-ac {
+  border-color: rgba(129, 212, 250, 0.5) !important;
+  background: linear-gradient(180deg, rgba(129, 212, 250, 0.09) 0%, var(--bg-panel) 100%) !important;
+}
+.tactical-vital-card.card-ac .vital-legend { color: var(--semantic-ac) !important; }
+
+.tactical-vital-card.card-dt {
+  border-color: rgba(207, 216, 220, 0.5) !important;
+  background: linear-gradient(180deg, rgba(207, 216, 220, 0.09) 0%, var(--bg-panel) 100%) !important;
+}
+.tactical-vital-card.card-dt .vital-legend { color: var(--semantic-dt) !important; }
+
+.vital-split-row {
+  display: flex !important;
+  align-items: baseline !important;
+  justify-content: center !important;
+  gap: 6px !important;
+}
+
+.vital-massive-input {
+  font-size: 2.75rem !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+  width: 100% !important;
+  max-width: 110px !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: var(--text-bright) !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+
+.vital-massive-input:focus {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: var(--border-highlight) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+.vital-sub-badge {
+  font-size: 11px !important;
+  color: var(--text-dim) !important;
+  text-align: center !important;
+  margin-top: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+}
+
+/* Griglia Dati Periferici (6 moduli in linea orizzontale) */
+.peripheral-stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 10px !important;
+  margin-bottom: 20px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.peripheral-stat-item {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+  padding: 6px 8px !important;
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+.peripheral-stat-item label {
+  font-size: 10.5px !important;
+  color: var(--text-dim) !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.peripheral-stat-item input {
+  font-size: 13.5px !important;
+  font-weight: 800 !important;
+  padding: 4px 6px !important;
+  text-align: center !important;
+}
+
+/* Layout Combattimento a 2 Colonne (Sidebar 380px + Main fluida) */
+.combat-layout {
+  display: grid !important;
+  grid-template-columns: 380px minmax(0, 1fr) !important;
+  gap: 20px !important;
+  align-items: start !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.combat-sidebar-col {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.combat-main-col {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* =============================================================================
+   TAB 2: PERSONAGGIO - LAYOUT 340px + 1fr & SPECIAL 7-COLONNE
+   ============================================================================= */
+
+.sheet-row-cols,
+.core-three-columns,
+.core-two-columns {
+  display: grid !important;
+  grid-template-columns: 340px minmax(0, 1fr) !important;
+  gap: 20px !important;
+  align-items: start !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.core-sidebar-col {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.core-center-col {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* S.P.E.C.I.A.L. a 7 Colonne allineate */
+.special-seven-grid {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  margin: 12px 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.special-card {
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 10px 4px !important;
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+
+.special-card .special-letter {
+  font-size: 18px !important;
+  font-weight: 900 !important;
+  color: var(--text-bright) !important;
+}
+
+.special-card .special-name {
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+  color: var(--text-dim) !important;
+  text-transform: uppercase !important;
+  margin-bottom: 2px !important;
+}
+
+.special-card .special-score-input {
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  width: 44px !important;
+  height: 32px !important;
+  text-align: center !important;
+  background: var(--bg-input) !important;
+  border: 1.5px solid var(--border-color) !important;
+  color: #ffffff !important;
+  border-radius: var(--radius-sm) !important;
+  margin: 4px 0 !important;
+}
+
+.special-card .special-mod-wrap {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  color: var(--text-dim) !important;
+}
+
+.special-card .special-modifier-input {
+  width: 38px !important;
+  height: 22px !important;
+  text-align: center !important;
+  font-size: 11.5px !important;
+  font-weight: 800 !important;
+  padding: 1px !important;
+  background: var(--bg-input) !important;
+  color: var(--semantic-ac) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* Tabella 14 Abilità */
+.skills-box {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.skills-header-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 8px 10px !important;
+  background: var(--bg-secondary) !important;
+  color: var(--text-dim) !important;
+  border-bottom: 2px solid var(--border-color) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.skill-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 6px 10px !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  background: var(--bg-panel) !important;
+  color: var(--text-main) !important;
+  transition: background-color 0.15s ease;
+}
+
+.skill-row:hover {
+  background: var(--bg-card-hover) !important;
+}
+
+.skill-row:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+.skill-row.skill-tagged,
+.skill-row:has(input[type="checkbox"]:checked) {
+  background: rgba(77, 163, 255, 0.08) !important;
+  border-left: 3px solid var(--border-highlight) !important;
+}
+
+/* Tratti e Abilità di Razza a 2 Colonne */
+.traits-dual-row {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 16px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-top: 14px !important;
+}
+
+/* =============================================================================
+   TAB 3: SOPRAVVIVENZA - DASHBOARD ARTI & TRACCE
+   ============================================================================= */
+
+.survival-dashboard-grid {
+  display: grid !important;
+  grid-template-columns: 460px minmax(0, 1fr) !important;
+  gap: 20px !important;
+  align-items: start !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-bottom: 20px !important;
+}
+
+.limbs-segmented-container {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.limb-control-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 6px 10px !important;
+}
+
+.limb-label-wrap {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-width: 85px !important;
+}
+
+.limb-name {
+  font-size: 12.5px !important;
+  font-weight: 800 !important;
+  color: var(--text-bright) !important;
+}
+
+.segmented-control {
+  display: inline-flex !important;
+  background: #141414 !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 2px !important;
+  gap: 2px !important;
+  flex: 1 !important;
+}
+
+.segmented-control input[type="radio"] {
+  position: absolute !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+}
+
+.segmented-control .seg-btn {
+  flex: 1 !important;
+  text-align: center !important;
+  padding: 5px 6px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  border-radius: 3px !important;
+  cursor: pointer !important;
+  color: var(--text-dim) !important;
+  background: transparent !important;
+  transition: all 0.15s ease-in-out !important;
+  border: 1px solid transparent !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+}
+
+.segmented-control input[type="radio"]:checked + .seg-btn {
+  color: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+}
+
+.segmented-control input[type="radio"][value="healthy"]:checked + .seg-btn {
+  background: #1b5e20 !important;
+  border-color: #4caf50 !important;
+}
+
+.segmented-control input[type="radio"][value="crippled"]:checked + .seg-btn {
+  background: #b76e00 !important;
+  border-color: #ffa726 !important;
+}
+
+.segmented-control input[type="radio"][value="severed"]:checked + .seg-btn {
+  background: #b71c1c !important;
+  border-color: #ef5350 !important;
+}
+
+.limb-path {
+  cursor: pointer;
+  transition: fill 0.2s ease, stroke 0.2s ease;
+}
+.limb-path.limb-healthy { fill: #2e7d32; stroke: #4caf50; stroke-width: 1.5; }
+.limb-path.limb-crippled { fill: #e65100; stroke: #ffa726; stroke-width: 2; }
+.limb-path.limb-severed { fill: #b71c1c; stroke: #ef5350; stroke-width: 2; }
+
+/* Progressive Disclosure (Accordion Regole Radiazioni) */
+.rules-disclosure-box {
+  margin-top: 10px;
+  border: 1px solid rgba(255, 167, 38, 0.3);
+  border-radius: var(--radius-md);
+  background: rgba(255, 167, 38, 0.05);
+  overflow: hidden;
+}
+
+.btn-rules-disclosure {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  color: var(--semantic-rad);
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.btn-rules-disclosure:hover {
+  background: rgba(255, 167, 38, 0.1);
+}
+
+.rules-disclosure-content {
+  padding: 10px 12px;
+  border-top: 1px solid rgba(255, 167, 38, 0.2);
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.rules-disclosure-content[hidden] {
+  display: none !important;
+}
+
+.rad-gravity-table {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 6px;
+  margin: 8px 0;
+  font-size: 11px;
+}
+
+.rad-grav-row {
+  background: var(--bg-panel);
+  padding: 4px 8px;
+  border-radius: 3px;
+  border: 1px solid var(--border-color);
+}
+
+/* =============================================================================
+   CARD & BOX STYLING AD ALTO CONTRASTO (OVERRIDE TOTALE TEMA LIGHT)
+   ============================================================================= */
+
+body[data-theme] .col-inner-box,
+body[data-theme] .section-box,
+body[data-theme] .anatomical-card,
+body[data-theme] .bio-panel,
+body[data-theme] .photo-card,
+body[data-theme] .photo-box,
+body[data-theme] .race-box,
+body[data-theme] .bg-box,
+body[data-theme] .karma-prominent-box,
+body[data-theme] .special-prominent-box,
+body[data-theme] .perks-horizontal-box,
+body[data-theme] .traits-racial-col,
+body[data-theme] .traits-generic-col,
+body[data-theme] .combat-weapons-box,
+body[data-theme] .combat-armor-box,
+body[data-theme] .combat-quick-box,
+body[data-theme] .resistances-prominent-box,
+body[data-theme] .survival-box,
+body[data-theme] .inv-box,
+body[data-theme] .weapon-card,
+body[data-theme] .quick-weapon-card,
+body[data-theme] .perk-card,
+body[data-theme] .trait-card,
+body[data-theme] .armor-card,
+body[data-theme] .armor-part-card,
+body[data-theme] .inv-item-card {
+  background-color: var(--bg-panel) !important;
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-md) !important;
+  color: var(--text-main) !important;
+  box-shadow: none !important;
+}
+
+body[data-theme] .box-title-bar,
+body[data-theme] .section-title,
+body[data-theme] .weapon-card-header,
+body[data-theme] .trait-card-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  font-weight: 800 !important;
+  font-size: 13px !important;
+  color: var(--text-bright) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  padding-bottom: 8px !important;
+  margin-bottom: 12px !important;
+  letter-spacing: 0.03em !important;
+  text-transform: uppercase !important;
+}
+
+/* Moduli input e select */
+body[data-theme] input[type="text"],
+body[data-theme] input[type="number"],
+body[data-theme] input[type="search"],
+body[data-theme] textarea,
+body[data-theme] .input-field,
+body[data-theme] .weapon-card input.input-field,
+body[data-theme] .pill-input {
+  background-color: var(--bg-input) !important;
+  background: var(--bg-input) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 6px 8px !important;
+  font-family: var(--font-family-base) !important;
+  font-size: 13px !important;
+  box-shadow: none !important;
+}
+
+body[data-theme] select,
+body[data-theme] .input-field select,
+body[data-theme] select.input-field {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  background-color: var(--bg-input) !important;
+  background: var(--bg-input) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 6px 26px 6px 8px !important;
+  font-family: var(--font-family-base) !important;
+  font-size: 13px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a0a0a0' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 8px center !important;
+  cursor: pointer !important;
+}
+
+/* Badges arma e armature */
+body[data-theme] .weapon-stat-badge,
+body[data-theme] .weapon-card .stat-badge-box,
+body[data-theme] .to-hit-badge,
+body[data-theme] .damage-badge {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text-main) !important;
+}
+
+body[data-theme] .to-hit-badge .tactical-badge-val,
+body[data-theme] .damage-badge .tactical-badge-val {
+  color: var(--text-bright) !important;
+}
+
+/* Pulsanti */
+.btn {
+  font-family: var(--font-family-base) !important;
+  font-weight: 700 !important;
+  font-size: 12.5px !important;
+  padding: 6px 12px !important;
+  border-radius: var(--radius-sm) !important;
+  border: 1px solid var(--border-color) !important;
+  background: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease-in-out !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  text-decoration: none !important;
+}
+
+.btn:hover {
+  background: var(--bg-card-hover) !important;
+  border-color: var(--border-light) !important;
+  color: var(--text-bright) !important;
+}
+
+.btn-primary {
+  background: #1e3a5f !important;
+  border-color: #2563eb !important;
+  color: #ffffff !important;
+}
+.btn-primary:hover {
+  background: #2563eb !important;
+}
+
+.btn-success {
+  background: #14532d !important;
+  border-color: #22c55e !important;
+  color: #ffffff !important;
+}
+.btn-success:hover {
+  background: #16a34a !important;
+}
+
+.btn-danger {
+  background: #7f1d1d !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
+}
+.btn-danger:hover {
+  background: #b91c1c !important;
+}
+
+/* Floating Save Toast */
+.tactical-save-toast {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  background: #1e1e1e;
+  color: #81c784;
+  border: 1px solid #81c784;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+  z-index: 99999;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tactical-save-toast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =============================================================================
+   HEADER E SUMMARY BAR
+   ============================================================================= */
+
+.app-header {
+  background: var(--bg-secondary) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  padding: 12px 20px !important;
+}
+
+.brand-bar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 10px !important;
+}
+
+.brand-title {
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+}
+
+.brand-sub {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--text-dim) !important;
+}
+
+.sheet-summary-bar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  flex-wrap: wrap !important;
+  padding-top: 10px !important;
+  border-top: 1px solid var(--border-color) !important;
+}
+
+.summary-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.summary-group label {
+  font-size: 12px !important;
+  color: var(--text-dim) !important;
+  font-weight: 700 !important;
+}
+
+
+/* =============================================================================
+   COMPONENTE ARMI & COMBATTIMENTO AD ALTO CONTRASTO (NO SQUASHING)
+   ============================================================================= */
+
+.weapon-card {
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--border-color) !important;
+  border-left: 4px solid var(--border-highlight) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 16px !important;
+  margin-bottom: 16px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.weapon-card-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  padding-bottom: 10px !important;
+  margin-bottom: 12px !important;
+}
+
+.weapon-tactical-banner {
+  display: flex !important;
+  gap: 14px !important;
+  margin: 12px 0 !important;
+  padding: 12px !important;
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-md) !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.to-hit-badge,
+.damage-badge {
+  flex: 1 !important;
+  background: var(--bg-panel) !important;
+  border: 1.5px solid var(--border-color) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 10px 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  box-sizing: border-box !important;
+}
+
+.to-hit-badge {
+  border-color: rgba(77, 163, 255, 0.4) !important;
+}
+
+.damage-badge {
+  border-color: rgba(255, 167, 38, 0.4) !important;
+}
+
+.to-hit-badge .tactical-badge-label {
+  color: var(--semantic-ac) !important;
+  font-weight: 800 !important;
+  font-size: 11.5px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+.damage-badge .tactical-badge-label {
+  color: var(--semantic-rad) !important;
+  font-weight: 800 !important;
+  font-size: 11.5px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+.to-hit-badge .tactical-badge-val,
+.damage-badge .tactical-badge-val {
+  font-size: 26px !important;
+  font-weight: 900 !important;
+  color: var(--text-bright) !important;
+  line-height: 1.1 !important;
+}
+
+/* Griglia 6 Statistiche Arma */
+.weapon-stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 12px 0 !important;
+}
+
+.weapon-stat-unit {
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 6px 4px !important;
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.weapon-stat-unit .stat-unit-label {
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  color: var(--text-dim) !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.weapon-stat-unit .stat-unit-val,
+.weapon-stat-unit input {
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-align: center !important;
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-bright) !important;
+  padding: 4px 2px !important;
+  border-radius: 3px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Slot Rapidi */
+.quick-weapon-card {
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 10px 14px !important;
+  color: var(--text-main) !important;
+}
+
+/* Box Armature e Miglioramenti */
+.combat-armor-box,
+.combat-weapons-box,
+.combat-quick-box,
+.resistances-prominent-box {
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 16px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Tabella Inventario */
+.inv-table,
+.weapons-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin-top: 10px !important;
+}
+
+.inv-table th,
+.weapons-table th {
+  background: var(--bg-secondary) !important;
+  color: var(--text-dim) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  padding: 8px 10px !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  text-align: left !important;
+}
+
+.inv-table td,
+.weapons-table td {
+  padding: 8px 10px !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  font-size: 13px !important;
+  color: var(--text-main) !important;
+}
+
+.inv-table tr:hover td,
+.weapons-table tr:hover td {
+  background: var(--bg-card-hover) !important;
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN (SOTTO 992px E MOBILE SOTTO 768px)
+   ============================================================================= */
+
+.fallout-mobile-dock {
+  display: none;
+}
+
+@media (max-width: 992px) {
+  .primary-vitals-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .peripheral-stats-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .combat-layout,
+  .sheet-row-cols,
+  .core-three-columns,
+  .survival-dashboard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    padding: 8px !important;
+  }
+
+  .sheet-binder-frame {
+    padding: 10px !important;
+    padding-bottom: 75px !important;
+  }
+
+  .primary-vitals-container {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  .peripheral-stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+  }
+
+  .special-seven-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  .traits-dual-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .tactical-tab-navigation {
+    display: none !important;
+  }
+
+  .fallout-mobile-dock {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 60px !important;
+    background: #141414 !important;
+    border-top: 1px solid var(--border-color) !important;
+    display: flex !important;
+    z-index: 9999 !important;
+    padding: 4px 8px !important;
+    gap: 6px !important;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.8) !important;
+  }
+
+  .fallout-mobile-dock .mobile-dock-btn {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    border-radius: var(--radius-sm) !important;
+    color: var(--text-dim) !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    padding: 4px !important;
+    cursor: pointer !important;
+  }
+
+  .fallout-mobile-dock .mobile-dock-btn.active {
+    background: var(--bg-card) !important;
+    border-color: var(--border-highlight) !important;
+    color: #ffffff !important;
+  }
+
+  .mobile-top-vitals-strip {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 9998 !important;
+    background: #181818 !important;
+    border-bottom: 1px solid var(--border-color) !important;
+  }
+
+  .limb-control-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 6px !important;
+  }
+}
+
+/* =============================================================================
+   BIO & BIOMETRIA AD ALTO CONTRASTO (ALLINEAMENTO SIDEBAR SINISTRA)
+   ============================================================================= */
+
+.bio-panel {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.bio-physical-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+.bio-physical-grid .input-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+}
+
+.bio-physical-grid label {
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  color: var(--text-dim) !important;
+  text-transform: uppercase !important;
+}
+
+.bio-physical-grid input {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  padding: 5px 8px !important;
+  text-align: center !important;
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-bright) !important;
+}
+
+.bio-textarea {
+  min-height: 75px !important;
+  resize: vertical !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.bio-trait-item,
+.bio-dynamic-list > div {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 4px 8px !important;
+  margin-top: 6px !important;
+  font-size: 12.5px !important;
+}
+
+/* =============================================================================
+   TAB 4: INTERPRETAZIONE - LAYOUT 380px + 1fr & BIO CARDS
+   ============================================================================= */
+
+#panel-interpretazione .sheet-row {
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+#panel-interpretazione .sheet-row-heading {
+  margin-bottom: 16px !important;
+}
+
+#panel-interpretazione .sheet-row-cols {
+  display: grid !important;
+  grid-template-columns: 380px minmax(0, 1fr) !important;
+  gap: 20px !important;
+  align-items: start !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+#panel-interpretazione .sheet-col {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 900px) {
+  #panel-interpretazione .sheet-row-cols {
+    grid-template-columns: 1fr !important;
+  }
+}
+
