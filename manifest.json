@@ -1,0 +1,17 @@
+{
+  "name": "Fallout TTRPG - Scheda Vault-Tec",
+  "short_name": "Fallout TTRPG",
+  "description": "Scheda personaggio interattiva per Fallout TTRPG 2.1",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1d4ed8",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

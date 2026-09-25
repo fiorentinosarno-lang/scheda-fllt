@@ -1,0 +1,6 @@
+# File temporanei e di lavoro
+scratch/
+*.bak*
+*.py
+.vscode/
+.warlock/

@@ -1,0 +1,3026 @@
+<!DOCTYPE html>
+
+<html lang="it">
+
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Fallout TTRPG - Scheda Personaggio Interattiva Vault-Tec</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1d4ed8">
+
+</head>
+<body data-theme="vault">
+
+  <!-- PIP-BOY SCANLINE OVERLAY -->
+  <div class="scanlines"></div>
+
+  <!-- APPLICATION HEADER & PIP-BOY STATUS -->
+  <header class="app-header no-print">
+    <div class="brand">
+      <div class="brand-icon"></div>
+      <div>
+        <div class="brand-title">VAULT-TEC PIP-BOY 3000 Mk IV</div>
+        <div class="brand-sub">SISTEMA DI GESTIONE PERSONAGGIO - ZONA CONTAMINATA</div>
+      </div>
+    </div>
+
+    <!-- Quick action controls -->
+    <div class="header-actions">
+      <!-- Theme Switcher -->
+      <div class="theme-selector theme-switch-group" id="theme-selector-group">
+        <button type="button" class="theme-btn active" data-set-theme="vault" onclick="applyTheme('vault')" title="Tema Ufficiale Vault-Tec">VAULT-TEC</button>
+        <button type="button" class="theme-btn" data-set-theme="paper" onclick="applyTheme('paper')" title="Cartaceo / Alto Contrasto">CARTACEO</button>
+        <button type="button" class="theme-btn" data-set-theme="enclave" onclick="applyTheme('enclave')" title="Enclave Stealth">ENCLAVE</button>
+      </div>
+
+      <!-- Action buttons with official IDs -->
+      <button type="button" class="btn btn-success" id="btn-new-character" onclick="startNewCharacter()" title="Crea un nuovo personaggio da zero o avvia il Wizard guidato" style="font-weight:800; background:linear-gradient(135deg,#15803d,#16a34a); color:#fff; border:1px solid #22c55e;">👤 NUOVO PERSONAGGIO</button>
+      <button type="button" class="btn" id="btn-export-json" onclick="exportCharacterJSON()" title="Scarica il file .json del personaggio sul tuo computer">💾 SALVA FILE</button>
+      <button type="button" class="btn" id="btn-import-trigger" title="Carica un file .json salvato sul computer">📂 CARICA FILE</button>
+      <button type="button" class="btn btn-danger" id="btn-reset-sheet" onclick="resetCharacter()" title="Resetta la scheda ai valori iniziali puliti">↺ RESET SCHEDA</button>
+      <button type="button" class="btn btn-primary" id="btn-open-compendium" onclick="openCompendiumModal()">📖 COMPENDIO</button>
+      <button type="button" class="btn" id="btn-open-dice" onclick="openDiceModal()">🎲 DADI</button>
+      <button type="button" class="btn btn-primary" id="btn-open-level-up" onclick="openLevelUpWizard()">▲ LEVEL UP</button>
+      <button type="button" class="btn" id="btn-print-sheet" title="Stampa o esporta in PDF">🖨️ STAMPA</button>
+      <div class="save-status saved" id="save-status-indicator" title="Autosalvataggio attivo nel browser: ogni modifica è sempre memorizzata automaticamente">SALVATO AUTOMATICO [OK]</div>
+    </div>
+  </header>
+
+  <!-- TOP PERSISTENT SUMMARY BAR -->
+  <div class="sheet-summary-bar no-print">
+    <div class="summary-group">
+      <label for="char-name-header">Nome Personaggio</label>
+      <input type="text" id="char-name-header" class="input-field" placeholder="Es. John Cassidy">
+    </div>
+    <div class="summary-group">
+      <label for="char-player-header">Giocatore</label>
+      <input type="text" id="char-player-header" class="input-field" placeholder="Nome Giocatore">
+    </div>
+    <div class="summary-group summary-sm">
+      <label for="char-level">Livello</label>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <input type="number" id="char-level" class="input-field" value="1" min="1" max="30" onchange="onLevelInputChange(this.value)" style="width:48px; text-align:center; font-weight:bold;">
+        <button type="button" class="btn btn-sm btn-primary no-print" id="btn-trigger-level-up" onclick="openLevelUpWizard()" title="Apri procedura guidata Sali di Livello" style="padding:3px 8px; font-size:12px; font-weight:bold; white-space:nowrap;">▲ LEVEL UP</button>
+      </div>
+    </div>
+    <div class="summary-group summary-sm">
+      <label for="char-xp">Punti XP</label>
+      <input type="number" id="char-xp" class="input-field" value="0" min="0" step="50" style="width:70px; text-align:center;">
+    </div>
+    <div class="summary-actions" style="margin-left:auto;">
+      <span class="sheet-binder-note">Scheda Personaggio Fallout TTRPG &bull; Sistema 2d20</span>
+    </div>
+  </div>
+
+  <!-- MAIN CHARACTER SHEET BINDER CONTAINER -->
+  <main class="app-container layout-binder-root layout-codex-root">
+    <div class="sheet-binder-frame">
+
+      <!-- SHEET BODY (4 SEZIONI PRINCIPALI: CORE / COMBAT / INVENTARIO / RELAZIONI) -->
+      <div class="sheet-grid-3x2" id="character-sheet-main">
+
+        <!-- ===============================================================
+             SEZIONE 1: CORE (IDENTITÀ, SPECIAL, SKILLS, TRATTI & PERK)
+             =============================================================== -->
+                <!-- ===============================================================
+             SEZIONE 1: CORE (IDENTITÀ, SPECIAL, SKILLS, TRATTI & PERK)
+             =============================================================== -->
+        <section class="sheet-row" id="row-core" data-row="core">
+          <div class="sheet-row-heading">
+            <span class="sheet-row-badge">CORE</span>
+            <h2>SEZIONE CORE: IDENTITÀ, SPECIAL, ABILITÀ, TRATTI & PERK</h2>
+          </div>
+
+          <div class="sheet-row-cols core-three-columns">
+            <!-- ===============================================================
+                 COLONNA SINISTRA: FOTO, IDENTITÀ, RAZZA, BG & SOPRAVVIVENZA
+                 =============================================================== -->
+            <div class="sheet-col sheet-col-left core-sidebar-col">
+              
+              <!-- 1. FOTO PERSONAGGIO (IN ALTO A SINISTRA) -->
+              <div class="col-inner-box photo-box">
+                <div class="box-title-bar">
+                  <span>FOTO PERSONAGGIO</span>
+                  <span style="font-size:11px; color:var(--text-dim);">AVATAR</span>
+                </div>
+                <div class="photo-card">
+                  <div class="portrait-frame" id="portrait-display" title="Clicca per caricare una foto o trascinala qui">
+                    <!-- Populated by app.js -->
+                  </div>
+                  <input type="file" id="portrait-file-input" accept="image/*" style="display: none;">
+                  <div class="portrait-actions no-print" style="margin-top:6px; display:flex; gap:6px;">
+                    <button type="button" class="btn btn-sm" onclick="document.getElementById('portrait-file-input').click()" style="flex:1;">Sfoglia Foto</button>
+                    <button type="button" class="btn btn-sm btn-danger" id="btn-clear-photo" title="Rimuovi Foto">Rimuovi</button>
+                  </div>
+                  <div class="no-print" style="width: 100%; margin-top: 6px;">
+                    <select id="avatar-preset-select" class="input-field" style="font-size: 12px; padding: 4px;">
+                      <option value="">-- Avatar Predefiniti --</option>
+                      <option value="vaultboy">Vault Boy (Vault-Tec)</option>
+                      <option value="ghoul">Ghoul</option>
+                      <option value="synth">Gen-2 Synth</option>
+                      <option value="supermutant">Super Mutante</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- 3. RAZZA / ORIGINE & SOTTOTIPO -->
+              <div class="col-inner-box race-box">
+                <div class="box-title-bar">
+                  <span>RAZZA / ORIGINE</span>
+                  <span style="font-size:11px; color:var(--text-dim);">SPECIE</span>
+                </div>
+                <div class="form-grid" style="display:flex; flex-direction:column; gap:8px;">
+                  <div class="input-group">
+                    <label for="char-race">Razza / Origine</label>
+                    <select id="char-race" class="input-field" onchange="onRaceChange(this.value)">
+                      <option value="human">Umano (Human)</option>
+                      <option value="ghoul">Ghoul</option>
+                      <option value="gen2_synth">Synth Gen-2</option>
+                      <option value="robot">Robot (Handy / Protectron / Robobrain)</option>
+                      <option value="super_mutant">Super Mutante</option>
+                    </select>
+                  </div>
+                  <div class="input-group">
+                    <label for="char-race-variant">Sottotipo / Variante</label>
+                    <select id="char-race-variant" class="input-field" onchange="onRaceVariantChange(this.value)"></select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 4. BG DI PARTENZA -->
+              <div class="col-inner-box bg-box">
+                <div class="box-title-bar">
+                  <span>BG DI PARTENZA</span>
+                  <span style="font-size:11px; color:var(--text-dim);">BACKGROUND</span>
+                </div>
+                <div class="form-grid" style="display:flex; flex-direction:column; gap:8px;">
+                  <div class="input-group">
+                    <label for="char-background">Background Storico</label>
+                    <select id="char-background" class="input-field">
+                      <option value="cultist">Cultista (Cultist)</option>
+                      <option value="doctor">Dottore (Doctor)</option>
+                      <option value="drifter">Vagabondo (Drifter)</option>
+                      <option value="entertainer">Intrattenitore (Entertainer)</option>
+                      <option value="farmer">Agricoltore (Farmer)</option>
+                      <option value="guard">Guardia (Guard)</option>
+                      <option value="hermit">Eremita (Hermit)</option>
+                      <option value="journalist">Giornalista (Journalist)</option>
+                      <option value="laborer">Bracciante (Laborer)</option>
+                      <option value="mechanic">Meccanico (Mechanic)</option>
+                      <option value="mercenary">Mercenario (Mercenary)</option>
+                      <option value="pastor">Pastore (Pastor)</option>
+                      <option value="pilgrim">Pellegrino (Pilgrim)</option>
+                      <option value="pit_fighter">Gladiatore (Pit Fighter)</option>
+                      <option value="scientist">Scienziato (Scientist)</option>
+                      <option value="scribe">Scriba della Confraternita</option>
+                      <option value="soldier">Soldato / Guardia RNC</option>
+                      <option value="trader">Commerciante (Trader)</option>
+                      <option value="vault_dweller" selected>Abitante Vault (Vault Dweller)</option>
+                      <option value="wastelander">Abitante Zona (Wastelander)</option>
+                      <option value="custom">Personalizzato (Custom)</option>
+                    </select>
+                  </div>
+                  <!-- Background Tag Skills Preview & Apply Button -->
+                  <div id="bg-skills-preview" class="bg-skills-preview"></div>
+                </div>
+              </div>
+
+              <!-- 5. PARAMETRI VITALI & RISORSE (CORE) -->
+              <div class="col-inner-box vitals-box core-vitals-box">
+                <div class="box-title-bar">
+                  <span>PARAMETRI VITALI & RISORSE</span>
+                  <span class="core-col-badge" style="background:rgba(16,185,129,0.12); color:#10b981; border:1px solid rgba(16,185,129,0.3);">ONLINE</span>
+                </div>
+                <div class="vitals-column">
+                  <!-- Primary Vitals (HP, SP, AP) -->
+                  <div class="vitals-grid">
+                    <!-- Punti Stamina -->
+                    <div class="vital-widget has-tooltip" data-keyword="sp">
+                      <div class="vital-title">STAMINA (SP)</div>
+                      <div class="vital-values">
+                        <input type="number" class="vital-input" id="core-current-sp" value="10" title="SP Attuali">
+                        <span class="vital-sep">/</span>
+                        <input type="number" class="vital-input" id="core-max-sp" value="10" title="SP Massimi">
+                      </div>
+                    </div>
+
+                    <!-- Punti Ferita -->
+                    <div class="vital-widget has-tooltip" data-keyword="hp">
+                      <div class="vital-title">FERITA (HP)</div>
+                      <div class="vital-values">
+                        <input type="number" class="vital-input" id="core-current-hp" value="10" title="HP Attuali">
+                        <span class="vital-sep">/</span>
+                        <input type="number" class="vital-input" id="core-max-hp" value="10" title="HP Massimi">
+                      </div>
+                    </div>
+
+                    <!-- Punti Azione -->
+                    <div class="vital-widget has-tooltip" data-keyword="ap">
+                      <div class="vital-title">AZIONE (AP)</div>
+                      <div class="vital-values">
+                        <input type="number" class="vital-input" id="core-current-ap" value="10" title="AP Attuali">
+                        <span class="vital-sep">/</span>
+                        <input type="number" class="vital-input" id="core-max-ap" value="10" title="AP Massimi">
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Secondary Derived (Tasso Guarigione, Combat Seq, AP Riciclati, Perc Passiva, DC Rad) -->
+                  <div class="derived-stats-grid">
+                    <div class="derived-card has-tooltip" data-keyword="robustezza">
+                      <div class="derived-label" title="Tasso di Guarigione">Tasso Guarig.</div>
+                      <input type="number" class="derived-input" id="core-val-healing-rate" value="3">
+                    </div>
+                    <div class="derived-card has-tooltip" data-keyword="percezione">
+                      <div class="derived-label">Sequenza Comb.</div>
+                      <input type="number" class="derived-input" id="core-val-combat-seq" value="0">
+                    </div>
+                    <div class="derived-card has-tooltip" data-tooltip="Punti Azione riciclati (la metà non spesa dal turno precedente)">
+                      <div class="derived-label">AP Riciclati</div>
+                      <input type="number" id="core-recycled-ap" class="derived-input" value="0" min="0" max="15">
+                    </div>
+                    <div class="derived-card has-tooltip" data-tooltip="Percezione Passiva: 12 + Mod. Percezione.">
+                      <div class="derived-label">Perc. Passiva</div>
+                      <input type="number" class="derived-input" id="core-val-passive-sense" value="12">
+                    </div>
+                    <div class="derived-card has-tooltip" data-keyword="robustezza">
+                      <div class="derived-label">DC Radiazioni</div>
+                      <input type="number" class="derived-input" id="core-val-rad-dc" value="12">
+                    </div>
+                  </div>
+
+                  <!-- Statistiche di Gruppo (Party Nerve & Group Sneak & Sconto) -->
+                  <div class="party-stats-row">
+                    <div class="party-card">
+                      <div class="derived-label">Sanguefreddo Gruppo</div>
+                      <input type="number" id="core-input-party-nerve" class="input-field" value="0" style="text-align:center; font-weight:bold; padding:2px;">
+                      <span style="font-size:10px; color:var(--text-dim);">Somma mod CAR / 2</span>
+                    </div>
+                    <div class="party-card">
+                      <div class="derived-label">Sneak di Gruppo</div>
+                      <input type="number" id="core-input-group-sneak" class="input-field" value="0" style="text-align:center; font-weight:bold; padding:2px;">
+                      <span style="font-size:10px; color:var(--text-dim);">Media mod Sneak</span>
+                    </div>
+                    <div class="party-card">
+                      <div class="derived-label">Sconto Mercante</div>
+                      <div class="derived-val" id="core-val-discount">% Barter</div>
+                      <span style="font-size:10px; color:var(--text-dim);">1 volta per riposo</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 5b. RESISTENZE, IMMUNITÀ & SUSCETTIBILITÀ (CORE - SOPRA LO STATO ANATOMICO ARTI) -->
+              <div class="col-inner-box resistances-prominent-box" id="core-resistances-container-box" style="margin-top: 4px;">
+                <div class="box-title-bar">
+                  <div style="display:flex; align-items:center; gap:6px;">
+                    <span>🛡️ RESISTENZE, IMMUNITÀ & SUSCETTIBILITÀ</span>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:6px;">
+                    <span class="core-col-badge badge-defense" style="background:rgba(59,130,246,0.12); color:#2563eb; border:1px solid rgba(59,130,246,0.3);">DIFESE & BUFF</span>
+                    <button type="button" class="btn btn-sm no-print" onclick="openAddCustomResistanceModal()" title="Aggiungi una resistenza o immunità custom" style="padding:2px 8px; font-size:11px;">+ Aggiungi</button>
+                  </div>
+                </div>
+
+                <!-- Timed buffs & Perks banner (CORE) -->
+                <div id="core-active-perks-resistances-banner" style="display:none; margin: 6px 8px 4px 8px; padding: 6px 8px; border-radius: 4px; font-size: 11.5px; background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.25);">
+                  <!-- Injected by app.js -->
+                </div>
+
+                <div class="resistances-section" style="border:none; padding:4px 4px 6px 4px; margin-top:0; box-shadow:none; background:transparent;">
+                  <div class="resistances-grid" style="margin-top:4px;">
+                    <!-- Resistenze (Danno Dimezzato) -->
+                    <div class="resist-col resist-col-half">
+                      <div class="resist-col-header">
+                        <div class="resist-header-top">
+                          <span class="resist-icon">[½]</span>
+                          <span class="resist-title" title="Resistenze (Danno Dimezzato)">RESISTENZE</span>
+                        </div>
+                        <span class="resist-desc-sub">Danno ½</span>
+                      </div>
+                      <div id="core-resistances-list" class="resist-chips-container">
+                        <!-- Injected by app.js -->
+                      </div>
+                    </div>
+
+                    <!-- Immunità (Danno 0 / Immune) -->
+                    <div class="resist-col resist-col-immune">
+                      <div class="resist-col-header">
+                        <div class="resist-header-top">
+                          <span class="resist-icon">[0]</span>
+                          <span class="resist-title" title="Immunità (Danno 0)">IMMUNITÀ</span>
+                        </div>
+                        <span class="resist-desc-sub">Danno 0 (Immune)</span>
+                      </div>
+                      <div id="core-immunities-list" class="resist-chips-container">
+                        <!-- Injected by app.js -->
+                      </div>
+                    </div>
+
+                    <!-- Suscettibilità / Vulnerabilità (Danno x2) -->
+                    <div class="resist-col resist-col-vuln">
+                      <div class="resist-col-header">
+                        <div class="resist-header-top">
+                          <span class="resist-icon">[2×]</span>
+                          <span class="resist-title" title="Suscettibilità (Danno x2)">SUSCETTIBILITÀ</span>
+                        </div>
+                        <span class="resist-desc-sub">Danno 2×</span>
+                      </div>
+                      <div id="core-vulnerabilities-list" class="resist-chips-container">
+                        <!-- Injected by app.js -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 6. STATO ANATOMICO ARTI (CORE) -->
+              <div class="col-inner-box paperdoll-box core-paperdoll-box">
+                <div class="box-title-bar">
+                  <span>STATO ANATOMICO ARTI</span>
+                  <span class="core-col-badge badge-traits">DANNI & MENOMAZIONI</span>
+                </div>
+                <div class="anatomical-card" id="core-anatomical-body-card">
+                  <div class="anatomical-header">
+                    <span>STATO ARTI & ANATOMIA</span>
+                    <span style="font-size:10px; color:var(--text-dim);">[Clicca per alternare: Sano / Menomato / Reciso]</span>
+                  </div>
+                  <div class="anatomical-body-wrap">
+                    <svg class="body-silhouette-svg" viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">
+                      <circle id="core-limb-head" class="limb-path limb-healthy" cx="50" cy="18" r="11" onclick="toggleLimb('head')" />
+                      <path id="core-limb-torso" class="limb-path limb-healthy" d="M38,32 L62,32 L60,70 L40,70 Z" onclick="toggleLimb('torso')" />
+                      <path id="core-limb-armL" class="limb-path limb-healthy" d="M64,34 L76,46 L82,72 L76,74 L70,52 L62,38 Z" onclick="toggleLimb('armL')" />
+                      <path id="core-limb-armR" class="limb-path limb-healthy" d="M36,34 L24,46 L18,72 L24,74 L30,52 L38,38 Z" onclick="toggleLimb('armR')" />
+                      <path id="core-limb-legL" class="limb-path limb-healthy" d="M52,72 L61,72 L64,106 L66,124 L56,124 L54,104 L52,72 Z" onclick="toggleLimb('legL')" />
+                      <path id="core-limb-legR" class="limb-path limb-healthy" d="M39,72 L48,72 L48,104 L44,124 L34,124 L36,106 L39,72 Z" onclick="toggleLimb('legR')" />
+                    </svg>
+                  </div>
+                  <!-- Quick action limb buttons -->
+                  <div class="limbs-quick-grid" id="core-limbs-quick-grid">
+                    <button type="button" class="limb-quick-btn status-healthy" id="core-btn-limb-head" onclick="toggleLimb('head')">TESTA: SANA</button>
+                    <button type="button" class="limb-quick-btn status-healthy" id="core-btn-limb-torso" onclick="toggleLimb('torso')">TORSO: SANO</button>
+                    <button type="button" class="limb-quick-btn status-healthy" id="core-btn-limb-armL" onclick="toggleLimb('armL')">BRACCIO SX: SANO</button>
+                    <button type="button" class="limb-quick-btn status-healthy" id="core-btn-limb-armR" onclick="toggleLimb('armR')">BRACCIO DX: SANO</button>
+                    <button type="button" class="limb-quick-btn status-healthy" id="core-btn-limb-legL" onclick="toggleLimb('legL')">GAMBA SX: SANA</button>
+                    <button type="button" class="limb-quick-btn status-healthy" id="core-btn-limb-legR" onclick="toggleLimb('legR')">GAMBA DX: SANA</button>
+                  </div>
+                  <!-- Penalties summary banner -->
+                  <div class="limb-penalty-banner" id="core-limb-penalties">
+                    <span class="limb-status-indicator limb-ind-healthy"></span>
+                    <span>Nessuna menomazione: corpo in piena efficienza operativa.</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 7. SEZIONE SOPRAVVIVENZA -->
+              <div class="col-inner-box survival-box">
+                <div class="box-title-bar">
+                  <span>SEZIONE SOPRAVVIVENZA</span>
+                  <span style="font-size:11px; color:var(--text-dim);">CONDIZIONI</span>
+                </div>
+                <div class="survival-panel-inner" style="display:flex; flex-direction:column; gap:8px;">
+                  <div style="font-size:11px; color:var(--text-dim); margin-bottom:2px;">Tracce di Sopravvivenza & Radiazioni (clicca sui quadrati):</div>
+                  <!-- Fame -->
+                  <div class="survival-row">
+                    <span class="survival-label">Fame (0-10):</span>
+                    <div class="pips-row" id="hunger-pips"></div>
+                  </div>
+                  <!-- Disidratazione -->
+                  <div class="survival-row">
+                    <span class="survival-label">Disidratazione:</span>
+                    <div class="pips-row" id="dehydration-pips"></div>
+                  </div>
+                  <!-- Stanchezza -->
+                  <div class="survival-row">
+                    <span class="survival-label">Stanchezza:</span>
+                    <div class="pips-row" id="exhaustion-pips"></div>
+                  </div>
+                  <!-- Fatica -->
+                  <div class="survival-row">
+                    <span class="survival-label">Fatica (0-9):</span>
+                    <div class="pips-row" id="fatigue-pips"></div>
+                  </div>
+                  <!-- Radiazioni -->
+                  <div class="survival-row">
+                    <span class="survival-label" style="color:var(--warning);">Radiazioni:</span>
+                    <div class="pips-row" id="rad-pips"></div>
+                  </div>
+                  <!-- Riepilogo & Calcolo Malus Sopravvivenza -->
+                  <div id="survival-malus-summary" class="survival-malus-summary"></div>
+
+                  <!-- RADIAZIONI & CONTAMINAZIONE (PAG. 124) -->
+                  <div class="radiation-detailed-panel" id="radiation-detailed-panel" style="margin-top:6px; padding:8px; background:rgba(217, 119, 6, 0.08); border:1px solid rgba(217, 119, 6, 0.3); border-radius:6px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                      <span style="font-weight:800; font-size:12px; color:var(--accent-amber, #d97706); display:flex; align-items:center; gap:4px;">
+                        ☢️ CONTAMINAZIONE & CD RAD (PAG. 124)
+                      </span>
+                      <span id="radiation-dc-badge" style="font-size:11px; font-weight:800; background:#fef3c7; color:#b45309; padding:1px 6px; border-radius:3px; border:1px solid #fde68a;">
+                        CD ATTUALE: 12
+                      </span>
+                    </div>
+                    <div style="font-size:11px; color:var(--text-dim); line-height:1.4; margin-bottom:6px;" id="radiation-dc-explanation">
+                      Formula: <strong>12 - Modificatore Costituzione</strong>. Ogni successo in zona irradiata aumenta la CD di <strong>+2</strong> fino a totale decontaminazione.
+                    </div>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                      <button type="button" class="btn btn-xs btn-outline-warning" onclick="rollRadiationCheck()" style="font-size:11px; font-weight:800; padding:3px 8px; flex:1;" title="Tira 1d20 contro la tua CD Radiazioni attuale">
+                        🎲 Test Radiazioni
+                      </button>
+                      <button type="button" class="btn btn-xs btn-outline-info" onclick="toggleRadiationSeverityGuide()" style="font-size:11px; font-weight:800; padding:3px 8px;" title="Mostra tabella frequenza test per gravità zona 1-7">
+                        ℹ️ Tabella Gravità
+                      </button>
+                      <button type="button" class="btn btn-xs btn-outline-success" onclick="cleanseRadiationDoses()" style="font-size:11px; font-weight:800; padding:3px 8px;" title="Usa RadAway o decontaminati: azzera i Rads e resetta l'accumulo di CD">
+                        💊 Rimuovi Rads
+                      </button>
+                    </div>
+                    <!-- Tabella Gravità Espandibile -->
+                    <div id="radiation-severity-guide" style="display:none; margin-top:6px; font-size:10.5px; background:rgba(0,0,0,0.25); padding:6px; border-radius:4px; line-height:1.35; color:var(--text-bright);">
+                      <div style="font-weight:800; margin-bottom:4px; color:var(--accent-amber);">Frequenza Test d20 per Livello Gravità Zona:</div>
+                      <div>• <strong>Livello 1</strong>: Ogni 1 ora (0.05 Rads/s)</div>
+                      <div>• <strong>Livello 2</strong>: Ogni 30 minuti (0.1 Rads/s)</div>
+                      <div>• <strong>Livello 3</strong>: Ogni 10 minuti (0.3 Rads/s)</div>
+                      <div>• <strong>Livello 4</strong>: Ogni 3 minuti (1 Rads/s)</div>
+                      <div>• <strong>Livello 5</strong>: Ogni 1 minuto (3 Rads/s)</div>
+                      <div>• <strong>Livello 6</strong>: Ogni 30 secondi (5 Rads/s)</div>
+                      <div>• <strong>Livello 7</strong>: Ogni 6 secondi / 1 round (30 Rads/s - Ground Zero)</div>
+                      <div style="margin-top:4px; color:#ef4444; font-weight:700;">⚠ Al 10° livello di Rads o 0 HP da rad: Morte. Tira Fortuna (CD 20): con successo rinasci Ghoul (1 HP); con meno di 5 rinasci Ghoul Ferale!</div>
+                    </div>
+                    <!-- Avviso se Rads >= 10 o pulsante Ghoul -->
+                    <div id="radiation-critical-alert" style="display:none; margin-top:6px;"></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ===============================================================
+                 COLONNA CENTRALE: SPECIAL (ATTRIBUTI BASE) & ABILITÀ (14 SKILL)
+                 =============================================================== -->
+            <div class="sheet-col sheet-col-center core-center-col">
+              
+              <!-- 1. TAPPI KARMA NUKA-COLA (SOPRA I PUNTI SPECIAL) -->
+              <div class="col-inner-box karma-prominent-box">
+                <div class="box-title-bar">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span>⭐ TAPPI KARMA NUKA-COLA</span>
+                    <span id="karma-status-badge" class="core-col-badge badge-perks" style="background:#fee2e2; color:#991b1b; border:1px solid #fca5a5;">1 ATTIVO</span>
+                  </div>
+                  <div id="karma-breakdown-text" style="font-size:12px; color:var(--text-dim);" title="Tappi Karma Nuka-Cola">
+                    Capacità: <strong id="karma-caps-val" style="color:var(--text-bright);">1</strong> / <strong id="karma-caps-max">3</strong> Tappi Karma
+                  </div>
+                </div>
+                <div class="karma-bar-horizontal" style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:4px 0;">
+                  <div id="karma-caps-container" class="karma-caps-container karma-caps-row" style="display:flex; gap:8px; align-items:center;">
+                    <!-- Injected by app.js -->
+                  </div>
+                  <div class="karma-controls-row no-print" style="display:flex; align-items:center; gap:6px;">
+                    <button type="button" class="btn btn-sm" id="btn-sub-karma" title="Riduci Tappi">-</button>
+                    <button type="button" class="btn btn-sm" id="btn-add-karma" title="Aumenta Tappi">+</button>
+                    <button type="button" class="btn btn-sm" id="karma-flip-btn" style="margin-left:4px;">ATTIVA/SPENDI</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. S.P.E.C.I.A.L. (50% DI VISIBILITÀ / LA BASE DEL PG) -->
+              <div class="col-inner-box special-prominent-box">
+                <div class="box-title-bar">
+                  <span class="special-title-heading">S &bull; P &bull; E &bull; C &bull; I &bull; A &bull; L</span>
+                  <div class="special-points-pool" id="special-pool-info">Totale Punti: 35/38</div>
+                </div>
+
+                <div class="special-seven-grid">
+                  <!-- S - FORZA -->
+                  <div class="special-card has-tooltip" data-keyword="forza">
+                    <div class="special-letter">S</div>
+                    <div class="special-name">FORZA</div>
+                    <div class="special-score-wrap">
+                      <input type="number" class="special-score-input" id="stat-strength" value="5" min="1" max="30" oninput="updateStatScore('strength', this.value)">
+                    </div>
+                    <div class="special-mod-wrap">
+                      <span class="special-mod-label">MOD</span>
+                      <input type="text" class="special-modifier-input" id="mod-strength" value="+0" oninput="updateStatMod('strength', this.value)" title="Modificatore Forza (Modificabile)">
+                    </div>
+                  </div>
+
+                  <!-- P - PERCEZIONE -->
+                  <div class="special-card has-tooltip" data-keyword="percezione">
+                    <div class="special-letter">P</div>
+                    <div class="special-name">PERCEZIONE</div>
+                    <div class="special-score-wrap">
+                      <input type="number" class="special-score-input" id="stat-perception" value="5" min="1" max="30" oninput="updateStatScore('perception', this.value)">
+                    </div>
+                    <div class="special-mod-wrap">
+                      <span class="special-mod-label">MOD</span>
+                      <input type="text" class="special-modifier-input" id="mod-perception" value="+0" oninput="updateStatMod('perception', this.value)" title="Modificatore Percezione (Modificabile)">
+                    </div>
+                  </div>
+
+                  <!-- E - ROBUSTEZZA -->
+                  <div class="special-card has-tooltip" data-keyword="robustezza">
+                    <div class="special-letter">E</div>
+                    <div class="special-name">ROBUSTEZZA</div>
+                    <div class="special-score-wrap">
+                      <input type="number" class="special-score-input" id="stat-endurance" value="5" min="1" max="30" oninput="updateStatScore('endurance', this.value)">
+                    </div>
+                    <div class="special-mod-wrap">
+                      <span class="special-mod-label">MOD</span>
+                      <input type="text" class="special-modifier-input" id="mod-endurance" value="+0" oninput="updateStatMod('endurance', this.value)" title="Modificatore Robustezza (Modificabile)">
+                    </div>
+                  </div>
+
+                  <!-- C - CARISMA -->
+                  <div class="special-card has-tooltip" data-keyword="carisma">
+                    <div class="special-letter">C</div>
+                    <div class="special-name">CARISMA</div>
+                    <div class="special-score-wrap">
+                      <input type="number" class="special-score-input" id="stat-charisma" value="5" min="1" max="30" oninput="updateStatScore('charisma', this.value)">
+                    </div>
+                    <div class="special-mod-wrap">
+                      <span class="special-mod-label">MOD</span>
+                      <input type="text" class="special-modifier-input" id="mod-charisma" value="+0" oninput="updateStatMod('charisma', this.value)" title="Modificatore Carisma (Modificabile)">
+                    </div>
+                  </div>
+
+                  <!-- I - INTELLIGENZA -->
+                  <div class="special-card has-tooltip" data-keyword="intelligenza">
+                    <div class="special-letter">I</div>
+                    <div class="special-name">INTELLIGENZA</div>
+                    <div class="special-score-wrap">
+                      <input type="number" class="special-score-input" id="stat-intelligence" value="5" min="1" max="30" oninput="updateStatScore('intelligence', this.value)">
+                    </div>
+                    <div class="special-mod-wrap">
+                      <span class="special-mod-label">MOD</span>
+                      <input type="text" class="special-modifier-input" id="mod-intelligence" value="+0" oninput="updateStatMod('intelligence', this.value)" title="Modificatore Intelligenza (Modificabile)">
+                    </div>
+                  </div>
+
+                  <!-- A - AGILITÀ -->
+                  <div class="special-card has-tooltip" data-keyword="agilita">
+                    <div class="special-letter">A</div>
+                    <div class="special-name">AGILITÀ</div>
+                    <div class="special-score-wrap">
+                      <input type="number" class="special-score-input" id="stat-agility" value="5" min="1" max="30" oninput="updateStatScore('agility', this.value)">
+                    </div>
+                    <div class="special-mod-wrap">
+                      <span class="special-mod-label">MOD</span>
+                      <input type="text" class="special-modifier-input" id="mod-agility" value="+0" oninput="updateStatMod('agility', this.value)" title="Modificatore Agilità (Modificabile)">
+                    </div>
+                  </div>
+
+                  <!-- L - FORTUNA -->
+                  <div class="special-card has-tooltip" data-keyword="fortuna">
+                    <div class="special-letter">L</div>
+                    <div class="special-name">FORTUNA</div>
+                    <div class="special-score-wrap">
+                      <input type="number" class="special-score-input" id="stat-luck" value="5" min="1" max="30" oninput="updateStatScore('luck', this.value)">
+                    </div>
+                    <div class="special-mod-wrap">
+                      <span class="special-mod-label">MOD</span>
+                      <input type="text" class="special-modifier-input" id="mod-luck" value="+0" oninput="updateStatMod('luck', this.value)" title="Modificatore Fortuna (Modificabile)">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. PERK & TALENTI (SOTTO GLI SPECIAL, DISTESI IN ORIZZONTALE) -->
+              <div class="col-inner-box perks-horizontal-box">
+                <div class="box-title-bar">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span>PERK & TALENTI</span>
+                    <span class="core-col-badge badge-perks">TALENTI</span>
+                  </div>
+                  <div class="no-print" style="display:flex; gap:6px;">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleAllPerksLang()" title="Cambia la lingua di tutti i perk tra Italiano e Inglese Manuale" style="font-size:12px; font-weight:800;">🌐 Lingua IT / EN</button>
+                    <button type="button" class="btn btn-sm" id="btn-add-perk-comp" onclick="addPerkCompendium()">+ Compendio</button>
+                    <button type="button" class="btn btn-sm" id="btn-add-perk-custom" onclick="addPerkCustom()">+ Custom</button>
+                  </div>
+                </div>
+                <div class="perks-list perks-grid-horizontal" id="perks-list">
+                  <!-- Populated dynamically by app.js -->
+                </div>
+              </div>
+
+              <!-- CONNETTORE DIVISORE (FALLOUT STYLE) -->
+              <div class="special-to-skills-connector" style="margin: 4px 0 10px 0;">
+                <div class="connector-line">
+                  <span>ABILITÀ UFFICIALI (14 SKILL)</span>
+                </div>
+                <div class="connector-sub">Gli attributi determinano la base di ogni abilità. Il Background conferisce +2 a 3 abilità Tag selezionate.</div>
+              </div>
+
+              <!-- SOTTO: SKILL (TABELLA COMPLETA A TUTTA LARGHEZZA) -->
+              <div class="col-inner-box skills-box">
+                <div class="box-title-bar">
+                  <span>ABILITÀ UFFICIALI (14 SKILL)</span>
+                  <span style="font-size:11px; color:var(--text-dim);">SPECIAL + PUNTI + TAG (+2)</span>
+                </div>
+                
+                <!-- Skills Table Header -->
+                <div class="skills-header-row">
+                  <span style="width:32px; text-align:center; font-weight:bold; color:var(--accent-glow);" title="Abilità di Background (+2): Seleziona le 3 abilità scelte dal tuo Background al 1° Livello (Manuale Pag. 4 e 19)">BG</span>
+                  <span style="flex:1;">ABILITÀ</span>
+                  <span style="width:38px; text-align:center;">ATTR</span>
+                  <span style="width:44px; text-align:center;" title="Bonus Caratteristica + Fortuna/2">BASE</span>
+                  <span style="width:10px; text-align:center;">+</span>
+                  <span style="width:42px; text-align:center;" title="Punti Abilità Assegnati">PUNTI</span>
+                  <span style="width:10px; text-align:center;">+</span>
+                  <span style="width:42px; text-align:center;" title="Punti Extra (Equip/Master/Tag)">EXTRA</span>
+                  <span style="width:10px; text-align:center;">=</span>
+                  <span style="width:52px; text-align:center; font-weight:bold;">TOTALE</span>
+                </div>
+
+                <div class="skills-table" id="skills-list-body">
+                  <!-- 14 Skills injected dynamically by app.js -->
+                </div>
+
+                <div style="font-size:11px; color:var(--text-dim); margin-top:8px; line-height:1.4;">
+                  * <strong>BG (+2)</strong>: Le 3 abilità scelte dal Background al 1° livello ricevono un bonus permanente di +2 (Manuale pag. 4, 19).<br>
+                  * Formula: <strong>Base (Mod. Attr + Mod. Fortuna) + Punti + BG (+2) + Extra = TOTALE</strong>. Clicca su [ATTR] per alternare l'attributo ove previsto.
+                </div>
+              </div>
+
+              <!-- 5. TRATTI & ABILITÀ DI RAZZA + TRATTI DEL PERSONAGGIO (SOTTO LA SECONDA COLONNA, DISTESI FINO ALLA FINE) -->
+              <div class="traits-dual-row">
+                
+                <!-- 1. TRATTI & ABILITÀ DI RAZZA -->
+                <div class="col-inner-box traits-racial-col">
+                  <div class="box-title-bar" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span>TRATTI &amp; ABILITÀ DI RAZZA</span>
+                      <span class="core-col-badge badge-racial">ORIGINE</span>
+                    </div>
+                    <div class="no-print">
+                      <button type="button" class="btn btn-sm" id="btn-add-custom-racial-trait" onclick="addCustomRacialTrait()">+ Tratto Master</button>
+                    </div>
+                  </div>
+                  <div class="racial-bonuses-box" id="racial-bonuses-box">
+                    <div class="racial-innate-container" id="racial-innate-container">
+                      <!-- Injected by app.js: Innate racial traits -->
+                    </div>
+                    <div class="racial-optional-container">
+                      <div style="font-size:12px; color:var(--text-bright); text-transform:uppercase; font-weight:800; letter-spacing:0.5px; margin:6px 0 4px 0;">
+                        Varianti &amp; Opzioni Master:
+                      </div>
+                      <div id="racial-optional-list" class="racial-optional-list">
+                        <!-- Checkboxes injected by app.js -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2. TRATTI DEL PERSONAGGIO (TRAITS) -->
+                <div class="col-inner-box traits-generic-col">
+                  <div class="box-title-bar" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span>TRATTI DEL PERSONAGGIO</span>
+                      <span class="core-col-badge badge-traits">TRAITS</span>
+                    </div>
+                    <div class="no-print" style="display:flex; gap:5px;">
+                      <button type="button" class="btn btn-sm" id="btn-add-trait-comp" onclick="addTraitCompendium()">+ Compendio</button>
+                      <button type="button" class="btn btn-sm" id="btn-add-trait-custom" onclick="addTraitCustom()">+ Custom</button>
+                    </div>
+                  </div>
+                  <div class="traits-list" id="traits-list-container">
+                    <!-- Populated dynamically by app.js with Rank controls -->
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- ===============================================================
+             SEZIONE 2: COMBAT (ARMI IMPUGNATE, TO HIT, DAMAGE, ARMATURA & VITALI)
+             =============================================================== -->
+        <section class="sheet-row" id="row-combat" data-row="combat">
+          <div class="sheet-row-heading">
+            <span class="sheet-row-badge">COMBAT</span>
+            <h2>SEZIONE COMBAT: ARMA IMPUGNATA, TO HIT, DAMAGE, ARMATURA & RISORSE VITALI</h2>
+          </div>
+
+          <div class="sheet-row-cols combat-layout">
+            <!-- COLONNA SINISTRA (~380px): RISORSE VITALI, PAPERDOLL & KARMA -->
+            <div class="sheet-col sheet-col-left combat-sidebar-col">
+              <!-- Parametri Vitali -->
+              <div class="col-inner-box vitals-box">
+                <div class="box-title-bar">
+                  <span>PARAMETRI VITALI & RISORSE</span>
+                  <span class="core-col-badge" style="background:rgba(16,185,129,0.12); color:#10b981; border:1px solid rgba(16,185,129,0.3);">ONLINE</span>
+                </div>
+                <div class="vitals-column">
+                  <!-- Primary Vitals (HP, SP, AP) -->
+                  <div class="vitals-grid">
+                    <!-- Punti Stamina -->
+                    <div class="vital-widget has-tooltip" data-keyword="sp">
+                      <div class="vital-title">STAMINA (SP)</div>
+                      <div class="vital-values">
+                        <input type="number" class="vital-input" id="current-sp" value="10" title="SP Attuali">
+                        <span class="vital-sep">/</span>
+                        <input type="number" class="vital-input" id="max-sp" value="10" title="SP Massimi (Modificabile)">
+                      </div>
+                    </div>
+
+                    <!-- Punti Ferita -->
+                    <div class="vital-widget has-tooltip" data-keyword="hp">
+                      <div class="vital-title">FERITA (HP)</div>
+                      <div class="vital-values">
+                        <input type="number" class="vital-input" id="current-hp" value="10" title="HP Attuali">
+                        <span class="vital-sep">/</span>
+                        <input type="number" class="vital-input" id="max-hp" value="10" title="HP Massimi (Modificabile)">
+                      </div>
+                    </div>
+
+                    <!-- Punti Azione -->
+                    <div class="vital-widget has-tooltip" data-keyword="ap">
+                      <div class="vital-title">AZIONE (AP)</div>
+                      <div class="vital-values">
+                        <input type="number" class="vital-input" id="current-ap" value="10" title="AP Attuali">
+                        <span class="vital-sep">/</span>
+                        <input type="number" class="vital-input" id="max-ap" value="10" title="AP Massimi (Modificabile)">
+                      </div>
+                    </div>
+                  </div>
+
+
+<!-- Secondary Derived (Tasso Guarigione, Combat Seq, AP Riciclati, Perc Passiva, DC Rad) -->
+
+<div class="derived-stats-grid">
+
+<div class="derived-card has-tooltip" data-keyword="robustezza">
+
+<div class="derived-label" title="Tasso di Guarigione">Tasso Guarig.</div>
+
+<input type="number" class="derived-input" id="val-healing-rate" value="3">
+
+</div>
+
+<div class="derived-card has-tooltip" data-keyword="percezione">
+
+<div class="derived-label">Sequenza Comb.</div>
+
+<input type="number" class="derived-input" id="val-combat-seq" value="0">
+
+</div>
+
+<div class="derived-card has-tooltip" data-tooltip="Punti Azione riciclati (la metà non spesa dal turno precedente)">
+
+<div class="derived-label">AP Riciclati</div>
+
+<input type="number" id="recycled-ap" class="derived-input" value="0" min="0" max="15">
+
+</div>
+
+<div class="derived-card has-tooltip" data-tooltip="Percezione Passiva: 12 + Mod. Percezione.">
+
+<div class="derived-label">Perc. Passiva</div>
+
+<input type="number" class="derived-input" id="val-passive-sense" value="12">
+
+</div>
+
+<div class="derived-card has-tooltip" data-keyword="robustezza">
+
+<div class="derived-label">DC Radiazioni</div>
+
+<input type="number" class="derived-input" id="val-rad-dc" value="12">
+
+</div>
+
+</div>
+          <!-- Statistiche di Gruppo (Party Nerve & Group Sneak) -->
+
+<div class="party-stats-row">
+
+<div class="party-card">
+
+<div class="derived-label">Sanguefreddo Gruppo</div>
+
+<input type="number" id="input-party-nerve" class="input-field" value="0" style="text-align:center; font-weight:bold; padding:2px;">
+
+<span style="font-size:10px; color:var(--text-dim);">Somma mod CAR / 2</span>
+
+</div>
+
+<div class="party-card">
+
+<div class="derived-label">Sneak di Gruppo</div>
+
+<input type="number" id="input-group-sneak" class="input-field" value="0" style="text-align:center; font-weight:bold; padding:2px;">
+
+<span style="font-size:10px; color:var(--text-dim);">Media mod Sneak</span>
+
+</div>
+
+<div class="party-card">
+
+<div class="derived-label">Sconto Mercante</div>
+
+<div class="derived-val" id="val-discount">% Barter</div>
+
+<span style="font-size:10px; color:var(--text-dim);">1 volta per riposo</span>
+
+</div>
+
+</div>
+        </div>
+      </div>
+
+              <!-- ===============================================================
+                   RESISTENZE, IMMUNITÀ & SUSCETTIBILITÀ (SOPRA LO STATO ANATOMICO ARTI)
+                   =============================================================== -->
+              <div class="col-inner-box resistances-prominent-box" id="resistances-container-box" style="margin-top: 10px;">
+                <div class="box-title-bar">
+                  <div style="display:flex; align-items:center; gap:6px;">
+                    <span>🛡️ RESISTENZE, IMMUNITÀ & SUSCETTIBILITÀ</span>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:6px;">
+                    <span class="core-col-badge badge-defense" style="background:rgba(59,130,246,0.12); color:#2563eb; border:1px solid rgba(59,130,246,0.3);">DIFESE & BUFF</span>
+                    <button type="button" class="btn btn-sm no-print" onclick="openAddCustomResistanceModal()" title="Aggiungi una resistenza o immunità custom" style="padding:2px 8px; font-size:11px;">+ Aggiungi</button>
+                  </div>
+                </div>
+
+                <!-- Timed buffs & Perks banner (Impianto Nemeo, Furia da Nerd, Armatura Riflettente, etc.) -->
+                <div id="active-perks-resistances-banner" style="display:none; margin: 6px 8px 4px 8px; padding: 6px 8px; border-radius: 4px; font-size: 11.5px; background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.25);">
+                  <!-- Injected by app.js -->
+                </div>
+
+                <div class="resistances-section" id="resistances-section" style="border:none; padding:4px 8px 8px 8px; margin-top:0; box-shadow:none; background:transparent;">
+                  <div class="resistances-grid" style="margin-top:4px;">
+                    <!-- Resistenze (Danno Dimezzato) -->
+                    <div class="resist-col resist-col-half">
+                      <div class="resist-col-header">
+                        <div class="resist-header-top">
+                          <span class="resist-icon">[½]</span>
+                          <span class="resist-title" title="Resistenze (Danno Dimezzato)">RESISTENZE</span>
+                        </div>
+                        <span class="resist-desc-sub">Danno ½</span>
+                      </div>
+                      <div id="resistances-list" class="resist-chips-container">
+                        <!-- Injected by app.js -->
+                      </div>
+                    </div>
+
+                    <!-- Immunità (Danno 0 / Immune) -->
+                    <div class="resist-col resist-col-immune">
+                      <div class="resist-col-header">
+                        <div class="resist-header-top">
+                          <span class="resist-icon">[0]</span>
+                          <span class="resist-title" title="Immunità (Danno 0)">IMMUNITÀ</span>
+                        </div>
+                        <span class="resist-desc-sub">Danno 0 (Immune)</span>
+                      </div>
+                      <div id="immunities-list" class="resist-chips-container">
+                        <!-- Injected by app.js -->
+                      </div>
+                    </div>
+
+                    <!-- Suscettibilità / Vulnerabilità (Danno x2) -->
+                    <div class="resist-col resist-col-vuln">
+                      <div class="resist-col-header">
+                        <div class="resist-header-top">
+                          <span class="resist-icon">[2×]</span>
+                          <span class="resist-title" title="Suscettibilità (Danno x2)">SUSCETTIBILITÀ</span>
+                        </div>
+                        <span class="resist-desc-sub">Danno 2×</span>
+                      </div>
+                      <div id="vulnerabilities-list" class="resist-chips-container">
+                        <!-- Injected by app.js -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Paperdoll Arti Anatomici -->
+              <div class="col-inner-box paperdoll-box">
+                <div class="box-title-bar">
+                  <span>STATO ANATOMICO ARTI</span>
+                  <span class="core-col-badge badge-traits">DANNI & MENOMAZIONI</span>
+                </div>
+                <!-- Anatomical Human Paperdoll Card (Stato & Condizione Arti) -->
+                <div class="anatomical-card" id="anatomical-body-card">
+
+<div class="anatomical-header">
+
+<span> STATO ARTI & ANATOMIA</span>
+
+<span style="font-size:10px; color:var(--text-dim);">[Clicca per alternare: Sano / Menomato / Reciso]</span>
+
+</div>
+
+
+<div class="anatomical-body-wrap">
+
+<svg class="body-silhouette-svg" viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">
+
+<!-- Head -->
+
+<circle id="limb-head" class="limb-path limb-healthy" cx="50" cy="18" r="11" onclick="toggleLimb('head')" />
+
+<!-- Torso -->
+
+<path id="limb-torso" class="limb-path limb-healthy" d="M38,32 L62,32 L60,70 L40,70 Z" onclick="toggleLimb('torso')" />
+
+<!-- Left Arm (visual right) -->
+
+<path id="limb-armL" class="limb-path limb-healthy" d="M64,34 L76,46 L82,72 L76,74 L70,52 L62,38 Z" onclick="toggleLimb('armL')" />
+
+<!-- Right Arm (visual left) -->
+
+<path id="limb-armR" class="limb-path limb-healthy" d="M36,34 L24,46 L18,72 L24,74 L30,52 L38,38 Z" onclick="toggleLimb('armR')" />
+
+<!-- Left Leg (visual right) -->
+
+<path id="limb-legL" class="limb-path limb-healthy" d="M52,72 L61,72 L64,106 L66,124 L56,124 L54,104 L52,72 Z" onclick="toggleLimb('legL')" />
+
+<!-- Right Leg (visual left) -->
+
+<path id="limb-legR" class="limb-path limb-healthy" d="M39,72 L48,72 L48,104 L44,124 L34,124 L36,106 L39,72 Z" onclick="toggleLimb('legR')" />
+
+</svg>
+
+</div>
+
+
+<!-- Quick action limb buttons -->
+
+<div class="limbs-quick-grid" id="limbs-quick-grid">
+
+<button type="button" class="limb-quick-btn status-healthy" id="btn-limb-head" onclick="toggleLimb('head')">TESTA: SANA</button>
+
+<button type="button" class="limb-quick-btn status-healthy" id="btn-limb-torso" onclick="toggleLimb('torso')">TORSO: SANO</button>
+
+<button type="button" class="limb-quick-btn status-healthy" id="btn-limb-armL" onclick="toggleLimb('armL')">BRACCIO SX: SANO</button>
+
+<button type="button" class="limb-quick-btn status-healthy" id="btn-limb-armR" onclick="toggleLimb('armR')">BRACCIO DX: SANO</button>
+
+<button type="button" class="limb-quick-btn status-healthy" id="btn-limb-legL" onclick="toggleLimb('legL')">GAMBA SX: SANA</button>
+
+<button type="button" class="limb-quick-btn status-healthy" id="btn-limb-legR" onclick="toggleLimb('legR')">GAMBA DX: SANA</button>
+
+</div>
+
+
+<!-- Penalties summary banner -->
+
+<div class="limb-penalty-banner" id="limb-penalties-summary">
+
+[OK] Nessuna menomazione: corpo in piena efficienza operativa.
+
+</div>
+
+                </div>
+              </div>
+
+              <!-- 3. OGGETTI EQUIPAGGIATI & ACCESSO RAPIDO (SOTTO LO STATO ANATOMICO ARTI) -->
+              <div class="col-inner-box combat-quick-box" style="margin-top:10px;">
+                <div class="box-title-bar">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span>🎒 OGGETTI EQUIPAGGIATI & ACCESSO RAPIDO</span>
+                    <span class="core-col-badge badge-traits">SLOT RAPIDI</span>
+                  </div>
+                  <span style="font-size:11px; color:var(--text-dim);">MEDICINA &bull; TORCIA &bull; CARICO</span>
+                </div>
+                <div class="equipped-misc-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:8px; padding:6px 0;">
+                  <div class="equipped-misc-card" style="border:1.5px solid var(--border-color); border-radius:6px; padding:8px 10px; background:var(--bg-card);">
+                    <div style="font-size:10.5px; font-weight:800; color:var(--text-dim); text-transform:uppercase;">Slot Rapido 1 (Medicina)</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                      <span style="font-weight:800; font-size:12.5px; color:var(--text-bright);">Stimpak (<span id="quick-stimpak-qty">3</span>)</span>
+                      <button type="button" class="btn btn-sm btn-primary" onclick="useQuickStimpak()">Usa (+4 HP)</button>
+                    </div>
+                  </div>
+                  <div class="equipped-misc-card" style="border:1.5px solid var(--border-color); border-radius:6px; padding:8px 10px; background:var(--bg-card);">
+                    <div style="font-size:10.5px; font-weight:800; color:var(--text-dim); text-transform:uppercase;">Slot Rapido 2 (Antirad)</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                      <span style="font-weight:800; font-size:12.5px; color:var(--text-bright);">RadAway (<span id="quick-radaway-qty">2</span>)</span>
+                      <button type="button" class="btn btn-sm btn-primary" onclick="useQuickRadAway()">Usa (-2 Rads)</button>
+                    </div>
+                  </div>
+                  <div class="equipped-misc-card" style="border:1.5px solid var(--border-color); border-radius:6px; padding:8px 10px; background:var(--bg-card);">
+                    <div style="font-size:10.5px; font-weight:800; color:var(--text-dim); text-transform:uppercase;">Accessorio / Torcia</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                      <span style="font-weight:800; font-size:12.5px; color:var(--text-bright);">Luce Pip-Boy</span>
+                      <button type="button" class="btn btn-sm" id="btn-quick-torch" onclick="toggleQuickLight()" style="background:#15803d; color:#fff; font-weight:bold;">ATTIVA</button>
+                    </div>
+                  </div>
+                  <div class="equipped-misc-card" style="border:1.5px solid var(--border-color); border-radius:6px; padding:8px 10px; background:var(--bg-card);">
+                    <div style="font-size:10.5px; font-weight:800; color:var(--text-dim); text-transform:uppercase;">Zaino / Mod Carico</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                      <span style="font-weight:800; font-size:12.5px; color:var(--text-bright);" id="quick-backpack-label">Zaino (+20 lbs)</span>
+                      <button type="button" class="btn btn-sm" id="btn-quick-backpack" onclick="toggleQuickBackpack()" style="background:var(--accent-secondary); color:#fff; font-weight:bold;">INDOSSATO</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- COLONNA CENTRALE / PRINCIPALE (1fr): ARMI IMPUGNATE, TO HIT, DAMAGE, ARMATURA & ALTRI OGGETTI -->
+            <div class="sheet-col sheet-col-right combat-main-col">
+              <!-- ARMA IMPUGNATA O ARMI IMPUGNATE (CON TO HIT E DAMAGE EVIDENTI) -->
+              <div class="col-inner-box combat-weapons-box">
+                <div class="box-title-bar">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span>⚔️ ARMI IMPUGNATE & ATTACCHI TATTICI</span>
+                    <span class="core-col-badge badge-perks" style="background:rgba(220,38,38,0.12); color:#dc2626; border-color:rgba(220,38,38,0.3);">TO HIT & DAMAGE</span>
+                  </div>
+                  <span style="font-size:11px; color:var(--text-dim);">MANO DX &bull; MANO SX &bull; ATTACCHI</span>
+                </div>
+                <div class="section-box weapons-column" style="border:none; padding:0; background:transparent;">
+
+<div class="section-title">
+
+<span>Armi Equipaggiate</span>
+
+<div class="no-print" style="display:flex; gap:4px; flex-wrap:wrap;">
+
+<button type="button" class="btn btn-sm btn-primary" id="btn-add-weapon-firearm" onclick="addWeaponFirearm()">+ Arma da Fuoco</button>
+
+<button type="button" class="btn btn-sm btn-primary" id="btn-add-weapon-melee" onclick="addWeaponMelee()">+ Corpo a Corpo</button>
+
+<button type="button" class="btn btn-sm" id="btn-add-weapon-compendium" onclick="addWeaponCompendium()">+ Da Compendio</button>
+
+</div>
+
+</div>
+
+
+<!-- Hands & Dual Wield Status Banner -->
+
+<div id="dual-wield-status-banner" class="dual-wield-status-banner">
+
+<!-- Injected by app.js: e.g. "Mano Principale: Pistola 10mm | Mano Secondaria: Libera" -->
+
+</div>
+
+
+<div id="weapons-container" style="display:flex; flex-direction:column; gap:10px;">
+
+<!-- Weapon cards injected by app.js -->
+
+</div>
+
+</div>
+
+
+</div>
+
+
+              <!-- 2. ARMATURA & PROTEZIONE (DIFESA) -->
+              <div class="col-inner-box combat-armor-box" style="margin-top:14px;">
+                <div class="box-title-bar">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span>🛡️ ARMATURA & PROTEZIONE</span>
+                    <span class="core-col-badge badge-racial">DIFESA</span>
+                  </div>
+                  <span style="font-size:11px; color:var(--text-dim);">AC &bull; DT &bull; RESISTENZE &bull; POWER ARMOR</span>
+                </div>
+                <div class="armor-widget" style="border:none; padding:0; background:transparent;">
+
+<div style="display:flex; justify-content:space-between; align-items:center;">
+
+<span style="font-weight:bold; font-size:13px; text-transform:uppercase; color:var(--text-bright);">Armatura & Protezione</span>
+
+<div style="display:flex; gap:8px;">
+
+<div class="stat-badge-box has-tooltip" data-keyword="ac">
+
+<span class="badge-label">AC</span>
+
+<input type="number" id="val-ac" class="badge-input" value="10">
+
+</div>
+
+<div class="stat-badge-box has-tooltip" data-keyword="dt">
+
+<span class="badge-label">DT</span>
+
+<input type="number" id="val-dt" class="badge-input" value="0">
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="armor-row">
+
+<div class="input-group" style="flex:2;">
+
+<label>Nome Corazza / Vestimento</label>
+
+<input type="text" id="armor-name" class="input-field" value="Tuta del Vault 111">
+
+</div>
+
+<div class="input-group" style="flex:1;">
+
+<label>Tipo Base</label>
+<select id="armor-type" class="input-field">
+<option value="cloth">Stoffa (Cloth) - 8 Slot | AC 10, DT 0, For 1</option>
+<option value="leather">Cuoio (Leather) - 6 Slot | AC 11, DT 1, For 1</option>
+<option value="multilayered">Multistrato (Multilayered) - 5 Slot | AC 10, DT 2, For 3</option>
+<option value="metal">Metallo (Metal) - 4 Slot | AC 12, DT 0, For 5</option>
+<option value="ballistic_weave">Tessuto Balistico (Ballistic Weave) - 2 Slot | AC 12, DT 3, For 3</option>
+<option value="steel">Acciaio (Steel) - 2 Slot | AC 13, DT 2, For 6</option>
+</select>
+</div>
+</div>
+
+<!-- Qualità Armatura (STANDARD o LEGGENDARIA) -->
+<div class="armor-row" style="margin-top:4px;">
+<div class="input-group" style="flex:1;">
+<label>Qualità Armatura</label>
+<select id="armor-quality-select" class="input-field" onchange="updateArmorQuality(this.value)">
+<option value="standard" selected>Standard (Normale)</option>
+<option value="legendary">★ Leggendaria (Slot Extra & Tratti Unici)</option>
+</select>
+</div>
+</div>
+
+<!-- Riquadro Tratti Leggendari Multipli Armatura -->
+<div class="legendary-traits-section" id="armor-legendary-box" style="display:none; margin-top:6px;">
+<div class="legendary-traits-header">
+<span class="legendary-badge">★ ARMATURA LEGGENDARIA &bull; PERSONALIZZAZIONE</span>
+<button type="button" class="btn btn-sm no-print" onclick="addArmorLegendaryTrait()">+ Aggiungi Tratto</button>
+</div>
+
+<!-- Configurazione Slot Modifiche Aggiuntivi Leggendari -->
+<div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px; margin-bottom:8px; padding:6px 10px; background:rgba(234, 179, 8, 0.1); border:1px solid rgba(234, 179, 8, 0.3); border-radius:4px;">
+  <div>
+    <span style="font-weight:bold; font-size:12px; color:#eab308;">★ Slot Modifiche Extra Leggendari:</span>
+    <div style="font-size:10px; color:var(--text-dim);">Le armature leggendarie supportano slot extra per upgrade unici oltre alla capienza base.</div>
+  </div>
+  <div style="display:flex; align-items:center; gap:6px;">
+    <button type="button" class="btn btn-sm no-print" onclick="adjustArmorLegendarySlots(-1)" style="padding:2px 8px; font-weight:bold;">-</button>
+    <span id="armor-legendary-slots-val" style="font-weight:bold; font-size:13px; color:#eab308; min-width:32px; text-align:center;">+1</span>
+    <button type="button" class="btn btn-sm no-print" onclick="adjustArmorLegendarySlots(1)" style="padding:2px 8px; font-weight:bold;">+</button>
+  </div>
+</div>
+
+<div class="legendary-traits-list" id="armor-legendary-list">
+<!-- Injected by app.js -->
+</div>
+</div>
+
+<!-- Interactive Armor Upgrades Manager -->
+<div class="input-group" style="margin-top:6px;">
+<div style="display:flex; justify-content:space-between; align-items:center;">
+<label>Miglioramenti Armatura (<span id="armor-slots-info" style="font-weight:bold;">Slot: 0/8</span>)</label>
+<button type="button" class="btn btn-sm no-print" id="btn-add-armor-upgrade" onclick="addArmorUpgrade()">+ Aggiungi Upgrade</button>
+</div>
+
+<!-- Visual Slot Dots Indicator -->
+<div id="armor-slots-dots-container" style="display:flex; gap:5px; margin-top:5px; margin-bottom:6px; align-items:center; flex-wrap:wrap;">
+<!-- Slot dots injected by app.js -->
+</div>
+
+<div id="armor-upgrades-container" class="mods-container">
+<!-- Upgrades injected by app.js -->
+</div>
+</div>
+
+<!-- Modal Gestione Slot Pieni Armatura -->
+<div id="armor-slots-modal" class="modal-overlay" style="display:none; align-items:center; justify-content:center; z-index:9999; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.75);">
+  <div class="modal-content" style="max-width:540px; width:92%; background:var(--bg-secondary, #1e293b); border:1px solid var(--border-color, #334155); border-radius:8px; padding:18px; box-shadow:0 12px 36px rgba(0,0,0,0.6);">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color, #334155); padding-bottom:8px; margin-bottom:12px;">
+      <h3 style="margin:0; font-size:15px; color:#f59e0b; display:flex; align-items:center; gap:6px;">
+        <span>⚠️</span> <span>SLOT MODIFICHE ESAURITI</span>
+      </h3>
+      <button type="button" class="btn btn-sm" onclick="closeArmorSlotsModal()">✕</button>
+    </div>
+    <div id="armor-slots-modal-body" style="font-size:13px; line-height:1.5;">
+      <!-- Injected by app.js -->
+    </div>
+  </div>
+</div>
+
+
+<!-- Armor Decay (Cliccabile con livello visibile) -->
+
+<div style="margin-top:6px;">
+
+<div class="decay-header-row">
+
+<span class="decay-label">Usura Armatura (Decay 0-10):</span>
+
+<span id="armor-decay-val-badge" class="decay-val-badge">0 / 10 [Nessuna usura]</span>
+
+</div>
+
+<div class="decay-track" id="armor-decay-container"></div>
+
+</div>
+
+
+<!-- Power Armor Pilot Mode Section -->
+
+<div style="border-top:1px dashed var(--border-color); padding-top:8px; margin-top:8px;">
+
+<div style="display:flex; justify-content:space-between; align-items:center;">
+
+<div style="display:flex; align-items:center; gap:8px;">
+
+<span style="font-size:15px;"></span>
+
+<span style="font-size:12px; font-weight:bold; color:var(--warning); text-transform:uppercase; letter-spacing:0.5px;">Armatura Atomica (Power Armor)</span>
+
+</div>
+
+<div style="display:flex; gap:6px; align-items:center;" class="no-print">
+
+<label class="pipboy-toggle-label" style="font-size:11px; margin:0;">
+
+<input type="checkbox" id="pa-owned-toggle" onchange="togglePowerArmorOwned(this.checked)">
+
+<span>In Possesso</span>
+
+</label>
+
+<button type="button" class="btn btn-sm" id="btn-toggle-pa" onclick="togglePowerArmorEquipped()" style="font-weight:bold;">
+
+INDOSSA
+
+</button>
+
+</div>
+
+</div>
+
+
+<!-- Power Armor Panel (visibile se posseduta) -->
+
+<div id="power-armor-panel" class="pa-panel-box" style="display:none;">
+
+<div style="display:grid; grid-template-columns: 2fr 1fr; gap:8px;">
+
+<div class="input-group">
+
+<label>Modello Power Armor</label>
+
+<select id="pa-model-select" class="input-field" onchange="onPowerArmorModelChange(this.value)">
+
+<option value="t45">T-45 (AC 14, DP 15, DT 6, 6 Slot)</option>
+
+<option value="t51">T-51 (AC 17, DP 20, DT 8, 5 Slot)</option>
+
+<option value="t60">T-60 (AC 16, DP 30, DT 9, 6 Slot)</option>
+
+<option value="x01">X-01 (AC 16, DP 45, DT 10, 4 Slot)</option>
+
+<option value="x02">X-02 Black Devil (AC 18, DP 40, DT 11, 4 Slot)</option>
+
+</select>
+
+</div>
+
+<div class="input-group">
+
+<label>Punti Difesa (DP)</label>
+
+<div style="display:flex; align-items:center; gap:4px;">
+
+<input type="number" id="pa-current-dp" class="input-field" value="15" style="width:55px; text-align:center;" onchange="updatePowerArmorDP(this.value, null)">
+
+<span>/</span>
+
+<input type="number" id="pa-max-dp" class="input-field" value="15" style="width:55px; text-align:center;" onchange="updatePowerArmorDP(null, this.value)">
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PA Stats & Status Badges -->
+
+<div class="pa-stats-badge-row" id="pa-stats-badge-row">
+
+<!-- Badges injected by app.js: AC, DT, DP, Autonomia, Forza 12, Taglia Grande, ecc. -->
+
+</div>
+
+
+<!-- Autonomia & Surriscaldamento -->
+
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; font-size:12px; margin-top:6px;">
+
+<div class="input-group">
+
+<label style="font-weight:700; color:var(--text-bright);">Autonomia Fusion Core (minuti)</label>
+
+<input type="number" id="pa-fusion-timer" class="input-field" value="240" onchange="updatePowerArmorTimer(this.value)">
+
+</div>
+
+<div class="input-group">
+
+<label style="font-weight:700; color:var(--text-bright);">Stato Nucleo</label>
+
+<div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
+
+<label style="display:flex; align-items:center; gap:4px; font-size:12px; cursor:pointer;">
+
+<input type="checkbox" id="pa-overheated-toggle" onchange="togglePowerArmorOverheated(this.checked)">
+
+<span style="color:var(--warning); font-weight:700;"> Surriscaldato (+15 AP)</span>
+
+</label>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Usura Totale Telaio -->
+
+<div style="margin-top:8px; background:var(--bg-input); padding:8px 10px; border-radius:6px; border:1px solid var(--border-color);">
+
+<div class="decay-header-row">
+
+<span class="decay-label" style="font-weight:700; color:var(--text-bright);">Usura Telaio (Decay 0-10):</span>
+
+<span id="pa-decay-val-badge" class="decay-val-badge" style="font-weight:700;">0 / 10 [Integra]</span>
+
+</div>
+
+<div class="decay-track" id="pa-decay-container"></div>
+
+<div id="pa-decay-radiation-alert" class="pa-decay-alert" style="display:none; font-weight:700;">
+
+[!] Usura ≥ 6: Protezione Radiazioni persa o ridotta!
+
+</div>
+
+</div>
+
+
+<!-- =============================================================
+
+DIAGRAMMA ANATOMICO & TRACCIAMENTO PARTI POWER ARMOR
+
+============================================================= -->
+
+<div class="pa-paperdoll-section" id="pa-paperdoll-section">
+
+<!-- Silhouette / Paperdoll SVG (Sinistra) -->
+
+<div class="pa-paperdoll-figure-box">
+
+<div class="pa-figure-header">
+
+<span style="font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-bright);">
+
+Stato Corazza
+
+</span>
+
+<span style="font-size:10px; color:var(--text-dim); font-style:italic;">
+
+(Clicca un pezzo per ciclarne lo stato)
+
+</span>
+
+</div>
+
+
+<!-- SVG Paperdoll -->
+
+<div class="pa-svg-wrapper" id="pa-svg-wrapper">
+
+<svg viewBox="0 0 240 320" class="pa-paperdoll-svg" id="pa-paperdoll-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagramma Anatomico Armatura Atomica">
+
+<defs>
+
+<filter id="pa-glow-healthy" x="-20%" y="-20%" width="140%" height="140%">
+
+<feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#22c55e" flood-opacity="0.6"/>
+
+</filter>
+
+<filter id="pa-glow-damaged" x="-20%" y="-20%" width="140%" height="140%">
+
+<feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#eab308" flood-opacity="0.7"/>
+
+</filter>
+
+<filter id="pa-glow-critical" x="-20%" y="-20%" width="140%" height="140%">
+
+<feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#f97316" flood-opacity="0.8"/>
+
+</filter>
+
+<filter id="pa-glow-broken" x="-20%" y="-20%" width="140%" height="140%">
+
+<feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#ef4444" flood-opacity="0.9"/>
+
+</filter>
+
+<pattern id="pa-hatch-broken" width="6" height="6" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+
+<line x1="0" y1="0" x2="0" y2="6" stroke="#ef4444" stroke-width="1.5" stroke-opacity="0.6" />
+
+</pattern>
+
+</defs>
+
+
+<!-- Exoskeleton Skeleton Frame -->
+
+<g class="pa-frame-chassis" opacity="0.35">
+
+<rect x="116" y="55" width="8" height="110" rx="3" fill="#64748b" />
+
+<rect x="70" y="70" width="100" height="8" rx="4" fill="#64748b" />
+
+<rect x="95" y="152" width="50" height="8" rx="3" fill="#64748b" />
+
+</g>
+
+
+<!-- 1. CASCO / HELMET (Head) -->
+
+<g id="pa-svg-head" class="pa-svg-part pa-part-healthy" onclick="window.onPowerArmorPartClick('head')" title="Casco (Testa) - Clicca per cambiare stato">
+
+<path d="M 104,22 C 104,12 136,12 136,22 L 139,40 L 133,58 L 107,58 L 101,40 Z" class="pa-part-mesh" />
+
+<path d="M 107,35 L 133,35 L 130,42 L 110,42 Z" class="pa-visor-slit" />
+
+<rect x="98" y="42" width="5" height="10" rx="1" class="pa-detail-accent" />
+
+<rect x="137" y="42" width="5" height="10" rx="1" class="pa-detail-accent" />
+
+<text x="120" y="52" class="pa-svg-label">CASCO</text>
+
+</g>
+
+
+<!-- 2. TORACE / TORSO (Chest) -->
+
+<g id="pa-svg-torso" class="pa-svg-part pa-part-healthy" onclick="window.onPowerArmorPartClick('torso')" title="Torace (Busto) - Clicca per cambiare stato">
+
+<path d="M 82,65 L 158,65 L 150,122 L 136,155 L 104,155 L 90,122 Z" class="pa-part-mesh" />
+
+<circle cx="120" cy="100" r="10" class="pa-core-circle" />
+
+<line x1="90" y1="88" x2="110" y2="88" class="pa-panel-line" />
+
+<line x1="130" y1="88" x2="150" y2="88" class="pa-panel-line" />
+
+<text x="120" y="135" class="pa-svg-label">BUSTO</text>
+
+</g>
+
+
+<!-- 3. BRACCIO SX / LEFT ARM -->
+
+<g id="pa-svg-armL" class="pa-svg-part pa-part-healthy" onclick="window.onPowerArmorPartClick('armL')" title="Braccio Sinistro - Clicca per cambiare stato">
+
+<path d="M 78,65 C 50,65 42,85 46,105 L 75,108 L 82,85 Z" class="pa-part-mesh" />
+
+<path d="M 52,112 L 72,114 L 68,142 L 50,138 Z" class="pa-part-mesh" />
+
+<path d="M 47,144 L 69,148 L 65,190 L 42,185 L 43,165 Z" class="pa-part-mesh" />
+
+<text x="58" y="132" class="pa-svg-label">BRACCIO SX</text>
+
+</g>
+
+
+<!-- 4. BRACCIO DX / RIGHT ARM -->
+
+<g id="pa-svg-armR" class="pa-svg-part pa-part-healthy" onclick="window.onPowerArmorPartClick('armR')" title="Braccio Destro - Clicca per cambiare stato">
+
+<path d="M 162,65 C 190,65 198,85 194,105 L 165,108 L 158,85 Z" class="pa-part-mesh" />
+
+<path d="M 188,112 L 168,114 L 172,142 L 190,138 Z" class="pa-part-mesh" />
+
+<path d="M 193,144 L 171,148 L 175,190 L 198,185 L 197,165 Z" class="pa-part-mesh" />
+
+<text x="182" y="132" class="pa-svg-label">BRACCIO DX</text>
+
+</g>
+
+
+<!-- 5. GAMBA SX / LEFT LEG -->
+
+<g id="pa-svg-legL" class="pa-svg-part pa-part-healthy" onclick="window.onPowerArmorPartClick('legL')" title="Gamba Sinistra - Clicca per cambiare stato">
+
+<path d="M 94,162 L 115,162 L 112,210 L 89,208 Z" class="pa-part-mesh" />
+
+<rect x="87" y="212" width="26" height="12" rx="3" class="pa-part-mesh" />
+
+<path d="M 88,226 L 113,226 L 116,275 L 85,275 Z" class="pa-part-mesh" />
+
+<path d="M 83,277 L 117,277 L 118,300 L 75,300 L 76,288 Z" class="pa-part-mesh" />
+
+<text x="101" y="245" class="pa-svg-label">GAMBA SX</text>
+
+</g>
+
+
+<!-- 6. GAMBA DX / RIGHT LEG -->
+
+<g id="pa-svg-legR" class="pa-svg-part pa-part-healthy" onclick="window.onPowerArmorPartClick('legR')" title="Gamba Destra - Clicca per cambiare stato">
+
+<path d="M 125,162 L 146,162 L 151,208 L 128,210 Z" class="pa-part-mesh" />
+
+<rect x="127" y="212" width="26" height="12" rx="3" class="pa-part-mesh" />
+
+<path d="M 127,226 L 152,226 L 155,275 L 124,275 Z" class="pa-part-mesh" />
+
+<path d="M 123,277 L 157,277 L 164,288 L 165,300 L 122,300 Z" class="pa-part-mesh" />
+
+<text x="139" y="245" class="pa-svg-label">GAMBA DX</text>
+
+</g>
+
+</svg>
+
+</div>
+
+
+<!-- Legenda Stati Silhouette -->
+
+<div class="pa-legend-row">
+
+<span class="pa-legend-pill pa-pill-healthy">[OK] Integro</span>
+
+<span class="pa-legend-pill pa-pill-damaged">[WARN] Usurato</span>
+
+<span class="pa-legend-pill pa-pill-critical">[CRIT] Critico</span>
+
+<span class="pa-legend-pill pa-pill-broken">[DIST] Rotto</span>
+
+</div>
+
+</div>
+
+
+<!-- Schede Dettagliate 6 Pezzi (Destra) -->
+
+<div class="pa-parts-content-box">
+
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid var(--border-color); padding-bottom:4px;">
+
+<span style="font-size:12px; font-weight:800; color:var(--text-bright); text-transform:uppercase;">
+
+Componenti & Livelli Corazza
+
+</span>
+
+<button type="button" class="btn btn-sm no-print" onclick="window.syncAllPowerArmorPiecesToModel()" title="Imposta tutti i pezzi sul modello principale della corazza">
+
+Sincronizza Tutti i Pezzi
+
+</button>
+
+</div>
+
+
+<div class="pa-parts-grid" id="pa-parts-grid">
+
+<!-- Injected dynamically by renderPowerArmorPartsFigure() -->
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Upgrade Power Armor -->
+
+<div style="margin-top:8px; border-top:1px solid rgba(255,215,0,0.2); padding-top:6px;">
+
+<div style="display:flex; justify-content:space-between; align-items:center;">
+
+<label style="color:var(--warning); font-weight:bold; font-size:12px;">
+
+Miglioramenti PA (<span id="pa-slots-info">Slot: 0/6</span>)
+
+</label>
+
+<button type="button" class="btn btn-sm no-print" id="btn-add-pa-upgrade" onclick="addPowerArmorUpgrade()">+ Aggiungi Upgrade PA</button>
+
+</div>
+
+<div id="pa-upgrades-container" class="pa-upgrades-container">
+
+<!-- PA upgrades injected by app.js -->
+
+</div>
+
+</div>
+
+
+<!-- PA Legendary Traits -->
+
+<div style="margin-top:8px; border:1px solid #1d4ed8; border-radius:4px; padding:8px; background:#eff6ff;">
+
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+
+<label style="font-weight:bold; font-size:12px; text-transform:uppercase; color:#1d4ed8; letter-spacing:0.5px;">
+
+Tratti Leggendari Telaio PA
+
+</label>
+
+<button type="button" class="btn btn-sm no-print" id="btn-add-pa-legendary" style="border-color:#1d4ed8; color:#1d4ed8; font-size:11px;">+ Tratto Leggendario</button>
+
+</div>
+
+<div id="pa-legendary-list">
+
+<!-- Injected by app.js -->
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+                </div>
+              </div>
+
+            </div>
+        </section>
+
+        <!-- ===============================================================
+             SEZIONE 3: INVENTARIO (CARICO, OGGETTI, TAPPI & PIP-BOY)
+             =============================================================== -->
+        <section class="sheet-row" id="row-inv" data-row="inv">
+          <div class="sheet-row-heading">
+            <span class="sheet-row-badge">INVENTARIO</span>
+            <h2>SEZIONE INVENTARIO: CAPACITÀ DI CARICO, OGGETTI, TAPPI & PIP-BOY 3000</h2>
+          </div>
+
+          
+          <!-- Pip-Boy 3000 Mk IV -->
+          <div class="col-inner-box" style="margin-top:10px;">
+            <div class="box-title-bar">
+              <span>PIP-BOY 3000 Mk IV</span>
+              <span style="font-size:11px; color:var(--text-dim);">TERMINALE PERSONALE VAULT-TEC</span>
+            </div>
+            <div class="pipboy-section section-box page-break" id="pipboy-section" style="margin-top:10px;">
+
+ <!-- Header con toggle possesso -->
+ <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
+ <div style="display:flex; align-items:center; gap:10px;">
+ <span class="pipboy-title-icon"></span>
+ <span>Pip-Boy</span>
+ <span id="pipboy-model-badge" class="pipboy-model-badge" style="display:none;"></span>
+ </div>
+ <div style="display:flex; gap:6px; align-items:center;" class="no-print">
+ <label class="pipboy-toggle-label">
+ <input type="checkbox" id="pipboy-owned-toggle" onchange="togglePipboyOwned(this.checked)">
+ <span>In Possesso</span>
+ </label>
+ </div>
+ </div>
+
+ <!-- Contenuto Pip-Boy (visibile solo se in possesso) -->
+ <div id="pipboy-content" style="display:none; margin-top:8px;">
+
+ <!-- Grafica Pip-Boy + Info Modello -->
+ <div class="pipboy-main-layout">
+
+ <!-- LEFT: Illustrazione grafica Pip-Boy -->
+ <div class="pipboy-visual-panel">
+ <div class="pipboy-device" id="pipboy-device-visual">
+ <!-- SVG Pip-Boy Device -->
+ <svg class="pipboy-svg" viewBox="0 0 160 200" xmlns="http://www.w3.org/2000/svg">
+ <!-- Body principale -->
+ <rect x="20" y="20" width="120" height="140" rx="14" ry="14" fill="#2a3d2e" stroke="#3ddc84" stroke-width="2"/>
+ <!-- Schermo LCD -->
+ <rect x="32" y="32" width="96" height="72" rx="4" ry="4" fill="#0d1f12" stroke="#2d8c4e" stroke-width="1"/>
+ <text x="80" y="58" text-anchor="middle" fill="#3ddc84" font-size="8" font-family="monospace" font-weight="bold">VAULT-TEC</text>
+ <text x="80" y="70" text-anchor="middle" fill="#2d8c4e" font-size="5" font-family="monospace" id="pipboy-screen-model">PIP-BOY 3000 MK IV</text>
+ <text x="80" y="82" text-anchor="middle" fill="#1a5c32" font-size="4" font-family="monospace">* GESTIONE PERSONAGGIO *</text>
+ <text x="80" y="94" text-anchor="middle" fill="#3ddc84" font-size="5" font-family="monospace">OPERATIVO</text>
+ <!-- Bracciolo sinistro -->
+ <rect x="4" y="60" width="16" height="50" rx="8" ry="8" fill="#1e2e20" stroke="#3ddc84" stroke-width="1.5"/>
+ <!-- Bracciolo destro -->
+ <rect x="140" y="60" width="16" height="50" rx="8" ry="8" fill="#1e2e20" stroke="#3ddc84" stroke-width="1.5"/>
+ <!-- Pulsanti in basso -->
+ <circle cx="50" cy="140" r="6" fill="#1e3820" stroke="#3ddc84" stroke-width="1"/>
+ <circle cx="80" cy="148" r="8" fill="#1e3820" stroke="#3ddc84" stroke-width="1.5"/>
+ <circle cx="110" cy="140" r="6" fill="#1e3820" stroke="#3ddc84" stroke-width="1"/>
+ <!-- Decorazioni -->
+ <line x1="32" y1="118" x2="128" y2="118" stroke="#2d8c4e" stroke-width="0.5" stroke-dasharray="3,2"/>
+ <circle cx="80" cy="148" r="4" fill="#3ddc84" opacity="0.6"/>
+ </svg>
+ </div>
+ </div>
+
+ <!-- RIGHT: Info Modello & Funzioni -->
+ <div class="pipboy-info-panel">
+ <div class="input-group">
+ <label>Modello Pip-Boy</label>
+ <select id="pipboy-model-select" class="input-field pipboy-select" onchange="onPipboyModelChange(this.value)">
+ <option value="pb2000">Pip-Boy 2000 (Vintage Pre-War)</option>
+ <option value="pb2000mk6">Pip-Boy 2000 Mark VI (Appalachia)</option>
+ <option value="pb3000">Pip-Boy 3000 (Capital Wasteland)</option>
+ <option value="pb3000mk4" selected>Pip-Boy 3000 Mark IV (Commonwealth)</option>
+ <option value="pbpimp">Pimp-Boy 3 Billion (Oro 24K & Diamanti)</option>
+ <option value="pbinstitute">Pip-Pad dell'Istituto (Touch Olografico)</option>
+ </select>
+ </div>
+ <div class="pipboy-model-desc" id="pipboy-model-desc">
+ <!-- Injected by app.js -->
+ </div>
+
+ <!-- Usura Pip-Boy -->
+ <div style="display:flex; align-items:center; gap:6px; margin-top:8px;">
+ <span style="font-size:12px; font-weight:bold; color:var(--text-dim); min-width:60px;">Usura:</span>
+ <div class="decay-track" id="pipboy-decay-container" style="flex:1;"></div>
+ <span id="pipboy-decay-badge" class="decay-val-badge">0/10</span>
+ </div>
+
+ <!-- Funzionalità -->
+ <div class="pipboy-features-grid" id="pipboy-features-grid">
+ <!-- Injected by app.js -->
+ </div>
+ </div>
+ </div>
+
+ <!-- Upgrades Pip-Boy -->
+ <div style="margin-top:8px; border-top:1px solid var(--border-color); padding-top:6px;">
+ <div style="display:flex; justify-content:space-between; align-items:center;">
+ <label style="font-size:12px; font-weight:bold; color:var(--text-dim);">
+ Upgrade Pip-Boy (<span class="pipboy-slots-badge" id="pipboy-upgrades-slots-info">Slot: 0/5</span>)
+ </label>
+ <div class="pipboy-slots-dots" id="pipboy-slots-dots"></div>
+ <button class="btn btn-sm no-print" onclick="addPipboyUpgrade()">+ Aggiungi Upgrade</button>
+ </div>
+ <div id="pipboy-upgrades-container" class="pipboy-upgrades-container">
+ <!-- Injected by app.js -->
+ </div>
+ </div>
+
+ <!-- Note Pip-Boy -->
+ <div style="margin-top:8px;">
+ <label style="font-size:12px; color:var(--text-dim);">Note / Log Pip-Boy:</label>
+ <textarea id="pipboy-notes" class="input-field" rows="3" style="font-size:12px; font-family:var(--font-mono);"
+ placeholder="Missioni registrate, waypoint, note di viaggio..."
+ oninput="updatePipboyNotes(this.value)"></textarea>
+ </div>
+
+ </div>
+
+ <!-- Placeholder quando non posseduto -->
+ <div id="pipboy-empty-state" style="display:flex; align-items:center; gap:10px; padding:12px; color:var(--text-dim); font-size:13px;">
+ <span style="font-size:25px; opacity:0.4;"></span>
+ <span>Pip-Boy non in possesso. Spunta "In Possesso" per registrare il modello e le funzionalità.</span>
+ </div>
+
+ 
+</div>
+
+          </div>
+
+          <!-- Inventario & Equipaggiamento -->
+          <div class="col-inner-box" style="margin-top:16px;">
+            <div class="section-box page-break" style="margin-top:10px;">
+
+<div class="section-title">
+
+<span>Inventario & Equipaggiamento</span>
+
+<div class="no-print" style="display:flex; gap:6px;">
+
+<button type="button" class="btn btn-sm btn-primary" id="btn-add-item" onclick="addInventoryItem()">+ Aggiungi Oggetto</button>
+
+<button type="button" class="btn btn-sm" id="btn-add-inv-compendium" onclick="addCompendiumItemToInventory()">+ Da Compendio</button>
+
+</div>
+
+</div>
+
+
+<!-- Inventory Live Search -->
+
+<div class="no-print" style="padding:6px 0 4px 0;">
+
+<input type="text" id="inv-search-input" class="input-field" placeholder="Filtra inventario per nome, note o valore..." style="width:100%; font-size:13px; padding:6px 10px;">
+
+</div>
+
+
+<div class="inv-table-wrapper">
+
+<table class="inv-table">
+
+<thead>
+
+<tr>
+
+<th>Oggetto / Equipaggiamento</th>
+
+<th style="width:55px;">Qtà</th>
+
+<th style="width:65px;">Peso (lbs)</th>
+
+<th style="width:65px;">Valore</th>
+
+<th>Note / Proprietà</th>
+
+<th style="width:160px; text-align:center;">Azioni / Equipaggia</th>
+
+</tr>
+
+</thead>
+
+<tbody id="inv-table-body">
+
+<!-- Populated by app.js -->
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<!-- Inventory Summary Bar -->
+
+<div class="inv-summary-bar">
+
+<!-- Caps -->
+
+<div class="caps-box">
+
+<div class="caps-icon">©</div>
+
+<label style="font-size:12px; text-transform:uppercase; color:var(--text-dim); margin-right:4px;">Tappi:</label>
+
+<input type="number" id="caps-val" class="input-field" value="85" style="width:90px; font-weight:bold;">
+
+</div>
+
+
+<!-- Carry Load Meter -->
+
+<div class="carry-meter">
+
+<span>Peso: <strong id="carry-current">0</strong> / <input type="number" id="carry-max" class="inline-stat-input" value="50"> lbs</span>
+
+<div class="carry-progress-bg">
+
+<div class="carry-progress-fill" id="carry-progress-bar"></div>
+
+</div>
+
+<span id="carry-status" style="font-size:11px; font-weight:bold;">[NORMALE]</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+          </div>
+        </section>
+
+        <!-- ===============================================================
+             SEZIONE 4: RELAZIONI (BIOMETRIA, PERSONALITÀ, STORIA GDR, COMPAGNI & NEMICI)
+             =============================================================== -->
+        <section class="sheet-row" id="row-rel" data-row="rel">
+          <div class="sheet-row-heading collapsible-header" onclick="togglePersonalProfile()" style="cursor:pointer;" title="Clicca per aprire/chiudere il profilo">
+            <span class="sheet-row-badge">RELAZIONI</span>
+            <h2>SEZIONE RELAZIONI: BIOMETRIA, PERSONALITÀ, STORIA GDR, COMPAGNI & NEMICI</h2>
+            <span id="profile-toggle-icon" class="badge-toggle" style="margin-left:auto; font-size:12px; font-family:var(--font-mono); font-weight:bold; color:var(--accent); background:var(--bg-input); border:1px solid var(--border-color); padding:3px 8px; border-radius:3px;">[-] Riduci Profilo</span>
+          </div>
+
+          <div id="personal-profile-body" class="collapsible-content">
+            <div class="sheet-row-cols">
+              <!-- COLONNA SINISTRA: FOTO, BIOMETRIA & PERSONALITÀ -->
+              <div class="sheet-col sheet-col-left">
+                <!-- Biometria / Caratteristiche Fisiche -->
+                <div class="col-inner-box">
+                  <div class="box-title-bar">
+                    <span>CARATTERISTICHE FISICHE</span>
+                    <span style="font-size:11px; color:var(--text-dim);">BIOMETRIA</span>
+                  </div>
+                  <!-- 2. CARATTERISTICHE FISICHE -->
+
+<div class="bio-panel">
+
+<div class="bio-panel-header">
+
+<div class="bio-panel-title"> Aspetto & Caratteristiche Fisiche</div>
+
+</div>
+
+<div class="bio-physical-grid">
+
+<div class="input-group">
+
+<label>Età</label>
+
+<input type="text" id="bio-age" class="input-field" placeholder="Es. 25">
+
+</div>
+
+<div class="input-group">
+
+<label>Sesso</label>
+
+<input type="text" id="bio-gender" class="input-field" placeholder="Es. M / F">
+
+</div>
+
+<div class="input-group">
+
+<label>Altezza</label>
+
+<input type="text" id="bio-height" class="input-field" placeholder="Es. 1.80 m">
+
+</div>
+
+<div class="input-group">
+
+<label>Peso</label>
+
+<input type="text" id="bio-weight" class="input-field" placeholder="Es. 75 kg">
+
+</div>
+
+<div class="input-group">
+
+<label>Occhi</label>
+
+<input type="text" id="bio-eyes" class="input-field" placeholder="Es. Azzurri">
+
+</div>
+
+<div class="input-group">
+
+<label>Capelli</label>
+
+<input type="text" id="bio-hair" class="input-field" placeholder="Es. Castani">
+
+</div>
+
+</div>
+
+<div class="input-group" style="margin-top:4px;">
+
+<label>Cicatrici, Tatuaggi, Segni Particolari & Mutazioni:</label>
+
+<input type="text" id="bio-marks" class="input-field" placeholder="Es. Cicatrice sopra l'occhio, tatuaggio del Vault...">
+
+</div>
+
+</div>
+
+
+
+                </div>
+
+                <!-- Carattere & Personalità -->
+                <div class="col-inner-box">
+                  <div class="box-title-bar">
+                    <span>CARATTERE & PERSONALITÀ</span>
+                    <span style="font-size:11px; color:var(--text-dim);">TEMPERAMENTO</span>
+                  </div>
+                  <!-- 1. CARATTERE & PERSONALITÀ -->
+
+<div class="bio-panel">
+
+<div class="bio-panel-header">
+
+<div class="bio-panel-title"> Carattere & Personalità</div>
+
+<button type="button" class="btn btn-sm no-print" id="btn-add-bio-personality-trait" onclick="addBioPersonalityTrait()">+ Aggiungi Tratto</button>
+
+</div>
+
+<div class="input-group">
+
+<label>Temperamento, Credo, Paure & Abitudini:</label>
+
+<textarea id="bio-personality" class="input-field bio-textarea" placeholder="Descrivi il carattere, paure, morale, tic e modo di fare..."></textarea>
+
+</div>
+
+<div id="bio-personality-list" class="bio-dynamic-list"></div>
+
+</div>
+
+
+
+                </div>
+              </div>
+
+              <!-- COLONNA DESTRA: STORIA, OBIETTIVI, RELAZIONI & DONI MASTER -->
+              <div class="sheet-col sheet-col-right">
+                <div class="col-inner-box">
+                  <div class="box-title-bar">
+                    <span>STORIA, OBIETTIVI & RELAZIONI GDR</span>
+                    <span style="font-size:11px; color:var(--text-dim);">NARRATIVA & LEGAMI</span>
+                  </div>
+                  <!-- 3. STORIA & ORIGINE -->
+
+<div class="bio-panel">
+
+<div class="bio-panel-header">
+
+<div class="bio-panel-title"> Background Storico & Origine</div>
+
+<button type="button" class="btn btn-sm no-print" id="btn-add-bio-event" onclick="addBioEvent()">+ Aggiungi Evento</button>
+
+</div>
+
+<div class="input-group">
+
+<label>Storia del Personaggio, Evento Chiave & Fazione:</label>
+
+<textarea id="bio-backstory" class="input-field bio-textarea" placeholder="Storia passata, evento che ha cambiato la tua vita, legami con fazioni..."></textarea>
+
+</div>
+
+<div id="bio-events-list" class="bio-dynamic-list"></div>
+
+</div>
+
+
+<!-- 4. OBIETTIVI & MOTIVAZIONI -->
+
+<div class="bio-panel">
+
+<div class="bio-panel-header">
+
+<div class="bio-panel-title"> Obiettivi & Motivazioni</div>
+
+<button type="button" class="btn btn-sm no-print" id="btn-add-bio-goal" onclick="addBioGoal()">+ Aggiungi Obiettivo</button>
+
+</div>
+
+<div class="input-group">
+
+<label>Obiettivo a Breve Termine:</label>
+
+<input type="text" id="bio-goal-short" class="input-field" placeholder="Es. Trovare munizioni e un filtro d'acqua...">
+
+</div>
+
+<div class="input-group" style="margin-top:4px;">
+
+<label>Obiettivo a Lungo Termine / Missione di Vita:</label>
+
+<input type="text" id="bio-goal-long" class="input-field" placeholder="Es. Ricostruire un insediamento sicuro...">
+
+</div>
+
+<div id="bio-goals-list" class="bio-dynamic-list"></div>
+
+</div>
+
+
+<!-- 5. RELAZIONI, COMPAGNI & NEMICI -->
+
+<div class="bio-panel">
+
+<div class="bio-panel-header">
+
+<div class="bio-panel-title"> Relazioni, Contatti & Rivali</div>
+
+<button type="button" class="btn btn-sm no-print" id="btn-add-bio-relationship" onclick="addBioRelationship()">+ Aggiungi Relazione</button>
+
+</div>
+
+<div class="input-group">
+
+<label>Alleati, Compagni & Contatti Principali:</label>
+
+<input type="text" id="bio-allies" class="input-field" placeholder="Compagni di viaggio, mercanti amici...">
+
+</div>
+
+<div class="input-group" style="margin-top:4px;">
+
+<label>Rivali, Nemici Giurati & Taglie:</label>
+
+<input type="text" id="bio-enemies" class="input-field" placeholder="Predoni rivali, cacciatori di taglie...">
+
+</div>
+
+<div id="bio-relationships-list" class="bio-dynamic-list"></div>
+
+</div>
+
+
+<!-- 6. BONUS SPECIALI & NOTE MASTER -->
+
+<div class="bio-panel">
+
+<div class="bio-panel-header">
+
+<div class="bio-panel-title">* Note Speciali & Doni Master</div>
+
+<button type="button" class="btn btn-sm no-print" id="btn-add-bio-gift" onclick="addBioGift()">+ Aggiungi Dono Master</button>
+
+</div>
+
+<div class="input-group">
+
+<label>Benedizioni Narrative, Contratti, Abilità Speciali:</label>
+
+<textarea id="bio-master-notes" class="input-field bio-textarea" placeholder="Note speciali del Game Master, poteri della campagna..."></textarea>
+
+</div>
+
+<div id="bio-gifts-list" class="bio-dynamic-list"></div>
+
+</div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div> <!-- END sheet-grid-3x2 -->
+
+      <!-- TAB VERTICALI SUL BORDO DESTRO (CORE, COMBAT, INVENTARIO, RELAZIONI, TUTTO) -->
+      <aside class="vertical-tabs-edge no-print" aria-label="Navigazione Schede">
+        <button type="button" class="vtab-tab tab-core active" data-target="row-core" onclick="selectVerticalTab('row-core')" title="Scheda Core: SPECIAL, Skills, Tratti & Perk">
+          <span class="vtab-badge">1</span>
+          <span class="vtab-label">CORE</span>
+        </button>
+        <button type="button" class="vtab-tab tab-combat" data-target="row-combat" onclick="selectVerticalTab('row-combat')" title="Scheda Combat: Armi, To Hit, Danno, Armatura & Vitali">
+          <span class="vtab-badge">2</span>
+          <span class="vtab-label">COMBAT</span>
+        </button>
+        <button type="button" class="vtab-tab tab-inv" data-target="row-inv" onclick="selectVerticalTab('row-inv')" title="Scheda Inventario: Carico, Tappi, Oggetti & Pip-Boy">
+          <span class="vtab-badge">3</span>
+          <span class="vtab-label">INVENTARIO</span>
+        </button>
+        <button type="button" class="vtab-tab tab-rel" data-target="row-rel" onclick="selectVerticalTab('row-rel')" title="Scheda Relazioni: Biometria, Personalità, Storia & Compagni">
+          <span class="vtab-badge">4</span>
+          <span class="vtab-label">RELAZIONI</span>
+        </button>
+        <button type="button" class="vtab-tab tab-all" data-target="all" onclick="selectVerticalTab('all')" title="Visualizza Tutte le Sezioni (Vista Completa / Stampa)">
+          <span class="vtab-badge">★</span>
+          <span class="vtab-label">TUTTO</span>
+        </button>
+      </aside>
+
+    </div> <!-- END sheet-binder-frame -->
+  </main>
+
+  <!-- Backward-compatibility and dashboard dummy anchors (guaranteeing 0 JS errors) -->
+  <div style="display:none;" id="legacy-dash-anchors">
+    <div id="codex-left-sidebar" class="codex-sidebar-left"></div>
+    <div id="codex-top-tabs" class="codex-tabs-bar"></div>
+    <div id="tab-page-1" class="vault-tab-page active"></div>
+    <div id="tab-page-2" class="vault-tab-page"></div>
+    <div id="tab-page-3" class="vault-tab-page"></div>
+    <div id="tab-page-4" class="vault-tab-page"></div>
+    <div id="tab-page-5" class="vault-tab-page"></div>
+    <div id="row-gdr"></div>
+    <div id="row-tech"></div>
+    <div id="char-creation-mode-badge"></div>
+    <div id="char-header-action-buttons"></div>
+    <div id="char-race-header"></div>
+    <div id="character-lock-modal"></div>
+    <div id="dash-hp-bar"></div><div id="dash-hp-text"></div>
+    <div id="dash-sp-bar"></div><div id="dash-sp-text"></div>
+    <div id="dash-ap-bar"></div><div id="dash-ap-text"></div>
+    <div id="dash-limb-penalties"></div>
+    <div id="dash-pa-badge"></div><div id="dash-pa-dp-val"></div>
+    <div id="dash-pa-equipped-view"></div><div id="dash-pa-fusion-val"></div>
+    <div id="dash-pa-model-title"></div><div id="dash-pa-not-equipped-view"></div>
+    <div id="dash-pb-model-name"></div><div id="dash-perks-count-badge"></div>
+    <div id="dashboard-active-perks-list"></div><div id="dashboard-perks-bonuses-container"></div>
+    <div id="lock-modal-bg-val"></div><div id="lock-modal-race-val"></div><div id="lock-modal-skills-val"></div>
+    <div id="race-lock-status-badge"></div>
+    <div id="top-hp-bar"></div><div id="top-hp-pct"></div>
+    <div id="top-sp-bar"></div><div id="top-sp-pct"></div>
+    <div id="top-ap-bar"></div><div id="top-ap-pct"></div>
+  </div>
+
+  <!-- Helper hidden elements -->
+<input type="file" id="import-file-input" accept=".json" style="display:none;" onchange="importCharacterJSON(event)">
+  <!-- COMPENDIUM MODAL -->
+  <div class="picker-overlay no-print" id="compendium-modal" style="display:none;" onclick="if(event.target===this) closeCompendiumModal()">
+    <div class="picker-dialog" style="max-width:850px; width:95vw; max-height:85vh; display:flex; flex-direction:column;">
+      <div class="picker-header" style="background:var(--accent-secondary); color:#ffffff;">
+        <div style="font-weight:bold; font-family:var(--font-display); font-size:17px; letter-spacing:1px; display:flex; align-items:center; gap:8px;">
+          <span>📖</span>
+          <span>COMPENDIO REGOLE FALLOUT 2d20</span>
+        </div>
+        <button type="button" class="btn btn-sm btn-icon" onclick="closeCompendiumModal()" style="background:transparent; color:#fff; border-color:#fff;" title="Chiudi">✕</button>
+      </div>
+      <div style="padding:12px; display:flex; gap:10px; align-items:center; border-bottom:1px solid var(--border-color); background:var(--bg-tertiary); flex-wrap:wrap;">
+        <input type="text" id="comp-search-input" class="input-field" placeholder="Cerca armi, tratti, talenti perk..." oninput="renderCompendium()" style="flex:1; min-width:200px;">
+        <div class="comp-tabs" style="display:flex; gap:6px;">
+          <button type="button" class="btn btn-sm comp-tab-btn active" data-tab="weapons" onclick="setCompendiumTab('weapons')">⚔️ Armi</button>
+          <button type="button" class="btn btn-sm comp-tab-btn" data-tab="traits" onclick="setCompendiumTab('traits')">📜 Tratti</button>
+          <button type="button" class="btn btn-sm comp-tab-btn" data-tab="perks" onclick="setCompendiumTab('perks')">★ Perks</button>
+        </div>
+      </div>
+      <div id="compendium-content" style="padding:14px; overflow-y:auto; flex:1; max-height:60vh;"></div>
+    </div>
+  </div>
+
+  <!-- DICE ROLLER MODAL (Pip-Boy 2d20 & Combat Dice Simulator) -->
+  <div class="picker-overlay no-print" id="dice-modal" style="display:none;" onclick="if(event.target===this) closeDiceModal()">
+    <div class="picker-dialog" style="max-width:720px; width:95vw; max-height:90vh; display:flex; flex-direction:column;">
+      <div class="picker-header" style="background:#15803d; color:#ffffff; padding:12px 18px; display:flex; justify-content:space-between; align-items:center; border-top-left-radius:8px; border-top-right-radius:8px;">
+        <div style="font-weight:bold; font-family:var(--font-display); font-size:17px; letter-spacing:1px; display:flex; align-items:center; gap:8px;">
+          <span>🎲</span>
+          <span id="dice-modal-title">SISTEMA DADI PIP-BOY 2d20 & DANNO</span>
+        </div>
+        <button type="button" class="btn btn-sm" onclick="closeDiceModal()" style="background:rgba(255,255,255,0.2); color:#ffffff; border:1.5px solid rgba(255,255,255,0.5); font-weight:800; font-size:13px; padding:5px 12px; border-radius:5px; display:flex; align-items:center; gap:6px; cursor:pointer;" title="Chiudi finestra (ESC)">
+          <span>✕</span>
+          <span>Chiudi (ESC)</span>
+        </button>
+      </div>
+
+      <!-- Dice Mode Tabs -->
+      <div style="display:flex; gap:6px; padding:10px 14px; background:var(--bg-tertiary); border-bottom:1px solid var(--border-color);">
+        <button type="button" class="btn btn-sm dice-tab-btn active" id="tab-dice-2d20" onclick="switchDiceTab('2d20')">🎯 Prova Abilità (2d20)</button>
+        <button type="button" class="btn btn-sm dice-tab-btn" id="tab-dice-cd" onclick="switchDiceTab('cd')">💥 Dadi Danno (CD)</button>
+        <button type="button" class="btn btn-sm dice-tab-btn" id="tab-dice-gen" onclick="switchDiceTab('gen')">🎲 Dadi Generici</button>
+      </div>
+
+      <div style="padding:16px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:16px;">
+        <!-- TAB 1: 2D20 SKILL / ATTRIBUTE CHECK -->
+        <div id="dice-panel-2d20" class="dice-panel">
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:14px;">
+            <div class="input-group">
+              <label for="dice-stat-select">Attributo S.P.E.C.I.A.L.</label>
+              <select id="dice-stat-select" class="input-field" onchange="updateDiceTN()">
+                <option value="strength">Forza (S)</option>
+                <option value="perception">Percezione (P)</option>
+                <option value="endurance">Robustezza (E)</option>
+                <option value="charisma">Carisma (C)</option>
+                <option value="intelligence">Intelligenza (I)</option>
+                <option value="agility" selected>Agilità (A)</option>
+                <option value="luck">Fortuna (L)</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="dice-skill-select">Abilità (Skill)</label>
+              <select id="dice-skill-select" class="input-field" onchange="updateDiceTN()"></select>
+            </div>
+            <div class="input-group">
+              <label for="dice-diff-select">Difficoltà Prova</label>
+              <select id="dice-diff-select" class="input-field">
+                <option value="1" selected>Difficoltà 1 (Standard)</option>
+                <option value="2">Difficoltà 2 (Impegnativo)</option>
+                <option value="3">Difficoltà 3 (Difficile)</option>
+                <option value="4">Difficoltà 4 (Estremo)</option>
+                <option value="5">Difficoltà 5 (Quasi Impossibile)</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="dice-pool-count">Numero Dadi d20</label>
+              <select id="dice-pool-count" class="input-field">
+                <option value="2" selected>2d20 (Base)</option>
+                <option value="3">3d20 (+1 AP o Karma)</option>
+                <option value="4">4d20 (+2 AP o Karma)</option>
+                <option value="5">5d20 (+3 AP o Karma)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Target Number & Tag Skill info banner -->
+          <div style="background:var(--bg-card); border:1.5px solid var(--border-color); border-radius:6px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div>
+              <span style="font-size:12px; text-transform:uppercase; color:var(--text-dim); font-weight:bold;">Numero Bersaglio (TN): </span>
+              <span id="dice-tn-display" style="font-size:19px; font-weight:900; color:var(--accent-secondary);">10</span>
+              <span id="dice-tag-display" style="margin-left:8px; font-size:12px; font-weight:bold; color:var(--accent-amber);"></span>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="roll2d20Check()" style="font-weight:900; letter-spacing:0.5px; padding:8px 20px;">🎲 LANCIA 2d20</button>
+          </div>
+
+          <!-- 2d20 Results Area -->
+          <div id="dice-results-2d20" style="margin-top:14px; min-height:80px; display:flex; flex-direction:column; gap:8px;"></div>
+        </div>
+
+        <!-- TAB 2: COMBAT DICE (CD) DAMAGE ROLLER -->
+        <div id="dice-panel-cd" class="dice-panel" style="display:none;">
+          <div style="display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; margin-bottom:14px;">
+            <div class="input-group" style="flex:1; min-width:140px;">
+              <label for="dice-cd-count">Numero Dadi Danno (CD)</label>
+              <input type="number" id="dice-cd-count" class="input-field" value="4" min="1" max="25" style="font-weight:bold; font-size:17px;">
+            </div>
+            <div class="input-group" style="flex:1; min-width:140px;">
+              <label for="dice-cd-bonus">Danno Fisso Aggiuntivo</label>
+              <input type="number" id="dice-cd-bonus" class="input-field" value="0" min="0" max="20" style="font-weight:bold; font-size:17px;">
+            </div>
+            <div class="input-group" style="flex:1; min-width:180px;">
+              <label for="dice-cd-weapon-name">Nome Arma (Opzionale)</label>
+              <input type="text" id="dice-cd-weapon-name" class="input-field" placeholder="Es. Fucile da Caccia">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="rollCombatDice()" style="font-weight:900; letter-spacing:0.5px; padding:10px 22px; height:42px;">💥 TIRA DANNO CD</button>
+          </div>
+
+          <!-- CD Results Area -->
+          <div id="dice-results-cd" style="min-height:80px; display:flex; flex-direction:column; gap:8px;"></div>
+        </div>
+
+        <!-- TAB 3: GENERIC DICE -->
+        <div id="dice-panel-gen" class="dice-panel" style="display:none;">
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+            <button type="button" class="btn" onclick="rollGenericDie(4)">d4</button>
+            <button type="button" class="btn" onclick="rollGenericDie(6)">d6</button>
+            <button type="button" class="btn" onclick="rollGenericDie(8)">d8</button>
+            <button type="button" class="btn" onclick="rollGenericDie(10)">d10</button>
+            <button type="button" class="btn" onclick="rollGenericDie(12)">d12</button>
+            <button type="button" class="btn" onclick="rollGenericDie(20)">d20</button>
+            <button type="button" class="btn" onclick="rollGenericDie(100)">d100 (Percentuale)</button>
+          </div>
+          <div id="dice-results-gen" style="min-height:60px;"></div>
+        </div>
+
+        <!-- ROLL HISTORY LOG -->
+        <div style="border-top:1px dashed var(--border-color); padding-top:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span style="font-size:12px; font-weight:bold; color:var(--text-dim); text-transform:uppercase;">Storico Tiri Recenti</span>
+            <button type="button" class="btn btn-sm" onclick="clearDiceLog()" style="font-size:11px;">Azzera Storico</button>
+          </div>
+          <div id="dice-history-log" style="display:flex; flex-direction:column; gap:4px; max-height:140px; overflow-y:auto; font-family:var(--font-mono); font-size:12px;"></div>
+        </div>
+      </div>
+
+      <!-- MODAL FOOTER ACTION BAR: CHIUDI E TORNA ALLA SCHEDA -->
+      <div class="picker-footer" style="padding:12px 18px; background:var(--bg-tertiary); border-top:1.5px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; border-bottom-left-radius:8px; border-bottom-right-radius:8px;">
+        <div style="font-size:12.5px; color:var(--text-dim); display:flex; align-items:center; gap:6px;">
+          <span>💡 Premi <strong>ESC</strong> o clicca sullo sfondo per chiudere.</span>
+        </div>
+        <button type="button" class="btn btn-primary btn-close-dice-modal" onclick="closeDiceModal()" style="font-size:14px; font-weight:800; padding:9px 22px; display:inline-flex; align-items:center; gap:8px; cursor:pointer;" title="Chiudi e torna alla scheda principale">
+          <span>⬅</span>
+          <span>Chiudi e Torna alla Scheda Principale</span>
+        </button>
+      </div>
+    </div>
+  </div>
+<!-- ===================================================================
+     PIP-BOY UPGRADE INSTALLATION MODAL
+     =================================================================== -->
+  <div class="picker-overlay no-print" id="pipboy-upgrade-modal" style="display:none;" onclick="if(event.target===this) closePipboyUpgradeModal()">
+    <div class="picker-dialog" style="max-width:560px; width:95vw;">
+      <div class="picker-header" style="background:#0f291e; color:#3ddc84; border-bottom:2px solid #3ddc84;">
+        <div style="font-weight:bold; font-family:var(--font-mono); font-size:16px; display:flex; align-items:center; gap:8px;">
+          <span>📟</span>
+          <span>CATALOGO UPGRADE PIP-BOY</span>
+        </div>
+        <button type="button" class="btn btn-sm btn-icon" onclick="closePipboyUpgradeModal()" style="color:#3ddc84; font-weight:bold;" title="Chiudi">✕</button>
+      </div>
+      <div style="padding:14px; display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(61,220,132,0.08); border:1px solid rgba(61,220,132,0.3); border-radius:4px; padding:6px 10px; font-size:12.5px;">
+          <span id="pb-modal-slots-info" style="font-weight:bold; color:var(--text-bright);">Slot: 0/5 Occupati</span>
+          <span id="pb-modal-model-info" style="color:#3ddc84; font-weight:bold; font-size:12px;">Modello Attivo</span>
+        </div>
+        <div id="pb-modal-upgrades-list" style="display:flex; flex-direction:column; gap:8px; max-height:360px; overflow-y:auto; padding-right:4px;">
+          <!-- Injected dynamically by app.js -->
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:6px; border-top:1px solid var(--border-color); padding-top:8px;">
+          <button type="button" class="btn" onclick="closePipboyUpgradeModal()">Chiudi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- ===================================================================
+
+ LEVEL UP WIZARD MODAL (Avanzamento Guidato con Regole Ufficiali)
+
+ =================================================================== -->
+
+ <div class="picker-overlay no-print" id="level-up-modal" style="display:none;" onclick="if(event.target===this) document.getElementById('level-up-modal').style.display='none'">
+
+ <div class="picker-dialog" style="max-width:680px; width:95vw;">
+
+ <div class="picker-header" style="background:var(--accent); color:var(--bg-primary);">
+
+ <div style="font-weight:bold; font-family:var(--font-display); font-size:18px; letter-spacing:1px;">
+
+ ▲ AVANZAMENTO A LIVELLO <span id="lvl-wizard-new-level" style="text-decoration:underline;">2</span>
+
+ </div>
+
+ <button type="button" class="btn btn-sm btn-icon" id="btn-close-level-up" onclick="document.getElementById('level-up-modal').style.display='none'" style="background:transparent; color:var(--bg-primary); border-color:var(--bg-primary);" title="Chiudi">✕</button>
+
+ </div>
+
+
+
+ <div style="padding:16px; display:flex; flex-direction:column; gap:14px;">
+
+ <!-- Level gains summary -->
+
+ <div class="lvl-summary-card">
+
+ <div style="font-weight:bold; font-size:14px; color:var(--text-bright); text-transform:uppercase;">
+
+ Progressione Statistiche (Manuale Pag. 5)
+
+ </div>
+
+ <div class="lvl-gains-grid" id="lvl-gains-display">
+
+ <!-- Injected by app.js: HP, SP gains, Perks gained -->
+
+ </div>
+
+ </div>
+
+
+
+ <!-- Skill points allocation -->
+
+ <div class="lvl-skill-section">
+
+ <div style="display:flex; justify-content:space-between; align-items:center;">
+
+ <div>
+
+ <span style="font-weight:bold; font-size:13px; color:var(--text-bright); text-transform:uppercase;">
+
+ Punti Abilità da Assegnare:
+
+ </span>
+
+ <span style="font-size:12px; color:var(--text-dim);" id="lvl-skill-formula-info">(Base INT + bonus)</span>
+
+ </div>
+
+ <div class="lvl-points-badge" id="lvl-remaining-points-badge">Punti Rimanenti: 0</div>
+
+ </div>
+
+
+
+ <div class="lvl-skills-grid" id="lvl-skills-alloc-grid">
+
+ <!-- 14 Skills allocation rows injected by app.js -->
+
+ </div>
+
+ </div>
+
+
+
+ <!-- Perk selection section (if eligible at this level) -->
+
+ <div class="lvl-perk-section" id="lvl-perk-section" style="display:none;">
+
+ <div style="font-weight:bold; font-size:13px; color:var(--warning); text-transform:uppercase;">
+
+ * Nuovo Perk / Talento Acquisito!
+
+ </div>
+
+ <div style="font-size:12px; color:var(--text-dim); margin-top:2px;">
+
+ A questo livello hai diritto a selezionare un nuovo perk secondo la tabella ufficiale:
+
+ </div>
+
+ <div id="lvl-chosen-perk-card" style="margin-top:6px;">
+
+ <div style="font-size:12px; color:var(--text-dim); font-style:italic;">Nessun perk selezionato. Clicca sotto per scegliere:</div>
+
+ </div>
+
+ <div id="lvl-perk-buttons-row" style="display:flex; gap:8px; margin-top:6px;">
+
+ <button class="btn btn-sm btn-primary" id="btn-lvl-pick-perk-comp">+ Scegli da Compendio</button>
+
+ <button class="btn btn-sm" id="btn-lvl-pick-perk-custom">+ Crea Perk Personalizzato</button>
+
+ </div>
+
+ </div>
+
+
+
+ <!-- Action buttons -->
+
+ <div style="display:flex; justify-content:flex-end; gap:10px; border-top:1px solid var(--border-color); padding-top:12px;">
+
+ <button class="btn" onclick="document.getElementById('level-up-modal').style.display='none'">Annulla</button>
+
+ <button class="btn btn-primary" id="btn-confirm-level-up" style="font-size:14px; font-weight:bold;">
+
+ [OK] APPLICA PASSAGGIO DI LIVELLO
+
+ </button>
+
+ </div>
+
+ </div>
+
+ </div>
+
+ </div>
+
+
+
+ <!-- ===================================================================
+       CONFIGURAZIONE IMPIANTO NEMEO (COST. 9 - SCELTA 3 TIPI DI DANNO)
+       =================================================================== -->
+  <div class="picker-overlay no-print" id="nemean-config-modal" style="display:none;" onclick="if(event.target===this) closeNemeanConfigModal()">
+    <div class="picker-dialog" style="max-width:440px;">
+      <div class="picker-header">
+        <div style="font-weight:bold; font-family:var(--font-display); font-size:16px; color:var(--text-bright);">
+          ⚡ IMPIANTO NEMEO: SELEZIONA 3 RESISTENZE
+        </div>
+        <button type="button" class="btn btn-sm btn-icon" onclick="closeNemeanConfigModal()" title="Chiudi">✕</button>
+      </div>
+      <div style="padding:14px; display:flex; flex-direction:column; gap:10px;">
+        <div style="font-size:12px; color:var(--text-dim);">
+          L'Impianto Nemeo (Costituzione 9) ti conferisce resistenza (danno dimezzato) a un massimo di <strong>3 tipi di danno a tua scelta</strong> per la durata di 3 round (o 15 secondi).
+        </div>
+        <div id="nemean-types-checklist" style="display:grid; grid-template-columns:1fr 1fr; gap:6px; max-height:240px; overflow-y:auto; padding:6px; border:1px solid var(--border-color); border-radius:4px; background:var(--bg-panel);">
+          <!-- Injected dynamically by app.js -->
+        </div>
+        <div id="nemean-selection-count" style="font-size:12px; font-weight:bold; color:var(--accent);">
+          Selezionati: 3 / 3 tipi
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:6px;">
+          <button type="button" class="btn" onclick="closeNemeanConfigModal()">Annulla</button>
+          <button type="button" class="btn btn-primary" onclick="saveNemeanConfig()">Salva Selezione</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================
+
+ EQUIP / SWAP MODAL (Gestione Slot Armi & Mani)
+
+ =================================================================== -->
+
+ <div class="picker-overlay no-print" id="equip-swap-modal" style="display:none;" onclick="if(event.target===this) closeEquipSwapModal()">
+
+ <div class="picker-dialog" style="max-width:540px;">
+
+ <div class="picker-header">
+
+ <div id="equip-swap-title" style="font-weight:bold; font-family:var(--font-display); font-size:17px; color:var(--text-bright);">
+
+ EQUIPAGGIA ARMA: SELEZIONA SLOT
+
+ </div>
+
+ <button type="button" class="btn btn-sm btn-icon" id="btn-close-equip-swap" onclick="closeEquipSwapModal()" title="Chiudi">✕</button>
+
+ </div>
+
+ <div style="padding:16px; display:flex; flex-direction:column; gap:12px;">
+
+ <div id="equip-swap-warning-box" style="display:none;"></div>
+
+ <div id="equip-swap-desc" style="font-size:13px; color:var(--text-bright); line-height:1.4;"></div>
+
+ <div id="equip-swap-options" style="display:flex; flex-direction:column; gap:8px;"></div>
+
+ <div style="text-align:right; margin-top:8px;">
+
+ <button class="btn" onclick="document.getElementById('equip-swap-modal').style.display='none'">Annulla</button>
+
+ </div>
+
+ </div>
+
+ </div>
+
+ </div>
+
+
+
+ 
+
+
+
+ <<!-- ===================================================================
+
+ TRAIT & RULE DETAIL MODAL (Apre scheda al click sui tratti innati)
+
+ =================================================================== -->
+
+ <div class="picker-overlay no-print" id="trait-detail-modal" style="display:none;" onclick="if(event.target===this) closeTraitDetailModal()">
+
+ <div class="picker-dialog" style="max-width:480px;">
+
+ <div class="picker-header">
+
+ <div id="trait-detail-title" style="font-weight:bold; font-family:var(--font-display); font-size:17px; color:var(--text-bright);">
+
+ DETTAGLIO TRATTO
+
+ </div>
+
+ <button type="button" class="btn btn-sm btn-icon" id="btn-close-trait-detail" onclick="closeTraitDetailModal()" title="Chiudi">✕</button>
+
+ </div>
+
+ <div style="padding:16px; display:flex; flex-direction:column; gap:10px;">
+
+ <div id="trait-detail-category" style="font-size:12px; color:var(--accent); text-transform:uppercase; font-weight:bold;"></div>
+
+ <div id="trait-detail-text" style="font-size:14px; line-height:1.5; color:var(--text-bright); background:var(--bg-input); padding:12px; border:1px solid var(--border-color); border-radius:var(--radius);"></div>
+
+ <div style="text-align:right;">
+
+ <button type="button" class="btn btn-primary" onclick="closeTraitDetailModal()">OK, HO CAPITO</button>
+
+ </div>
+
+ </div>
+
+ </div>
+
+ </div>
+
+
+
+ <<!-- ===================================================================
+
+ COMPENDIUM DRAWER (Consultazione Rapida Regole e Tabelle)
+
+ =================================================================== -->
+
+ <aside class="compendium-modal no-print" id="compendium-drawer">
+
+ <div class="compendium-header">
+
+ <div style="font-family:var(--font-display); font-size:19px; font-weight:bold; color:var(--text-bright);">
+
+ COMPENDIO REGOLE ZONA CONTAMINATA
+
+ </div>
+
+ <button class="btn btn-sm btn-icon" id="btn-close-compendium"> Chiudi</button>
+
+ </div>
+
+
+
+ <!-- Navigation Tabs -->
+
+ <div class="compendium-tabs">
+
+ <button class="comp-tab active" data-tab="weapons">Armi</button>
+
+ <button class="comp-tab" data-tab="weapon_mods">Modifiche Armi</button>
+
+ <button class="comp-tab" data-tab="armors">Armature</button>
+
+ <button class="comp-tab" data-tab="armor_upgrades">Modifiche Armatura</button>
+
+ <button class="comp-tab" data-tab="special_ammo">Munizioni Speciali</button>
+
+ <button class="comp-tab" data-tab="traits">Tratti</button>
+
+ <button class="comp-tab" data-tab="perks">Perks</button>
+
+ <button class="comp-tab" data-tab="glossary">Glossario</button>
+
+ </div>
+
+
+
+ <!-- Search bar -->
+
+ <div class="compendium-search-bar">
+
+ <input type="text" id="comp-search" class="input-field" placeholder="Cerca elemento, mod o regola nel compendio...">
+
+ </div>
+
+
+
+ <!-- Content List -->
+
+ <div class="compendium-body" id="compendium-body">
+
+ <!-- Injected by app.js -->
+
+ </div>
+
+ </aside>
+
+
+
+ <<!-- ===================================================================
+
+ MODAL AGGIUNGI RESISTENZA / IMMUNITÀ PERSONALIZZATA
+
+ =================================================================== -->
+
+ <div class="picker-overlay no-print" id="custom-resistance-modal" style="display:none;" onclick="if(event.target===this) closeCustomResistanceModal()">
+
+ <div class="picker-dialog" style="max-width:460px;">
+
+ <div class="picker-header">
+
+ <div style="font-weight:bold; font-family:var(--font-display); font-size:17px; color:var(--text-bright);">
+
+ AGGIUNGI MODIFICATORE DIFENSIVO
+
+ </div>
+
+ <button type="button" class="btn btn-sm btn-icon" onclick="closeCustomResistanceModal()" title="Chiudi">✕</button>
+
+ </div>
+
+ <div style="padding:16px; display:flex; flex-direction:column; gap:10px;">
+
+ <div class="input-group">
+
+ <label>Categoria Effetto</label>
+
+ <select id="custom-resist-category" class="input-field">
+
+ <option value="half">Resistenza (Danno Dimezzato - ½)</option>
+
+ <option value="immune">Immunità (Danno 0 / Immune a Condizione)</option>
+
+ <option value="vuln">Suscettibilità / Vulnerabilità (Danno x2)</option>
+
+ </select>
+
+ </div>
+
+ <div class="input-group">
+
+ <label>Tipo di Danno o Condizione</label>
+
+ <select id="custom-resist-type" class="input-field" onchange="onCustomResistTypeChange(this.value)">
+
+ <option value="Freddo">Freddo (Cold)</option>
+
+ <option value="Elettricità">Elettricità (Electricity)</option>
+
+ <option value="Esplosivo">Esplosivo (Explosive)</option>
+
+ <option value="Fuoco">Fuoco (Fire)</option>
+
+ <option value="Impatto">Impatto (Impact)</option>
+
+ <option value="Laser">Laser</option>
+
+ <option value="Plasma">Plasma</option>
+
+ <option value="Perforante">Perforante (Piercing)</option>
+
+ <option value="Veleno">Veleno (Poison)</option>
+
+ <option value="Tagliente">Tagliente (Slashing)</option>
+
+ <option value="Radiazioni">Radiazioni (Radiation)</option>
+
+ <option value="Sanguinamento">Sanguinamento (Bleed)</option>
+
+ <option value="Condizioni Arti">Condizioni Arti (Limb Conditions)</option>
+
+ <option value="Spaventato">Spaventato (Frightened)</option>
+
+ <option value="Ipotermia">Ipotermia (Hypothermia)</option>
+
+ <option value="Dipendenze">Dipendenze (Addiction)</option>
+
+ <option value="custom">Altro (Personalizzato)</option>
+
+ </select>
+
+ </div>
+
+ <div class="input-group" id="custom-resist-name-wrap">
+
+ <label>Nome / Dettaglio Specifico (Opzionale o se 'Altro')</label>
+
+ <input type="text" id="custom-resist-name" class="input-field" placeholder="Es. Danni Psichici, Radiazione Acqua...">
+
+ </div>
+
+ <div class="input-group">
+
+ <label>Fonte / Note (Opzionale)</label>
+
+ <input type="text" id="custom-resist-source" class="input-field" placeholder="Es. Med-X, Rad-X, Dono Master...">
+
+ </div>
+
+ <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+
+ <button type="button" class="btn" onclick="closeCustomResistanceModal()">Annulla</button>
+
+ <button type="button" class="btn btn-primary" onclick="saveCustomResistance()">Aggiungi</button>
+
+ </div>
+
+ </div>
+
+ </div>
+
+ </div>
+
+
+
+ <<!-- ===================================================================
+
+ GENERIC SELECTION / PICKER MODAL
+
+ =================================================================== -->
+
+ <div class="picker-overlay no-print" id="generic-picker-modal" style="display:none;" onclick="if(event.target===this) closePickerModal()">
+
+ <div class="picker-dialog">
+
+ <div class="picker-header">
+
+ <div id="picker-title" style="font-weight:bold; font-family:var(--font-display); font-size:17px; color:var(--text-bright);">
+
+ SELEZIONA ELEMENTO
+
+ </div>
+
+ <button type="button" class="btn btn-sm btn-icon" id="btn-close-picker" onclick="closePickerModal()" title="Chiudi">✕</button>
+
+ </div>
+
+ <div class="picker-search-box">
+
+ <input type="text" id="picker-search-input" class="input-field" placeholder="Filtra elementi...">
+
+ </div>
+
+ <div class="picker-list" id="picker-list-body">
+
+ <!-- Injected dynamically -->
+
+ </div>
+
+ </div>
+
+ </div>
+
+
+
+ <!-- FLOATING PIP-BOY TOOLTIP -->
+
+ <div id="pipboy-tooltip" class="pipboy-tooltip" role="tooltip"></div>
+
+
+
+
+<!-- CHARACTER CREATION WIZARD -->
+ <div id="char-creation-overlay" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.92); backdrop-filter:blur(6px); overflow-y:auto; font-family:'Courier New',monospace;">
+   <div id="char-creation-modal" style="max-width:700px; margin:40px auto; background:var(--bg-secondary,#1a1a1a); border:2px solid #4ade80; border-radius:12px; box-shadow:0 0 60px rgba(74,222,128,0.3),0 0 20px rgba(74,222,128,0.15); overflow:hidden;">
+
+     <!-- Modal Header -->
+     <div style="background:linear-gradient(135deg,#052e16 0%,#14532d 100%); padding:24px 30px; border-bottom:2px solid #4ade80; display:flex; align-items:center; gap:16px;">
+       <div style="font-size:37px; filter:drop-shadow(0 0 10px #4ade80);">☢️</div>
+       <div>
+         <div style="font-size:12px; letter-spacing:3px; color:#86efac; text-transform:uppercase; font-weight:700;">VAULT-TEC SYSTEM v3.5</div>
+         <div style="font-size:23px; font-weight:900; color:#4ade80; letter-spacing:2px; text-shadow:0 0 15px rgba(74,222,128,0.5);">CREAZIONE PERSONAGGIO</div>
+         <div style="font-size:12px; color:#86efac; margin-top:2px;">Inizializzazione profilo sopravvissuto...</div>
+       </div>
+       <div id="wiz-step-indicator" style="margin-left:auto; text-align:right;">
+         <div style="font-size:11px; color:#6b7280; letter-spacing:2px; text-transform:uppercase; margin-bottom:4px;">STEP</div>
+         <div id="wiz-step-label" style="font-size:25px; font-weight:900; color:#4ade80;">1 / 3</div>
+       </div>
+     </div>
+
+     <!-- Progress Bar -->
+     <div style="height:4px; background:#1f2937;">
+       <div id="wiz-progress-bar" style="height:100%; background:linear-gradient(90deg,#4ade80,#22d3ee); width:33%; transition:width 0.4s ease;"></div>
+     </div>
+
+     <!-- Modal Body -->
+     <div style="padding:30px;">
+
+       <!-- STEP 1: Nome & Giocatore -->
+       <div id="wiz-step-1" class="wiz-step">
+         <div style="font-size:15px; font-weight:800; color:#4ade80; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px;">&#62; IDENTITÀ SOPRAVVISSUTO</div>
+         <div style="font-size:13px; color:#6b7280; margin-bottom:24px;">Inserisci i dati base del tuo personaggio. Potrai modificarli in seguito.</div>
+
+         <div style="display:grid; gap:18px;">
+           <div>
+             <label style="display:block; font-size:12px; font-weight:700; color:#86efac; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px;">NOME PERSONAGGIO *</label>
+             <input type="text" id="wiz-char-name" placeholder="Es: Sarah Lyons, Doc Mitchell..." maxlength="50"
+               style="width:100%; background:#0a0f0a; border:2px solid #4ade80; border-radius:6px; padding:12px 16px; color:#4ade80; font-family:'Courier New',monospace; font-size:17px; font-weight:700; outline:none; box-sizing:border-box; letter-spacing:1px;"
+               oninput="wizValidateStep1()">
+             <div id="wiz-name-error" style="color:#f87171; font-size:12px; margin-top:4px; display:none;">⚠ Il nome è obbligatorio</div>
+           </div>
+           <div>
+             <label style="display:block; font-size:12px; font-weight:700; color:#86efac; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px;">NOME GIOCATORE</label>
+             <input type="text" id="wiz-player-name" placeholder="Il tuo nome (opzionale)" maxlength="50"
+               style="width:100%; background:#0a0f0a; border:2px solid #374151; border-radius:6px; padding:12px 16px; color:#d1d5db; font-family:'Courier New',monospace; font-size:15px; outline:none; box-sizing:border-box;"
+               onfocus="this.style.borderColor='#4ade80'" onblur="this.style.borderColor='#374151'">
+           </div>
+         </div>
+
+         <div style="margin-top:28px; display:flex; justify-content:flex-end;">
+           <button onclick="wizNextStep(1)" id="wiz-btn-next-1"
+             style="background:linear-gradient(135deg,#16a34a,#15803d); color:#fff; border:none; border-radius:6px; padding:12px 28px; font-family:'Courier New',monospace; font-size:14px; font-weight:800; letter-spacing:2px; cursor:pointer; text-transform:uppercase; transition:all 0.2s;"
+             onmouseover="this.style.background='linear-gradient(135deg,#22c55e,#16a34a)'; this.style.boxShadow='0 0 20px rgba(74,222,128,0.4)'"
+             onmouseout="this.style.background='linear-gradient(135deg,#16a34a,#15803d)'; this.style.boxShadow='none'">
+             AVANTI → RAZZA
+           </button>
+         </div>
+       </div>
+
+       <!-- STEP 2: Razza -->
+       <div id="wiz-step-2" class="wiz-step" style="display:none;">
+         <div style="font-size:15px; font-weight:800; color:#4ade80; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px;">&#62; ORIGINE GENETICA</div>
+         <div style="font-size:13px; color:#6b7280; margin-bottom:20px;">Scegli la razza del tuo personaggio. Determina tratti innati e capacità speciali.</div>
+
+         <div id="wiz-race-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap:12px; margin-bottom:20px;"></div>
+
+         <div id="wiz-race-desc" style="background:#0a0f0a; border:1px solid #374151; border-radius:8px; padding:16px; min-height:60px; display:none;">
+           <div id="wiz-race-desc-name" style="font-size:13px; font-weight:800; color:#4ade80; margin-bottom:6px;"></div>
+           <div id="wiz-race-desc-text" style="font-size:12.5px; color:#9ca3af; line-height:1.5;"></div>
+         </div>
+
+         <div style="margin-top:24px; display:flex; justify-content:space-between;">
+           <button onclick="wizGoStep(1)"
+             style="background:#1f2937; color:#9ca3af; border:1px solid #374151; border-radius:6px; padding:10px 20px; font-family:'Courier New',monospace; font-size:13px; font-weight:700; letter-spacing:1px; cursor:pointer; text-transform:uppercase;"
+             onmouseover="this.style.borderColor='#4ade80'; this.style.color='#4ade80'"
+             onmouseout="this.style.borderColor='#374151'; this.style.color='#9ca3af'">
+             ← INDIETRO
+           </button>
+           <button onclick="wizNextStep(2)" id="wiz-btn-next-2" disabled
+             style="background:linear-gradient(135deg,#16a34a,#15803d); color:#fff; border:none; border-radius:6px; padding:12px 28px; font-family:'Courier New',monospace; font-size:14px; font-weight:800; letter-spacing:2px; cursor:pointer; text-transform:uppercase; opacity:0.5; transition:all 0.2s;"
+             onmouseover="if(!this.disabled){this.style.background='linear-gradient(135deg,#22c55e,#16a34a)'; this.style.boxShadow='0 0 20px rgba(74,222,128,0.4)'}"
+             onmouseout="this.style.background='linear-gradient(135deg,#16a34a,#15803d)'; this.style.boxShadow='none'">
+             AVANTI → BACKGROUND
+           </button>
+         </div>
+       </div>
+
+       <!-- STEP 3: Background -->
+       <div id="wiz-step-3" class="wiz-step" style="display:none;">
+         <div style="font-size:15px; font-weight:800; color:#4ade80; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px;">&#62; STORIA PERSONALE</div>
+         <div style="font-size:13px; color:#6b7280; margin-bottom:20px;">Scegli il background del tuo personaggio. Otterrai <strong style="color:#fbbf24;">+2 a 3 abilità</strong> specifiche del BG scelto.</div>
+
+         <div id="wiz-bg-list" style="display:grid; gap:8px; max-height:340px; overflow-y:auto; padding-right:4px; margin-bottom:16px;"></div>
+
+         <!-- Skills Preview -->
+         <div id="wiz-skills-preview" style="background:#0a0f0a; border:2px solid #fbbf24; border-radius:8px; padding:14px; display:none;">
+           <div style="font-size:12px; font-weight:800; color:#fbbf24; letter-spacing:2px; text-transform:uppercase; margin-bottom:10px;">⚡ BONUS ABILITÀ BACKGROUND</div>
+           <div id="wiz-skills-list" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+           <div style="font-size:11px; color:#6b7280; margin-top:10px;">Queste abilità riceveranno +2 automaticamente. Potrai modificarle in seguito nella scheda.</div>
+         </div>
+
+         <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center;">
+           <button onclick="wizGoStep(2)"
+             style="background:#1f2937; color:#9ca3af; border:1px solid #374151; border-radius:6px; padding:10px 20px; font-family:'Courier New',monospace; font-size:13px; font-weight:700; letter-spacing:1px; cursor:pointer; text-transform:uppercase;"
+             onmouseover="this.style.borderColor='#4ade80'; this.style.color='#4ade80'"
+             onmouseout="this.style.borderColor='#374151'; this.style.color='#9ca3af'">
+             ← INDIETRO
+           </button>
+           <button onclick="wizFinalize()" id="wiz-btn-finish" disabled
+             style="background:linear-gradient(135deg,#b45309,#d97706); color:#fff; border:none; border-radius:6px; padding:14px 36px; font-family:'Courier New',monospace; font-size:15px; font-weight:900; letter-spacing:3px; cursor:pointer; text-transform:uppercase; opacity:0.5; transition:all 0.2s; box-shadow:0 0 20px rgba(217,119,6,0.3);"
+             onmouseover="if(!this.disabled){this.style.background='linear-gradient(135deg,#d97706,#f59e0b)'; this.style.boxShadow='0 0 30px rgba(251,191,36,0.5)'}"
+             onmouseout="this.style.background='linear-gradient(135deg,#b45309,#d97706)'; this.style.boxShadow='0 0 20px rgba(217,119,6,0.3)'">
+             ☢ INIZIA AVVENTURA
+           </button>
+         </div>
+       </div>
+
+     </div>
+   </div>
+ </div>
+ <!-- END CHARACTER CREATION WIZARD -->
+
+  <!-- SCRIPTS -->
+  <script src="rules-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
