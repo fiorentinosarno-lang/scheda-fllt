@@ -85,6 +85,61 @@
 
   <!-- MAIN CHARACTER SHEET BINDER CONTAINER -->
   <main class="app-container layout-binder-root layout-codex-root">
+
+    <!-- =========================================================================
+         FALLOUT VAULT-TEC DEDICATED MOBILE HUD & PIP-BOY SWITCHER (< 900px ONLY)
+         Completamente invisibile su PC/Desktop, attivo e touch-friendly su Mobile.
+         ========================================================================= -->
+    <div id="fallout-mobile-dock" class="mobile-only-dock no-print">
+      <!-- Mini Vitals HUD Strip -->
+      <div class="mobile-vitals-strip">
+        <div class="m-vital-chip" onclick="switchMobileSection('core')" title="Punti Ferita Attuali">
+          <span class="m-vital-icon">❤️</span> <span id="m-hud-hp">PF --/--</span>
+        </div>
+        <div class="m-vital-chip" onclick="switchMobileSection('core')" title="Punti Azione">
+          <span class="m-vital-icon">⚡</span> <span id="m-hud-ap">PA --/--</span>
+        </div>
+        <div class="m-vital-chip" onclick="switchMobileSection('armors')" title="Soglia Danni (DT)">
+          <span class="m-vital-icon">🛡️</span> <span id="m-hud-dt">DT --</span>
+        </div>
+        <div class="m-vital-chip" onclick="switchMobileSection('survival')" title="Radiazioni e CD">
+          <span class="m-vital-icon">☢️</span> <span id="m-hud-rad">Rad --</span>
+        </div>
+      </div>
+
+      <!-- 5-Section Pip-Boy Mobile Tab Bar -->
+      <nav class="mobile-nav-bar" aria-label="Navigazione Mobile Fallout">
+        <button type="button" class="mobile-nav-btn active" data-m-target="core" onclick="switchMobileSection('core')">
+          <span class="m-btn-icon">👤</span>
+          <span class="m-btn-label">STAT/SKILL</span>
+        </button>
+        <button type="button" class="mobile-nav-btn" data-m-target="perks" onclick="switchMobileSection('perks')">
+          <span class="m-btn-icon">🎖️</span>
+          <span class="m-btn-label">PERK</span>
+        </button>
+        <button type="button" class="mobile-nav-btn" data-m-target="weapons" onclick="switchMobileSection('weapons')">
+          <span class="m-btn-icon">⚔️</span>
+          <span class="m-btn-label">ARMI</span>
+        </button>
+        <button type="button" class="mobile-nav-btn" data-m-target="armors" onclick="switchMobileSection('armors')">
+          <span class="m-btn-icon">🛡️</span>
+          <span class="m-btn-label">ARMATURE</span>
+        </button>
+        <button type="button" class="mobile-nav-btn" data-m-target="survival" onclick="switchMobileSection('survival')">
+          <span class="m-btn-icon">☢️</span>
+          <span class="m-btn-label">SOPRAVV.</span>
+        </button>
+        <button type="button" class="mobile-nav-btn" data-m-target="inventory" onclick="switchMobileSection('inventory')">
+          <span class="m-btn-icon">🎒</span>
+          <span class="m-btn-label">ZAINO</span>
+        </button>
+        <button type="button" class="mobile-nav-btn" data-m-target="all" onclick="switchMobileSection('all')" title="Mostra tutte le sezioni insieme">
+          <span class="m-btn-icon">📜</span>
+          <span class="m-btn-label">TUTTO</span>
+        </button>
+      </nav>
+    </div>
+
     <div class="sheet-binder-frame">
 
       <!-- SHEET BODY (4 SEZIONI PRINCIPALI: CORE / COMBAT / INVENTARIO / RELAZIONI) -->
@@ -109,7 +164,7 @@
             <div class="sheet-col sheet-col-left core-sidebar-col">
               
               <!-- 1. FOTO PERSONAGGIO (IN ALTO A SINISTRA) -->
-              <div class="col-inner-box photo-box">
+              <div class="col-inner-box photo-box m-collapsible" data-mobile-cat="core">
                 <div class="box-title-bar">
                   <span>FOTO PERSONAGGIO</span>
                   <span style="font-size:11px; color:var(--text-dim);">AVATAR</span>
@@ -137,7 +192,7 @@
 
 
               <!-- 3. RAZZA / ORIGINE & SOTTOTIPO -->
-              <div class="col-inner-box race-box">
+              <div class="col-inner-box race-box m-collapsible" data-mobile-cat="core">
                 <div class="box-title-bar">
                   <span>RAZZA / ORIGINE</span>
                   <span style="font-size:11px; color:var(--text-dim);">SPECIE</span>
@@ -161,7 +216,7 @@
               </div>
 
               <!-- 4. BG DI PARTENZA -->
-              <div class="col-inner-box bg-box">
+              <div class="col-inner-box bg-box m-collapsible" data-mobile-cat="core">
                 <div class="box-title-bar">
                   <span>BG DI PARTENZA</span>
                   <span style="font-size:11px; color:var(--text-dim);">BACKGROUND</span>
@@ -199,7 +254,7 @@
               </div>
 
               <!-- 5. PARAMETRI VITALI & RISORSE (CORE) -->
-              <div class="col-inner-box vitals-box core-vitals-box">
+              <div class="col-inner-box vitals-box core-vitals-box m-collapsible" data-mobile-cat="core">
                 <div class="box-title-bar">
                   <span>PARAMETRI VITALI & RISORSE</span>
                   <span class="core-col-badge" style="background:rgba(16,185,129,0.12); color:#10b981; border:1px solid rgba(16,185,129,0.3);">ONLINE</span>
@@ -284,7 +339,7 @@
               </div>
 
               <!-- 5b. RESISTENZE, IMMUNITÀ & SUSCETTIBILITÀ (CORE - SOPRA LO STATO ANATOMICO ARTI) -->
-              <div class="col-inner-box resistances-prominent-box" id="core-resistances-container-box" style="margin-top: 4px;">
+              <div class="col-inner-box resistances-prominent-box m-collapsible" data-mobile-cat="desktop-only" id="core-resistances-container-box" style="margin-top: 4px;">
                 <div class="box-title-bar">
                   <div style="display:flex; align-items:center; gap:6px;">
                     <span>🛡️ RESISTENZE, IMMUNITÀ & SUSCETTIBILITÀ</span>
@@ -348,7 +403,7 @@
               </div>
 
               <!-- 6. STATO ANATOMICO ARTI (CORE) -->
-              <div class="col-inner-box paperdoll-box core-paperdoll-box">
+              <div class="col-inner-box paperdoll-box core-paperdoll-box m-collapsible" data-mobile-cat="desktop-only">
                 <div class="box-title-bar">
                   <span>STATO ANATOMICO ARTI</span>
                   <span class="core-col-badge badge-traits">DANNI & MENOMAZIONI</span>
@@ -386,7 +441,7 @@
               </div>
 
               <!-- 7. SEZIONE SOPRAVVIVENZA -->
-              <div class="col-inner-box survival-box">
+              <div class="col-inner-box survival-box m-collapsible" data-mobile-cat="survival">
                 <div class="box-title-bar">
                   <span>SEZIONE SOPRAVVIVENZA</span>
                   <span style="font-size:11px; color:var(--text-dim);">CONDIZIONI</span>
@@ -471,7 +526,7 @@
             <div class="sheet-col sheet-col-center core-center-col">
               
               <!-- 1. TAPPI KARMA NUKA-COLA (SOPRA I PUNTI SPECIAL) -->
-              <div class="col-inner-box karma-prominent-box">
+              <div class="col-inner-box karma-prominent-box m-collapsible" data-mobile-cat="core">
                 <div class="box-title-bar">
                   <div style="display:flex; align-items:center; gap:8px;">
                     <span>⭐ TAPPI KARMA NUKA-COLA</span>
@@ -494,7 +549,7 @@
               </div>
 
               <!-- 2. S.P.E.C.I.A.L. (50% DI VISIBILITÀ / LA BASE DEL PG) -->
-              <div class="col-inner-box special-prominent-box">
+              <div class="col-inner-box special-prominent-box m-collapsible" data-mobile-cat="core">
                 <div class="box-title-bar">
                   <span class="special-title-heading">S &bull; P &bull; E &bull; C &bull; I &bull; A &bull; L</span>
                   <div class="special-points-pool" id="special-pool-info">Totale Punti: 35/38</div>
@@ -595,7 +650,7 @@
               </div>
 
               <!-- 2. PERK & TALENTI (SOTTO GLI SPECIAL, DISTESI IN ORIZZONTALE) -->
-              <div class="col-inner-box perks-horizontal-box">
+              <div class="col-inner-box perks-horizontal-box m-collapsible" data-mobile-cat="perks">
                 <div class="box-title-bar">
                   <div style="display:flex; align-items:center; gap:8px;">
                     <span>PERK & TALENTI</span>
@@ -621,7 +676,7 @@
               </div>
 
               <!-- SOTTO: SKILL (TABELLA COMPLETA A TUTTA LARGHEZZA) -->
-              <div class="col-inner-box skills-box">
+              <div class="col-inner-box skills-box m-collapsible" data-mobile-cat="core">
                 <div class="box-title-bar">
                   <span>ABILITÀ UFFICIALI (14 SKILL)</span>
                   <span style="font-size:11px; color:var(--text-dim);">SPECIAL + PUNTI + TAG (+2)</span>
@@ -649,13 +704,21 @@
                   * <strong>BG (+2)</strong>: Le 3 abilità scelte dal Background al 1° livello ricevono un bonus permanente di +2 (Manuale pag. 4, 19).<br>
                   * Formula: <strong>Base (Mod. Attr + Mod. Fortuna) + Punti + BG (+2) + Extra = TOTALE</strong>. Clicca su [ATTR] per alternare l'attributo ove previsto.
                 </div>
+
+                <!-- Quick Navigation Shortcuts (Mobile Only) -->
+                <div class="mobile-nav-shortcuts">
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('perks')">🎖️ Vai a Perk &amp; Tratti</button>
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('weapons')">⚔️ Vai alle Armi</button>
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('armors')">🛡️ Vai alle Armature</button>
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('survival')">☢️ Vai a Sopravvivenza</button>
+                </div>
               </div>
 
               <!-- 5. TRATTI & ABILITÀ DI RAZZA + TRATTI DEL PERSONAGGIO (SOTTO LA SECONDA COLONNA, DISTESI FINO ALLA FINE) -->
               <div class="traits-dual-row">
                 
                 <!-- 1. TRATTI & ABILITÀ DI RAZZA -->
-                <div class="col-inner-box traits-racial-col">
+                <div class="col-inner-box traits-racial-col m-collapsible" data-mobile-cat="perks">
                   <div class="box-title-bar" style="display:flex; justify-content:space-between; align-items:center;">
                     <div style="display:flex; align-items:center; gap:8px;">
                       <span>TRATTI &amp; ABILITÀ DI RAZZA</span>
@@ -681,7 +744,7 @@
                 </div>
 
                 <!-- 2. TRATTI DEL PERSONAGGIO (TRAITS) -->
-                <div class="col-inner-box traits-generic-col">
+                <div class="col-inner-box traits-generic-col m-collapsible" data-mobile-cat="perks">
                   <div class="box-title-bar" style="display:flex; justify-content:space-between; align-items:center;">
                     <div style="display:flex; align-items:center; gap:8px;">
                       <span>TRATTI DEL PERSONAGGIO</span>
@@ -694,6 +757,14 @@
                   </div>
                   <div class="traits-list" id="traits-list-container">
                     <!-- Populated dynamically by app.js with Rank controls -->
+                  </div>
+
+                  <!-- Quick Navigation Shortcuts (Mobile Only) -->
+                  <div class="mobile-nav-shortcuts">
+                    <button type="button" class="btn btn-secondary" onclick="switchMobileSection('core')">👤 Torna a Stat &amp; Skill</button>
+                    <button type="button" class="btn btn-secondary" onclick="switchMobileSection('weapons')">⚔️ Vai alle Armi</button>
+                    <button type="button" class="btn btn-secondary" onclick="switchMobileSection('armors')">🛡️ Vai alle Armature</button>
+                    <button type="button" class="btn btn-secondary" onclick="switchMobileSection('survival')">☢️ Sopravvivenza</button>
                   </div>
                 </div>
 
@@ -716,7 +787,7 @@
             <!-- COLONNA SINISTRA (~380px): RISORSE VITALI, PAPERDOLL & KARMA -->
             <div class="sheet-col sheet-col-left combat-sidebar-col">
               <!-- Parametri Vitali -->
-              <div class="col-inner-box vitals-box">
+              <div class="col-inner-box vitals-box m-collapsible" data-mobile-cat="desktop-only">
                 <div class="box-title-bar">
                   <span>PARAMETRI VITALI & RISORSE</span>
                   <span class="core-col-badge" style="background:rgba(16,185,129,0.12); color:#10b981; border:1px solid rgba(16,185,129,0.3);">ONLINE</span>
@@ -842,7 +913,7 @@
               <!-- ===============================================================
                    RESISTENZE, IMMUNITÀ & SUSCETTIBILITÀ (SOPRA LO STATO ANATOMICO ARTI)
                    =============================================================== -->
-              <div class="col-inner-box resistances-prominent-box" id="resistances-container-box" style="margin-top: 10px;">
+              <div class="col-inner-box resistances-prominent-box m-collapsible" data-mobile-cat="armors" id="resistances-container-box" style="margin-top: 10px;">
                 <div class="box-title-bar">
                   <div style="display:flex; align-items:center; gap:6px;">
                     <span>🛡️ RESISTENZE, IMMUNITÀ & SUSCETTIBILITÀ</span>
@@ -906,7 +977,7 @@
               </div>
 
               <!-- Paperdoll Arti Anatomici -->
-              <div class="col-inner-box paperdoll-box">
+              <div class="col-inner-box paperdoll-box m-collapsible" data-mobile-cat="armors">
                 <div class="box-title-bar">
                   <span>STATO ANATOMICO ARTI</span>
                   <span class="core-col-badge badge-traits">DANNI & MENOMAZIONI</span>
@@ -987,7 +1058,7 @@
               </div>
 
               <!-- 3. OGGETTI EQUIPAGGIATI & ACCESSO RAPIDO (SOTTO LO STATO ANATOMICO ARTI) -->
-              <div class="col-inner-box combat-quick-box" style="margin-top:10px;">
+              <div class="col-inner-box combat-quick-box m-collapsible" data-mobile-cat="weapons" style="margin-top:10px;">
                 <div class="box-title-bar">
                   <div style="display:flex; align-items:center; gap:8px;">
                     <span>🎒 OGGETTI EQUIPAGGIATI & ACCESSO RAPIDO</span>
@@ -1024,14 +1095,21 @@
                       <button type="button" class="btn btn-sm" id="btn-quick-backpack" onclick="toggleQuickBackpack()" style="background:var(--accent-secondary); color:#fff; font-weight:bold;">INDOSSATO</button>
                     </div>
                   </div>
-                </div>
+                
+                  <!-- Quick Navigation Shortcuts (Mobile Only) -->
+                  <div class="mobile-nav-shortcuts">
+                    <button type="button" class="btn btn-secondary" onclick="switchMobileSection('core')">👤 Torna a Stat &amp; Skill</button>
+                    <button type="button" class="btn btn-secondary" onclick="switchMobileSection('weapons')">⚔️ Vai alle Armi</button>
+                    <button type="button" class="btn btn-secondary" onclick="switchMobileSection('inventory')">🎒 Vai allo Zaino</button>
+                  </div>
+</div>
               </div>
             </div>
 
             <!-- COLONNA CENTRALE / PRINCIPALE (1fr): ARMI IMPUGNATE, TO HIT, DAMAGE, ARMATURA & ALTRI OGGETTI -->
             <div class="sheet-col sheet-col-right combat-main-col">
               <!-- ARMA IMPUGNATA O ARMI IMPUGNATE (CON TO HIT E DAMAGE EVIDENTI) -->
-              <div class="col-inner-box combat-weapons-box">
+              <div class="col-inner-box combat-weapons-box m-collapsible" data-mobile-cat="weapons">
                 <div class="box-title-bar">
                   <div style="display:flex; align-items:center; gap:8px;">
                     <span>⚔️ ARMI IMPUGNATE & ATTACCHI TATTICI</span>
@@ -1039,7 +1117,7 @@
                   </div>
                   <span style="font-size:11px; color:var(--text-dim);">MANO DX &bull; MANO SX &bull; ATTACCHI</span>
                 </div>
-                <div class="section-box weapons-column" style="border:none; padding:0; background:transparent;">
+                <div class="section-box weapons-column m-collapsible" data-mobile-cat="weapons" style="border:none; padding:0; background:transparent;">
 
 <div class="section-title">
 
@@ -1076,11 +1154,17 @@
 </div>
 
 
-</div>
+  <!-- Quick Navigation Shortcuts (Mobile Only) -->
+                <div class="mobile-nav-shortcuts">
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('armors')">🛡️ Vai ad Armature &amp; PA</button>
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('core')">👤 Torna a Stat/Skill</button>
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('survival')">☢️ Sopravvivenza</button>
+                </div>
+              </div>
 
 
               <!-- 2. ARMATURA & PROTEZIONE (DIFESA) -->
-              <div class="col-inner-box combat-armor-box" style="margin-top:14px;">
+              <div class="col-inner-box combat-armor-box m-collapsible" data-mobile-cat="armors" style="margin-top:14px;">
                 <div class="box-title-bar">
                   <div style="display:flex; align-items:center; gap:8px;">
                     <span>🛡️ ARMATURA & PROTEZIONE</span>
@@ -1666,6 +1750,12 @@ Tratti Leggendari Telaio PA
 
 
                 </div>
+                <!-- Quick Navigation Shortcuts (Mobile Only) -->
+                <div class="mobile-nav-shortcuts">
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('weapons')">⚔️ Vai alle Armi</button>
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('survival')">☢️ Vai a Sopravvivenza</button>
+                  <button type="button" class="btn btn-secondary" onclick="switchMobileSection('core')">👤 Torna a Stat/Skill</button>
+                </div>
               </div>
 
             </div>
@@ -1674,7 +1764,7 @@ Tratti Leggendari Telaio PA
         <!-- ===============================================================
              SEZIONE 3: INVENTARIO (CARICO, OGGETTI, TAPPI & PIP-BOY)
              =============================================================== -->
-        <section class="sheet-row" id="row-inv" data-row="inv">
+        <section class="sheet-row" id="row-inv" data-row="inv" data-mobile-cat="inventory">
           <div class="sheet-row-heading">
             <span class="sheet-row-badge">INVENTARIO</span>
             <h2>SEZIONE INVENTARIO: CAPACITÀ DI CARICO, OGGETTI, TAPPI & PIP-BOY 3000</h2>
@@ -1682,7 +1772,7 @@ Tratti Leggendari Telaio PA
 
           
           <!-- Pip-Boy 3000 Mk IV -->
-          <div class="col-inner-box" style="margin-top:10px;">
+          <div class="col-inner-box m-collapsible" data-mobile-cat="inventory" style="margin-top:10px;">
             <div class="box-title-bar">
               <span>PIP-BOY 3000 Mk IV</span>
               <span style="font-size:11px; color:var(--text-dim);">TERMINALE PERSONALE VAULT-TEC</span>
@@ -1805,7 +1895,11 @@ Tratti Leggendari Telaio PA
           </div>
 
           <!-- Inventario & Equipaggiamento -->
-          <div class="col-inner-box" style="margin-top:16px;">
+          <div class="col-inner-box m-collapsible" data-mobile-cat="inventory" style="margin-top:16px;">
+            <div class="box-title-bar">
+              <span>🎒 OGGETTI &amp; EQUIPAGGIAMENTO</span>
+              <span style="font-size:11px; color:var(--text-dim);">CARICO &amp; PESO</span>
+            </div>
             <div class="section-box page-break" style="margin-top:10px;">
 
 <div class="section-title">
@@ -1912,7 +2006,7 @@ Tratti Leggendari Telaio PA
         <!-- ===============================================================
              SEZIONE 4: RELAZIONI (BIOMETRIA, PERSONALITÀ, STORIA GDR, COMPAGNI & NEMICI)
              =============================================================== -->
-        <section class="sheet-row" id="row-rel" data-row="rel">
+        <section class="sheet-row" id="row-rel" data-row="rel" data-mobile-cat="notes">
           <div class="sheet-row-heading collapsible-header" onclick="togglePersonalProfile()" style="cursor:pointer;" title="Clicca per aprire/chiudere il profilo">
             <span class="sheet-row-badge">RELAZIONI</span>
             <h2>SEZIONE RELAZIONI: BIOMETRIA, PERSONALITÀ, STORIA GDR, COMPAGNI & NEMICI</h2>
@@ -1924,7 +2018,7 @@ Tratti Leggendari Telaio PA
               <!-- COLONNA SINISTRA: FOTO, BIOMETRIA & PERSONALITÀ -->
               <div class="sheet-col sheet-col-left">
                 <!-- Biometria / Caratteristiche Fisiche -->
-                <div class="col-inner-box">
+                <div class="col-inner-box m-collapsible" data-mobile-cat="notes">
                   <div class="box-title-bar">
                     <span>CARATTERISTICHE FISICHE</span>
                     <span style="font-size:11px; color:var(--text-dim);">BIOMETRIA</span>
@@ -2006,7 +2100,7 @@ Tratti Leggendari Telaio PA
                 </div>
 
                 <!-- Carattere & Personalità -->
-                <div class="col-inner-box">
+                <div class="col-inner-box m-collapsible" data-mobile-cat="notes">
                   <div class="box-title-bar">
                     <span>CARATTERE & PERSONALITÀ</span>
                     <span style="font-size:11px; color:var(--text-dim);">TEMPERAMENTO</span>
@@ -2042,7 +2136,7 @@ Tratti Leggendari Telaio PA
 
               <!-- COLONNA DESTRA: STORIA, OBIETTIVI, RELAZIONI & DONI MASTER -->
               <div class="sheet-col sheet-col-right">
-                <div class="col-inner-box">
+                <div class="col-inner-box m-collapsible" data-mobile-cat="notes">
                   <div class="box-title-bar">
                     <span>STORIA, OBIETTIVI & RELAZIONI GDR</span>
                     <span style="font-size:11px; color:var(--text-dim);">NARRATIVA & LEGAMI</span>

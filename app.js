@@ -429,6 +429,7 @@ function updateDerivedValues() {
   if (coreDiscEl) coreDiscEl.textContent = discStr;
   if (typeof renderDashboardOverview === "function") renderDashboardOverview();
   if (typeof renderKarmaCaps === "function") renderKarmaCaps();
+  if (typeof updateMobileHUD === "function") updateMobileHUD();
 }
 
 function recalcArmor() {
@@ -8671,10 +8672,147 @@ function selectVerticalTab(targetId) {
 }
 window.selectVerticalTab = selectVerticalTab;
 
-// Initialize active vertical tab on load
+// =============================================================================
+// FALLOUT MOBILE UX/UI ENGINE (ACCORDION & 5-SECTION SWITCHER)
+// =============================================================================
+
+function updateMobileHUD() {
+  if (typeof document === "undefined") return;
+  const hpEl = document.getElementById("m-hud-hp");
+  const apEl = document.getElementById("m-hud-ap");
+  const dtEl = document.getElementById("m-hud-dt");
+  const radEl = document.getElementById("m-hud-rad");
+
+  if (!character || !character.vitals) return;
+
+  const curHp = character.vitals.currentHp !== undefined ? character.vitals.currentHp : (document.getElementById("core-current-hp") ? document.getElementById("core-current-hp").value : "--");
+  const maxHp = character.vitals.maxHp !== undefined ? character.vitals.maxHp : (document.getElementById("core-max-hp") ? document.getElementById("core-max-hp").value : "--");
+  const curAp = character.vitals.currentAp !== undefined ? character.vitals.currentAp : (document.getElementById("core-current-ap") ? document.getElementById("core-current-ap").value : "--");
+  const maxAp = character.vitals.maxAp !== undefined ? character.vitals.maxAp : (document.getElementById("core-max-ap") ? document.getElementById("core-max-ap").value : "--");
+  const dt = character.vitals.dt !== undefined ? character.vitals.dt : (document.getElementById("val-dt") ? document.getElementById("val-dt").value : "0");
+  const rads = character.vitals.rads !== undefined ? character.vitals.rads : 0;
+  const radDc = character.vitals.radDc !== undefined ? character.vitals.radDc : (document.getElementById("core-val-rad-dc") ? document.getElementById("core-val-rad-dc").value : "12");
+
+  if (hpEl) hpEl.textContent = `PF ${curHp}/${maxHp}`;
+  if (apEl) apEl.textContent = `PA ${curAp}/${maxAp}`;
+  if (dtEl) dtEl.textContent = `DT ${dt}`;
+  if (radEl) radEl.textContent = `Rad ${rads} (CD ${radDc})`;
+}
+window.updateMobileHUD = updateMobileHUD;
+
+function switchMobileSection(sectionKey) {
+  if (typeof document === "undefined") return;
+  // Update mobile nav buttons state
+  const navBtns = document.querySelectorAll("#fallout-mobile-dock .mobile-nav-btn");
+  navBtns.forEach(btn => {
+    if (btn.getAttribute("data-m-target") === sectionKey) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
+  });
+
+  const catElements = document.querySelectorAll("[data-mobile-cat]");
+  
+  if (sectionKey === "all") {
+    catElements.forEach(el => {
+      const cat = el.getAttribute("data-mobile-cat");
+      if (cat !== "desktop-only") {
+        el.classList.remove("m-cat-hidden");
+      } else {
+        el.classList.add("m-cat-hidden");
+      }
+    });
+    ["row-core", "row-combat", "row-inv", "row-rel"].forEach(id => {
+      const row = document.getElementById(id);
+      if (row) row.style.display = "block";
+    });
+  } else {
+    catElements.forEach(el => {
+      const cat = el.getAttribute("data-mobile-cat");
+      if (cat === sectionKey) {
+        el.classList.remove("m-cat-hidden");
+      } else {
+        el.classList.add("m-cat-hidden");
+      }
+    });
+
+    const rowMap = {
+      core: ["row-core"],
+      perks: ["row-core"],
+      survival: ["row-core"],
+      weapons: ["row-combat"],
+      armors: ["row-combat"],
+      inventory: ["row-inv"],
+      notes: ["row-rel"]
+    };
+
+    const targetRows = rowMap[sectionKey] || ["row-core"];
+    ["row-core", "row-combat", "row-inv", "row-rel"].forEach(id => {
+      const row = document.getElementById(id);
+      if (row) {
+        row.style.display = targetRows.includes(id) ? "block" : "none";
+      }
+    });
+  }
+
+  // Smooth scroll to top of content on mobile switch
+  if (typeof window !== "undefined" && window.innerWidth <= 900) {
+    const dock = document.getElementById("fallout-mobile-dock");
+    if (dock) {
+      dock.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+
+  try { localStorage.setItem("fallout_mobile_active_section", sectionKey); } catch(e){}
+}
+window.switchMobileSection = switchMobileSection;
+
+function initMobileAccordion() {
+  if (typeof document === "undefined") return;
+  document.querySelectorAll(".m-collapsible").forEach(box => {
+    const titleBar = box.querySelector(".box-title-bar");
+    if (!titleBar || titleBar.dataset.accordionBound) return;
+    titleBar.dataset.accordionBound = "true";
+
+    titleBar.addEventListener("click", (e) => {
+      if (e.target.closest("button, input, select, textarea, a, label")) return;
+      if (typeof window !== "undefined" && window.innerWidth <= 900) {
+        box.classList.toggle("m-box-collapsed");
+      }
+    });
+  });
+}
+window.initMobileAccordion = initMobileAccordion;
+
+// Initialize active vertical tab or mobile section on load
 document.addEventListener("DOMContentLoaded", () => {
-  const savedTab = localStorage.getItem("fallout_vtab_active") || "row-core";
-  selectVerticalTab(savedTab);
+  initMobileAccordion();
+  updateMobileHUD();
+
+  if (typeof window !== "undefined" && window.innerWidth <= 900) {
+    const savedMobileSection = localStorage.getItem("fallout_mobile_active_section") || "core";
+    switchMobileSection(savedMobileSection);
+  } else {
+    const savedTab = localStorage.getItem("fallout_vtab_active") || "row-core";
+    selectVerticalTab(savedTab);
+  }
+
+  if (typeof window !== "undefined") {
+    window.addEventListener("resize", () => {
+      if (window.innerWidth <= 900) {
+        const savedMobileSection = localStorage.getItem("fallout_mobile_active_section") || "core";
+        switchMobileSection(savedMobileSection);
+      } else {
+        document.querySelectorAll(".m-box-collapsed").forEach(el => el.classList.remove("m-box-collapsed"));
+        document.querySelectorAll(".m-cat-hidden").forEach(el => el.classList.remove("m-cat-hidden"));
+        const savedTab = localStorage.getItem("fallout_vtab_active") || "row-core";
+        selectVerticalTab(savedTab);
+      }
+    });
+  }
 });
 
 window.openLevelUpModal = openLevelUpWizard;
@@ -9299,10 +9437,12 @@ if (typeof module !== 'undefined' && module.exports) {
     togglePerkCardLang,
     onRaceChange,
     onRaceVariantChange,
-    syncRacialPerksAndBonuses
+    syncRacialPerksAndBonuses,
+    switchMobileSection,
+    initMobileAccordion,
+    updateMobileHUD
   };
 }
-
 
 window.hasPerkOrTrait = hasPerkOrTrait;
 window.toggleNemeanImplant = toggleNemeanImplant;
@@ -9313,3 +9453,6 @@ window.updateNemeanCount = updateNemeanCount;
 window.saveNemeanConfig = saveNemeanConfig;
 window.toggleChemBuff = toggleChemBuff;
 window.showToast = showToast;
+window.switchMobileSection = switchMobileSection;
+window.initMobileAccordion = initMobileAccordion;
+window.updateMobileHUD = updateMobileHUD;

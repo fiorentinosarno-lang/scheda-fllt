@@ -13414,3 +13414,174 @@ body[data-theme="enclave"] .die-card.is-success {
     font-size: 9px !important;
   }
 }
+
+
+
+/* =============================================================================
+   FALLOUT MOBILE ACCORDION & 5-SECTION HUB ENGINE
+   ============================================================================= */
+
+/* Desktop view (> 900px): Mobile dock & shortcuts are COMPLETELY hidden */
+@media (min-width: 901px) {
+  .mobile-only-dock {
+    display: none !important;
+  }
+  .mobile-nav-shortcuts {
+    display: none !important;
+  }
+}
+
+/* Dedicated Mobile View (<= 900px) */
+@media (max-width: 900px) {
+  /* 1. Sticky Mobile Top Dock (Mini HUD + 5 Section Tabs) */
+  .mobile-only-dock {
+    display: flex !important;
+    flex-direction: column !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 999 !important;
+    background: var(--bg-panel, #ffffff) !important;
+    border-bottom: 2.5px solid var(--accent, #b45309) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+    margin: -6px -8px 12px -8px !important;
+    padding: 6px 8px !important;
+    box-sizing: border-box !important;
+  }
+
+  .mobile-vitals-strip {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 4px !important;
+    background: var(--bg-card, #f8fafc) !important;
+    border: 1px solid var(--border-color, #cbd5e1) !important;
+    border-radius: 6px !important;
+    padding: 3px 6px !important;
+    margin-bottom: 6px !important;
+    font-size: 11.5px !important;
+    font-weight: 800 !important;
+  }
+
+  .m-vital-chip {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    cursor: pointer !important;
+    padding: 3px 6px !important;
+    border-radius: 4px !important;
+    background: var(--bg-secondary, #ffffff) !important;
+    border: 1px solid var(--border-color, #cbd5e1) !important;
+    color: var(--text-bright, #020617) !important;
+  }
+  .m-vital-chip:active {
+    background: var(--accent-amber, #b45309) !important;
+    color: #ffffff !important;
+  }
+
+  .mobile-nav-bar {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 4px !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    padding: 2px 0 !important;
+  }
+  .mobile-nav-bar::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .mobile-nav-btn {
+    flex: 1 !important;
+    min-width: 48px !important;
+    height: 42px !important;
+    padding: 3px 4px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 6px !important;
+    border: 1.5px solid var(--border-color, #cbd5e1) !important;
+    background: var(--bg-card, #f8fafc) !important;
+    cursor: pointer !important;
+    color: var(--text-dim, #475569) !important;
+    font-family: var(--font-sans) !important;
+    transition: all 0.15s ease !important;
+  }
+
+  .mobile-nav-btn .m-btn-icon {
+    font-size: 14px !important;
+    line-height: 1 !important;
+  }
+
+  .mobile-nav-btn .m-btn-label {
+    font-size: 9px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.3px !important;
+    white-space: nowrap !important;
+    margin-top: 2px !important;
+  }
+
+  .mobile-nav-btn.active {
+    background: rgba(180, 83, 9, 0.12) !important;
+    border-color: var(--accent, #b45309) !important;
+    color: var(--accent, #b45309) !important;
+    box-shadow: 0 0 8px rgba(180, 83, 9, 0.25) !important;
+  }
+
+  /* 2. Hide inactive categories on mobile */
+  .m-cat-hidden {
+    display: none !important;
+  }
+
+  /* 3. Collapsible Accordions (Sezioni a Scomparsa) */
+  .m-collapsible .box-title-bar {
+    cursor: pointer !important;
+    user-select: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 8px 10px !important;
+  }
+
+  .m-collapsible .box-title-bar::after {
+    content: "▲" !important;
+    font-size: 11px !important;
+    color: var(--accent, #b45309) !important;
+    margin-left: auto !important;
+    padding-left: 8px !important;
+    transition: transform 0.2s ease !important;
+  }
+
+  .m-box-collapsed .box-title-bar::after {
+    transform: rotate(180deg) !important;
+  }
+
+  .m-box-collapsed > :not(.box-title-bar) {
+    display: none !important;
+  }
+
+  /* 4. Quick Jump Action Shortcuts ("Tasti che ne aprono altre") */
+  .mobile-nav-shortcuts {
+    display: flex !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+    margin-top: 10px !important;
+    padding: 8px 0 2px 0 !important;
+    border-top: 1px dashed var(--border-color, #cbd5e1) !important;
+  }
+
+  .mobile-nav-shortcuts button {
+    flex: 1 !important;
+    min-width: 120px !important;
+    padding: 6px 10px !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    border-radius: 4px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    cursor: pointer !important;
+  }
+}
