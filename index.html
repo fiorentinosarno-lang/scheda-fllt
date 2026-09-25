@@ -266,8 +266,20 @@
                     </div>
                   </div>
 
-                  <!-- Secondary Derived (Tasso Guarigione, Combat Seq, AP Riciclati, Perc Passiva, DC Rad) -->
+                  <!-- Secondary Derived (Classe Armatura, Soglia Danni, Tasso Guarigione, Combat Seq, AP Riciclati, Perc Passiva, DC Rad) -->
                   <div class="derived-stats-grid">
+                    <!-- Classe Armatura (CA) -->
+                    <div class="derived-card has-tooltip" data-keyword="classe-armatura" title="Classe Armatura (CA): Difficoltà per essere colpiti in combattimento">
+                      <div class="derived-label" style="font-weight:800; color:var(--accent-secondary, #1d4ed8);">Classe Armat.</div>
+                      <input type="number" class="derived-input" id="core-val-ac" value="10" style="font-weight:900; color:var(--accent-secondary, #1d4ed8);">
+                    </div>
+
+                    <!-- Soglia Danni (DT) -->
+                    <div class="derived-card has-tooltip" data-keyword="soglia-danni" title="Soglia Danni (DT): Riduzione fissa del danno assorbita dall'armatura">
+                      <div class="derived-label" style="font-weight:800; color:var(--accent, #b45309);">Soglia Danni</div>
+                      <input type="number" class="derived-input" id="core-val-dt" value="0" style="font-weight:900; color:var(--accent, #b45309);">
+                    </div>
+
                     <div class="derived-card has-tooltip" data-keyword="robustezza">
                       <div class="derived-label" title="Tasso di Guarigione">Tasso Guarig.</div>
                       <input type="number" class="derived-input" id="core-val-healing-rate" value="3">
@@ -800,9 +812,21 @@
                   </div>
 
 
-<!-- Secondary Derived (Tasso Guarigione, Combat Seq, AP Riciclati, Perc Passiva, DC Rad) -->
+<!-- Secondary Derived (Classe Armatura, Soglia Danni, Tasso Guarigione, Combat Seq, AP Riciclati, Perc Passiva, DC Rad) -->
 
 <div class="derived-stats-grid">
+
+<!-- Classe Armatura (CA) -->
+<div class="derived-card has-tooltip" data-keyword="classe-armatura" title="Classe Armatura (CA): Difficoltà per essere colpiti in combattimento">
+  <div class="derived-label" style="font-weight:800; color:var(--accent-secondary, #1d4ed8);">Classe Armat.</div>
+  <input type="number" class="derived-input" id="combat-val-ac" value="10" style="font-weight:900; color:var(--accent-secondary, #1d4ed8);">
+</div>
+
+<!-- Soglia Danni (DT) -->
+<div class="derived-card has-tooltip" data-keyword="soglia-danni" title="Soglia Danni (DT): Riduzione fissa del danno assorbita dall'armatura">
+  <div class="derived-label" style="font-weight:800; color:var(--accent, #b45309);">Soglia Danni</div>
+  <input type="number" class="derived-input" id="combat-val-dt" value="0" style="font-weight:900; color:var(--accent, #b45309);">
+</div>
 
 <div class="derived-card has-tooltip" data-keyword="robustezza">
 

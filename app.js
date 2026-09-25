@@ -516,10 +516,18 @@ function recalcArmor() {
     character.vitals.dt = dt;
   }
 
-  const acEl = document.getElementById("val-ac");
-  const dtEl = document.getElementById("val-dt");
-  if (acEl && (!acEl.dataset || !acEl.dataset.custom)) acEl.value = character.vitals.ac;
-  if (dtEl && (!dtEl.dataset || !dtEl.dataset.custom)) dtEl.value = character.vitals.dt;
+  const acVal = character.vitals.ac;
+  const dtVal = character.vitals.dt;
+
+  ["val-ac", "core-val-ac", "combat-val-ac"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && (!el.dataset || !el.dataset.custom)) el.value = acVal;
+  });
+
+  ["val-dt", "core-val-dt", "combat-val-dt"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && (!el.dataset || !el.dataset.custom)) el.value = dtVal;
+  });
 }
 
 // Recalculate Skills with transparent formula (Base + Punti + Extra = Total)
@@ -2148,10 +2156,16 @@ function renderVitals() {
     if (el2) el2.value = val;
   });
 
-  const acEl = document.getElementById("val-ac");
-  if (acEl) acEl.value = character.vitals.ac || 10;
-  const dtEl = document.getElementById("val-dt");
-  if (dtEl) dtEl.value = character.vitals.dt || 0;
+  const acVal = character.vitals.ac !== undefined ? character.vitals.ac : 10;
+  const dtVal = character.vitals.dt !== undefined ? character.vitals.dt : 0;
+  ["val-ac", "core-val-ac", "combat-val-ac"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = acVal;
+  });
+  ["val-dt", "core-val-dt", "combat-val-dt"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = dtVal;
+  });
 }
 
 // =============================================================================
@@ -7644,11 +7658,27 @@ function setupEventListeners() {
   });
 
   // Derived values custom override
-  ["val-healing-rate", "val-combat-seq", "recycled-ap", "val-passive-sense", "val-rad-dc", "val-ac", "val-dt", "input-party-nerve", "input-group-sneak"].forEach(id => {
+  ["val-healing-rate", "core-val-healing-rate", "val-combat-seq", "core-val-combat-seq", "recycled-ap", "core-recycled-ap", "val-passive-sense", "core-val-passive-sense", "val-rad-dc", "core-val-rad-dc", "val-ac", "core-val-ac", "combat-val-ac", "val-dt", "core-val-dt", "combat-val-dt", "input-party-nerve", "core-input-party-nerve", "input-group-sneak", "core-input-group-sneak"].forEach(id => {
     const el = document.getElementById(id);
     if (el) {
       el.addEventListener("input", (e) => {
         el.dataset.custom = "true";
+        if (id.includes("ac")) {
+          const val = parseInt(e.target.value, 10) || 10;
+          character.vitals.ac = val;
+          ["val-ac", "core-val-ac", "combat-val-ac"].forEach(targetId => {
+            const tEl = document.getElementById(targetId);
+            if (tEl && tEl !== el) tEl.value = val;
+          });
+        }
+        if (id.includes("dt")) {
+          const val = parseInt(e.target.value, 10) || 0;
+          character.vitals.dt = val;
+          ["val-dt", "core-val-dt", "combat-val-dt"].forEach(targetId => {
+            const tEl = document.getElementById(targetId);
+            if (tEl && tEl !== el) tEl.value = val;
+          });
+        }
         saveCharacter();
       });
     }
