@@ -3421,6 +3421,83 @@ function autoResizeTextarea(ta) {
   ta.style.setProperty('height', targetH + 'px', 'important');
 }
 
+function findCompendiumTrait(t) {
+  if (!t) return null;
+  const rules = (typeof FALLOUT_RULES_DATA !== 'undefined') ? FALLOUT_RULES_DATA : ((typeof window !== 'undefined' && window.FALLOUT_RULES_DATA) ? window.FALLOUT_RULES_DATA : (typeof global !== 'undefined' ? global.FALLOUT_RULES_DATA : null));
+  const list = rules?.traitsCompendium || [];
+  if (t.id && list.find(x => x.id === t.id)) return list.find(x => x.id === t.id);
+  if (t.traitRefId && list.find(x => x.id === t.traitRefId)) return list.find(x => x.id === t.traitRefId);
+  const normName = (t.name || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  return list.find(x => {
+    const normX = (x.name || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    return normX === normName || normX.includes(normName) || normName.includes(normX);
+  }) || null;
+}
+
+function isTraitAllowedForRace(trait, charRace) {
+  if (!trait) return false;
+  const race = (charRace || "human").toLowerCase().trim();
+  const req = (trait.req || "").toLowerCase();
+  const cat = (trait.category || "").toLowerCase();
+
+  // If it's a racial trait or mentions a race in requirements:
+  if (cat.includes("razziale") || req.includes("umano") || req.includes("human") || 
+      req.includes("ghoul") || req.includes("synth") || req.includes("robot") || 
+      req.includes("super mutant") || req.includes("mutante")) {
+    
+    if (race === "human" && (req.includes("umano") || req.includes("human"))) return true;
+    if (race === "ghoul" && req.includes("ghoul")) return true;
+    if (race === "synth" && req.includes("synth")) return true;
+    if (race === "robot" && req.includes("robot")) return true;
+    if (race === "super_mutant" && (req.includes("super mutant") || req.includes("mutante"))) return true;
+    return false; // Exclusive to another race!
+  }
+
+  // General and background traits are allowed
+  return true;
+}
+
+function toggleTraitWildWasteland(idx) {
+  if (!character.traits || !character.traits[idx]) return;
+  const t = character.traits[idx];
+  const compT = findCompendiumTrait(t);
+  t.isWildWasteland = !t.isWildWasteland;
+
+  if (compT && t.category !== "Personalizzato") {
+    const isEN = t.displayLang === "EN";
+    if (t.isWildWasteland) {
+      t.effect = isEN ? (compT.wildWastelandEn || compT.descEn) : (compT.wildWasteland || compT.desc);
+    } else {
+      t.effect = isEN ? compT.descEn : compT.desc;
+    }
+  }
+  renderTraits();
+  saveCharacter();
+  showToast(`🏜️ Wild Wasteland per <strong>${t.name}</strong>: ${t.isWildWasteland ? 'ATTIVATO' : 'DISATTIVATO'}`, "info");
+}
+window.toggleTraitWildWasteland = toggleTraitWildWasteland;
+
+function toggleTraitLang(idx) {
+  if (!character.traits || !character.traits[idx]) return;
+  const t = character.traits[idx];
+  const compT = findCompendiumTrait(t);
+  t.displayLang = (t.displayLang === "EN") ? "IT" : "EN";
+
+  if (compT && t.category !== "Personalizzato") {
+    const isWW = !!t.isWildWasteland;
+    const isEN = t.displayLang === "EN";
+    if (isWW) {
+      t.effect = isEN ? (compT.wildWastelandEn || compT.descEn) : (compT.wildWasteland || compT.desc);
+    } else {
+      t.effect = isEN ? compT.descEn : compT.desc;
+    }
+  }
+  renderTraits();
+  saveCharacter();
+  showToast(`🌐 Lingua per <strong>${t.name}</strong>: ${t.displayLang === "EN" ? "Inglese (Manuale)" : "Italiano"}`, "info");
+}
+window.toggleTraitLang = toggleTraitLang;
+
 function renderTraits() {
   const container = document.getElementById("traits-list-container");
   if (!container) return;
@@ -3432,22 +3509,49 @@ function renderTraits() {
 
   let html = "";
   character.traits.forEach((t, idx) => {
-    const rank = t.rank || 1;
+    const compT = findCompendiumTrait(t);
+    if (!t.displayLang) t.displayLang = "IT";
+
+    // Auto-sync effect text with official compendium
+    if (compT && t.category !== "Personalizzato") {
+      const isWW = !!t.isWildWasteland;
+      const isEN = t.displayLang === "EN";
+      if (isWW) {
+        t.effect = isEN ? (compT.wildWastelandEn || compT.descEn) : (compT.wildWasteland || compT.desc);
+      } else {
+        t.effect = isEN ? compT.descEn : compT.desc;
+      }
+    }
+
+    const hasWW = !!(compT && (compT.wildWasteland || compT.wildWastelandEn));
+    const isWW = !!t.isWildWasteland;
+    const isEN = t.displayLang === "EN";
+    const hasEnText = !!(compT && compT.descEn);
 
     html += `
-      <div class="trait-card">
-        <div class="trait-card-header">
-          <input type="text" class="input-field trait-name" value="${escapeHtml(t.name || "Nuovo Tratto")}" onchange="updateTraitField(${idx}, 'name', this.value)" placeholder="Nome Tratto">
-          <div class="trait-card-controls no-print">
-            <div class="trait-rank-box">
-              <button type="button" class="btn btn-sm trait-rank-btn" onclick="adjustTraitRank(${idx}, -1)" title="Diminuisci Grado">-</button>
-              <span class="trait-rank-val">Grado ${rank}</span>
-              <button type="button" class="btn btn-sm trait-rank-btn" onclick="adjustTraitRank(${idx}, 1)" title="Aumenta Grado (Fino a 5)">+</button>
-            </div>
+      <div class="trait-card" style="${isWW ? 'border-left: 4.5px solid #d97706; background: rgba(217, 119, 6, 0.03);' : ''}">
+        <div class="trait-card-header" style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+          <input type="text" class="input-field trait-name" value="${escapeHtml(t.name || "Nuovo Tratto")}" onchange="updateTraitField(${idx}, 'name', this.value)" placeholder="Nome Tratto" style="font-weight:800; font-size:14.5px; color:var(--text-bright); flex:1; min-width:0;">
+          <div class="trait-card-controls no-print" style="display:flex; align-items:center; gap:6px;">
+            ${hasWW ? `
+              <button type="button" class="btn btn-xs ${isWW ? 'btn-warning' : 'btn-outline-secondary'}" onclick="toggleTraitWildWasteland(${idx})" title="Attiva/Disattiva variante opzionale Zona Contaminata Selvaggia (Wild Wasteland)" style="font-size:11px; font-weight:800; padding:2px 7px; border-radius:4px; display:inline-flex; align-items:center; gap:4px; cursor:pointer;">
+                ${isWW ? '🏜️ Wild Wasteland: ON' : '🏜️ Wild Wasteland: OFF'}
+              </button>
+            ` : ''}
+            ${hasEnText ? `
+              <button type="button" class="btn btn-xs ${isEN ? 'btn-warning' : 'btn-outline-primary'}" onclick="toggleTraitLang(${idx})" title="Alterna tra traduzione in italiano e testo originale in inglese" style="font-size:11px; font-weight:800; padding:2px 7px; border-radius:4px; display:inline-flex; align-items:center; gap:4px; cursor:pointer;">
+                ${isEN ? '🇮🇹 IT' : '🇬🇧 EN'}
+              </button>
+            ` : ''}
             <button type="button" class="btn btn-sm btn-danger trait-del-btn" onclick="deleteTrait(${idx})" title="Rimuovi Tratto">✕</button>
           </div>
         </div>
         <textarea class="input-field trait-effect" oninput="autoResizeTextarea(this)" onchange="updateTraitField(${idx}, 'effect', this.value)" placeholder="Descrizione ed effetti del tratto...">${t.effect || ""}</textarea>
+        ${hasWW && isWW ? `
+          <div style="font-size:11px; color:#d97706; font-weight:700; margin-top:3px; display:flex; align-items:center; gap:4px;">
+            ⚠️ Regola opzionale Wild Wasteland attiva (raddoppia benefici e penalità)
+          </div>
+        ` : ''}
       </div>`;
   });
 
@@ -3463,20 +3567,8 @@ function renderTraits() {
 }
 
 function adjustTraitRank(idx, delta) {
-  const t = character.traits[idx];
-  if (!t) return;
-  const currentRank = t.rank || 1;
-  const newRank = Math.max(1, Math.min(5, currentRank + delta));
-  t.rank = newRank;
-  t.maxRank = 5;
-
-  const compMatch = (FALLOUT_RULES_DATA.traitsCompendium || []).find(item => item.id === t.id);
-  if (compMatch && compMatch.ranks && compMatch.ranks[newRank - 1]) {
-    t.effect = compMatch.ranks[newRank - 1];
-  }
-
+  // Traits in Fallout TTRPG do not have 1-5 ranks, but kept for compatibility
   renderTraits();
-  saveCharacter();
 }
 
 function updateTraitField(idx, field, val) {
@@ -4751,6 +4843,10 @@ window.isPerkAvailable = isPerkAvailable;
 // GENERIC PICKER MODAL & COMPENDIUM HELPERS
 // =============================================================================
 
+let currentPickerItems = [];
+let currentPickerFiltered = [];
+let currentPickerCallback = null;
+
 function openPickerModal(title, items, onSelect) {
   const modal = document.getElementById("generic-picker-modal");
   const titleEl = document.getElementById("picker-title");
@@ -4761,6 +4857,7 @@ function openPickerModal(title, items, onSelect) {
   if (searchInput) searchInput.value = "";
 
   currentPickerItems = items || [];
+  currentPickerFiltered = items || [];
   currentPickerCallback = onSelect;
 
   renderPickerList();
@@ -4781,10 +4878,13 @@ function renderPickerList() {
   const filtered = (currentPickerItems || []).filter(item => {
     if (!q) return true;
     const n = (item.name || "").toLowerCase();
-    const d = (item.effect || item.desc || (item.ranks ? item.ranks[0] : "") || "").toLowerCase();
+    const d = (item.desc || item.descEn || item.effect || (item.ranks ? item.ranks[0] : "") || "").toLowerCase();
     const c = (item.category || item.type || item.cat || "").toLowerCase();
-    return n.includes(q) || d.includes(q) || c.includes(q);
+    const r = (item.req || "").toLowerCase();
+    return n.includes(q) || d.includes(q) || c.includes(q) || r.includes(q);
   });
+
+  currentPickerFiltered = filtered;
 
   if (filtered.length === 0) {
     listBody.innerHTML = '<div style="padding:16px; color:var(--text-dim); text-align:center;">Nessun elemento trovato.</div>';
@@ -4792,27 +4892,34 @@ function renderPickerList() {
   }
 
   listBody.innerHTML = filtered.map((item, idx) => {
-    const ranksHtml = item.ranks && item.ranks.length > 1 ? `
-      <div style="margin-top:4px; font-size:11px; color:var(--accent-glow);">
-        ${item.ranks.map((r, ri) => `<div>• Grado ${ri + 1}: ${r}</div>`).join("")}
-      </div>
-    ` : "";
+    const reqHtml = (item.req && item.req !== "-") ? `
+      <span style="font-size:10.5px; font-weight:800; color:#b45309; background:#fef3c7; border:1px solid #fde68a; padding:1px 6px; border-radius:3px; margin-left:6px; white-space:nowrap;">
+        REQ: ${escapeHtml(item.req)}
+      </span>` : "";
+
+    const wwHtml = item.wildWasteland ? `
+      <div style="margin-top:4px; font-size:11px; color:#d97706; font-weight:600; display:flex; align-items:center; gap:4px;">
+        🏜️ Variante opzionale Wild Wasteland disponibile
+      </div>` : "";
 
     return `
-      <div class="picker-item" onclick="selectPickerItem(${idx})" style="margin-bottom:6px; padding:8px 10px; background:var(--bg-tertiary); border-radius:4px; cursor:pointer; border-left:3px solid var(--accent);">
-        <div class="picker-item-header" style="display:flex; justify-content:space-between; align-items:center;">
-          <span class="picker-item-title" style="font-weight:bold; font-size:13px; color:var(--text-bright);">${item.name || "Elemento"}</span>
-          ${item.cost ? `<span class="picker-item-badge" style="font-size:11px; color:var(--accent-amber); font-family:var(--font-mono);">${item.cost}</span>` : ""}
+      <div class="picker-item" onclick="selectPickerItem(${idx})" style="margin-bottom:8px; padding:10px 12px; background:var(--bg-tertiary); border-radius:6px; cursor:pointer; border-left:4px solid var(--accent); transition:all 0.15s ease;">
+        <div class="picker-item-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">
+          <div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
+            <span class="picker-item-title" style="font-weight:800; font-size:13.5px; color:var(--text-bright);">${escapeHtml(item.name || "Elemento")}</span>
+            ${reqHtml}
+          </div>
+          ${item.cost ? `<span class="picker-item-badge" style="font-size:11px; color:var(--accent-amber); font-family:var(--font-mono); font-weight:700;">${item.cost}</span>` : ""}
         </div>
-        ${item.category || item.type ? `<div style="font-size:11px; color:var(--accent); text-transform:uppercase; margin:2px 0; font-family:var(--font-mono);">${item.category || item.type}</div>` : ""}
-        <div class="picker-item-desc" style="font-size:12px; color:var(--text-dim); line-height:1.35;">${item.desc || item.effect || (item.ranks ? item.ranks[0] : "") || ""}</div>
-        ${ranksHtml}
+        ${item.category || item.type ? `<div style="font-size:11px; color:var(--accent); font-weight:700; text-transform:uppercase; margin:2px 0;">${item.category || item.type}</div>` : ""}
+        <div class="picker-item-desc" style="font-size:12.5px; color:var(--text-dim); line-height:1.45; margin-top:2px;">${escapeHtml(item.desc || item.effect || (item.ranks ? item.ranks[0] : "") || "")}</div>
+        ${wwHtml}
       </div>`;
   }).join("");
 }
 
 function selectPickerItem(idx) {
-  const selected = currentPickerItems[idx];
+  const selected = (currentPickerFiltered || currentPickerItems)[idx];
   if (selected && currentPickerCallback) {
     currentPickerCallback(selected);
   }
@@ -4895,19 +5002,34 @@ function removeWeaponMod(weaponIdx, modIdx) {
 
 function addTraitCompendium() {
   if (!character.traits) character.traits = [];
-  const traitsList = FALLOUT_RULES_DATA.traitsCompendium || [];
-  openPickerModal("AGGIUNGI TRATTO DA COMPENDIO", traitsList, (t) => {
-    const standardText = (t.ranks && t.ranks[0]) || t.effect || "";
-    const wwText = t.wildWasteland || (t.ranks && t.ranks[1]) || "";
+  const charRace = (character.info?.race || "human").toLowerCase();
+  
+  // Filter traits strictly by character race!
+  const traitsList = (FALLOUT_RULES_DATA.traitsCompendium || []).filter(t => {
+    return isTraitAllowedForRace(t, charRace);
+  });
+
+  const raceDisplayNames = {
+    human: "Umano",
+    ghoul: "Ghoul",
+    robot: "Robot",
+    synth: "Synth",
+    super_mutant: "Super Mutante"
+  };
+  const raceLabel = raceDisplayNames[charRace] || charRace;
+
+  openPickerModal(`AGGIUNGI TRATTO DA COMPENDIO (Razza: ${raceLabel})`, traitsList, (t) => {
+    const effectIT = t.desc || (t.ranks && t.ranks[0]) || t.effect || "";
+    const effectEN = t.descEn || (t.ranksEN && t.ranksEN[0]) || "";
     character.traits.push({
       id: t.id,
+      traitRefId: t.id,
       name: t.name,
       category: t.category,
       req: t.req,
       isWildWasteland: false,
-      effectStandard: standardText,
-      effectWildWasteland: wwText,
-      effect: standardText
+      displayLang: "IT",
+      effect: effectIT
     });
     renderTraits();
     updateDerivedValues();

@@ -2318,664 +2318,1103 @@ const FALLOUT_RULES_DATA = {
   ],
   "traitsCompendium": [
     {
-      "id": "human_resourceful",
-      "name": "Intraprendente (Resourceful)",
-      "category": "Razziale",
-      "maxRank": 1,
-      "req": "Umano (Human)",
-      "ranks": [
-        "Ottieni 1 Karma Cap addizionale utilizzabile in ogni sessione per ritiri o colpi fortunati."
-      ]
+        "id": "human_resourceful",
+        "name": "Intraprendente (Resourceful)",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Umano (Human)",
+        "desc": "Ottieni 1 Karma Cap addizionale utilizzabile in ogni sessione di gioco per effettuare ritiri o colpi fortunati.",
+        "descEn": "You gain 1 additional Karma Cap that can be used each game session for re-rolls or lucky bonuses.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Ottieni 1 Karma Cap addizionale utilizzabile in ogni sessione di gioco per effettuare ritiri o colpi fortunati."
+        ],
+        "ranksEN": [
+            "You gain 1 additional Karma Cap that can be used each game session for re-rolls or lucky bonuses."
+        ],
+        "effect": "Ottieni 1 Karma Cap addizionale utilizzabile in ogni sessione di gioco per effettuare ritiri o colpi fortunati."
     },
     {
-      "id": "human_unexposed",
-      "name": "Non Esposto (Unexposed)",
-      "category": "Razziale",
-      "maxRank": 1,
-      "req": "Umano (Human)",
-      "ranks": [
-        "Svantaggio a tutti i tiri salvezza contro Radiazioni e Dipendenze (tipico di chi proviene da un Vault protetto)."
-      ]
+        "id": "human_unexposed",
+        "name": "Non Esposto (Unexposed)",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Umano (Human)",
+        "desc": "Sei cresciuto in un ambiente asettico e protetto: hai svantaggio a tutti i tiri salvezza contro Radiazioni e Dipendenze.",
+        "descEn": "Having grown up sheltered, you have disadvantage on all saving throws against Radiation and Addictions.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Sei cresciuto in un ambiente asettico e protetto: hai svantaggio a tutti i tiri salvezza contro Radiazioni e Dipendenze."
+        ],
+        "ranksEN": [
+            "Having grown up sheltered, you have disadvantage on all saving throws against Radiation and Addictions."
+        ],
+        "effect": "Sei cresciuto in un ambiente asettico e protetto: hai svantaggio a tutti i tiri salvezza contro Radiazioni e Dipendenze."
     },
     {
-      "id": "human_gen3_secret",
-      "name": "Gen 3 Synth (Segreto)",
-      "category": "Razziale",
-      "maxRank": 1,
-      "req": "Umano (Human)",
-      "ranks": [
-        "Nessun bonus iniziale evidente; a discrezione del GM roll d20: con un 20 sei segretamente un Synth dell'Istituto sotto copertura con protocolli dormienti."
-      ]
+        "id": "human_gen3_secret",
+        "name": "Gen 3 Synth - Infiltrato (Secret)",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Umano (Human)",
+        "desc": "Nessun bonus iniziale evidente; a discrezione del GM puoi tirare un d20: con un 20 naturale sei segretamente un Synth di Terza Generazione con protocolli dormienti.",
+        "descEn": "No obvious initial bonus; at GM discretion roll a d20: on a natural 20 you are secretly a Gen 3 Synth with sleeper protocols.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Nessun bonus iniziale evidente; a discrezione del GM puoi tirare un d20: con un 20 naturale sei segretamente un Synth di Terza Generazione con protocolli dormienti."
+        ],
+        "ranksEN": [
+            "No obvious initial bonus; at GM discretion roll a d20: on a natural 20 you are secretly a Gen 3 Synth with sleeper protocols."
+        ],
+        "effect": "Nessun bonus iniziale evidente; a discrezione del GM puoi tirare un d20: con un 20 naturale sei segretamente un Synth di Terza Generazione con protocolli dormienti."
     },
     {
-      "id": "ghoul_many_roads",
-      "name": "Molte Strade Percorse (Many Roads)",
-      "category": "Razziale",
-      "maxRank": 1,
-      "req": "Ghoul",
-      "ranks": [
-        "I lunghi decenni trascorsi nella Zona ti hanno insegnato molto: ottieni 1 perk addizionale a tua scelta al livello 1."
-      ]
+        "id": "fast_metabolism",
+        "name": "Metabolismo Rapido (Fast Metabolism)",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Umano (Human)",
+        "desc": "Il tuo tasso metabolico è aumentato. Il tuo Tasso di Guarigione (Healing Rate) aumenta di 2. Tuttavia, la tua CD Radiazioni aumenta di 3.",
+        "descEn": "Your metabolic rate is increased. Your Healing Rate is increased by 2. However, your Radiation DC is increased by 3.",
+        "wildWasteland": "Zona Contaminata Selvaggia: Il tuo Tasso di Guarigione aumenta di un numero pari a metà del tuo livello (minimo 2). Tuttavia, la tua CD Radiazioni aumenta di un numero pari a metà del tuo livello (minimo 3).",
+        "wildWastelandEn": "Wild Wasteland: Your Healing Rate is increased by a number equal to half your level (minimum of 2). However, your Radiation DC is increased by a number equal to half your level (minimum of 3).",
+        "ranks": [
+            "Il tuo tasso metabolico è aumentato. Il tuo Tasso di Guarigione (Healing Rate) aumenta di 2. Tuttavia, la tua CD Radiazioni aumenta di 3.",
+            "Zona Contaminata Selvaggia: Il tuo Tasso di Guarigione aumenta di un numero pari a metà del tuo livello (minimo 2). Tuttavia, la tua CD Radiazioni aumenta di un numero pari a metà del tuo livello (minimo 3)."
+        ],
+        "ranksEN": [
+            "Your metabolic rate is increased. Your Healing Rate is increased by 2. However, your Radiation DC is increased by 3.",
+            "Wild Wasteland: Your Healing Rate is increased by a number equal to half your level (minimum of 2). However, your Radiation DC is increased by a number equal to half your level (minimum of 3)."
+        ],
+        "effect": "Il tuo tasso metabolico è aumentato. Il tuo Tasso di Guarigione (Healing Rate) aumenta di 2. Tuttavia, la tua CD Radiazioni aumenta di 3."
     },
     {
-      "id": "ghoul_old_bones",
-      "name": "Ossa Vecchie (Old Bones)",
-      "category": "Razziale",
-      "maxRank": 1,
-      "req": "Ghoul",
-      "ranks": [
-        "Immunità completa ai danni da veleno e ottieni il talento Cucito Insieme (Stitched Together) gratuito."
-      ]
+        "id": "ghoul_many_roads",
+        "name": "Molte Strade Percorse (Many Roads)",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Ghoul",
+        "desc": "I lunghi decenni trascorsi nella Zona Contaminata ti hanno insegnato molto: ottieni 1 perk addizionale a tua scelta al 1° livello.",
+        "descEn": "The decades spent wandering the Wasteland have taught you much: you gain 1 additional perk of your choice at level 1.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "I lunghi decenni trascorsi nella Zona Contaminata ti hanno insegnato molto: ottieni 1 perk addizionale a tua scelta al 1° livello."
+        ],
+        "ranksEN": [
+            "The decades spent wandering the Wasteland have taught you much: you gain 1 additional perk of your choice at level 1."
+        ],
+        "effect": "I lunghi decenni trascorsi nella Zona Contaminata ti hanno insegnato molto: ottieni 1 perk addizionale a tua scelta al 1° livello."
     },
     {
-      "id": "ghoul_half_life",
-      "name": "Mezzavita (Half Life)",
-      "category": "Razziale",
-      "maxRank": 1,
-      "req": "Ghoul",
-      "ranks": [
-        "Se esposto a radiazioni estreme oltre ogni limite, devi effettuare un tiro salvezza END con CD 15: se fallisci perdi la ragione e rischi di diventare un Feral Ghoul."
-      ]
+        "id": "ghoul_old_bones",
+        "name": "Ossa Vecchie (Old Bones)",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Ghoul",
+        "desc": "Immunità completa ai danni da veleno e ottieni il talento Cucito Insieme (Stitched Together) gratuitamente.",
+        "descEn": "Complete immunity to poison damage, and you gain the Stitched Together perk for free.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Immunità completa ai danni da veleno e ottieni il talento Cucito Insieme (Stitched Together) gratuitamente."
+        ],
+        "ranksEN": [
+            "Complete immunity to poison damage, and you gain the Stitched Together perk for free."
+        ],
+        "effect": "Immunità completa ai danni da veleno e ottieni il talento Cucito Insieme (Stitched Together) gratuitamente."
     },
     {
-      "id": "synth_advanced",
-      "name": "Componenti Avanzati (Advanced Components)",
-      "category": "Razziale",
-      "maxRank": 1,
-      "req": "Synth di Seconda Generazione (Gen-2 Synth)",
-      "ranks": [
-        "+1 DT naturale permanente su tutte le locazioni corporee grazie alla blindatura polimerica avanzata."
-      ]
+        "id": "ghoul_half_life",
+        "name": "Mezzavita (Half Life)",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Ghoul",
+        "desc": "Se esposto a radiazioni estreme oltre ogni limite, devi effettuare un tiro salvezza su Costituzione con CD 15: se fallisci perdi la ragione e rischi di diventare un Ghoul Feroce.",
+        "descEn": "If exposed to extreme radiation beyond normal limits, make a DC 15 Endurance save: failure means succumbing to feralization.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Se esposto a radiazioni estreme oltre ogni limite, devi effettuare un tiro salvezza su Costituzione con CD 15: se fallisci perdi la ragione e rischi di diventare un Ghoul Feroce."
+        ],
+        "ranksEN": [
+            "If exposed to extreme radiation beyond normal limits, make a DC 15 Endurance save: failure means succumbing to feralization."
+        ],
+        "effect": "Se esposto a radiazioni estreme oltre ogni limite, devi effettuare un tiro salvezza su Costituzione con CD 15: se fallisci perdi la ragione e rischi di diventare un Ghoul Feroce."
     },
     {
-      "id": "synth_brittle",
-      "name": "Corpo Fragile (Brittle Body)",
-      "category": "Razziale",
-      "maxRank": 1,
-      "req": "Synth di Seconda Generazione (Gen-2 Synth)",
-      "ranks": [
-        "Gli attacchi mirati subiti infliggono due condizioni all'arto anziché una. Vulnerabile ai danni da elettricità."
-      ]
+        "id": "activated_actinides",
+        "name": "Attinidi Attivati (Activated Actinides)",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Ghoul",
+        "desc": "Attraverso una singolare mutazione, non ti sei completamente ghoulicizzato. Puoi guarire l'intero ammontare di PF da stimpak e polvere curativa. Tuttavia, non sei più immune alle radiazioni e subisci danni da radiazioni come un umano normale.",
+        "descEn": "Through some mutation, you haven't fully ghoulified. You can heal the full amount from stimpaks and healing powder. However, you are no longer immune to radiation and take radiation damage as normal.",
+        "wildWasteland": "Zona Contaminata Selvaggia: Oltre a curarti per intero da stimpak e polveri, quando vieni esposto a radiazioni i tuoi attacchi senz'armi infliggono 1d4 danni radiativi addizionali. Tuttavia, la tua CD Radiazioni aumenta di 2.",
+        "wildWastelandEn": "Wild Wasteland: In addition to full healing from stimpaks and powder, when exposed to radiation your unarmed strikes deal 1d4 additional radiation damage. However, your Radiation DC is increased by 2.",
+        "ranks": [
+            "Attraverso una singolare mutazione, non ti sei completamente ghoulicizzato. Puoi guarire l'intero ammontare di PF da stimpak e polvere curativa. Tuttavia, non sei più immune alle radiazioni e subisci danni da radiazioni come un umano normale.",
+            "Zona Contaminata Selvaggia: Oltre a curarti per intero da stimpak e polveri, quando vieni esposto a radiazioni i tuoi attacchi senz'armi infliggono 1d4 danni radiativi addizionali. Tuttavia, la tua CD Radiazioni aumenta di 2."
+        ],
+        "ranksEN": [
+            "Through some mutation, you haven't fully ghoulified. You can heal the full amount from stimpaks and healing powder. However, you are no longer immune to radiation and take radiation damage as normal.",
+            "Wild Wasteland: In addition to full healing from stimpaks and powder, when exposed to radiation your unarmed strikes deal 1d4 additional radiation damage. However, your Radiation DC is increased by 2."
+        ],
+        "effect": "Attraverso una singolare mutazione, non ti sei completamente ghoulicizzato. Puoi guarire l'intero ammontare di PF da stimpak e polvere curativa. Tuttavia, non sei più immune alle radiazioni e subisci danni da radiazioni come un umano normale."
     },
     {
-      "id": "robot_handy",
-      "name": "Sottotipo Mister Handy",
-      "category": "Razziale",
-      "maxRank": 1,
-      "req": "Robot",
-      "ranks": [
-        "Propulsore a getto (vola fluttuando a 1 metro dal suolo, immune a trappole al suolo), 3 braccia/attrezzi polivalenti intercambiabili."
-      ]
+        "id": "synth_advanced",
+        "name": "Componenti Avanzati (Advanced Components)",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Synth",
+        "desc": "+1 DT naturale permanente su tutte le locazioni corporee grazie alla blindatura polimerica avanzata.",
+        "descEn": "+1 permanent natural DT across all body locations thanks to advanced polymer armor.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "+1 DT naturale permanente su tutte le locazioni corporee grazie alla blindatura polimerica avanzata."
+        ],
+        "ranksEN": [
+            "+1 permanent natural DT across all body locations thanks to advanced polymer armor."
+        ],
+        "effect": "+1 DT naturale permanente su tutte le locazioni corporee grazie alla blindatura polimerica avanzata."
     },
     {
-      "id": "robot_protectron",
-      "name": "Sottotipo Protectron",
-      "category": "Razziale",
-      "maxRank": 1,
-      "req": "Robot",
-      "ranks": [
-        "+2 DT naturale permanente su tutto il telaio corazzato. Massimo 6 AP spendibili in movimento per turno (andatura lenta)."
-      ]
+        "id": "synth_brittle",
+        "name": "Corpo Fragile (Brittle Body)",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Synth",
+        "desc": "Gli attacchi mirati subiti infliggono due condizioni all'arto anziché una. Vulnerabilità ai danni da elettricità.",
+        "descEn": "Targeted attacks against you inflict two limb conditions instead of one. Vulnerability to electric damage.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Gli attacchi mirati subiti infliggono due condizioni all'arto anziché una. Vulnerabilità ai danni da elettricità."
+        ],
+        "ranksEN": [
+            "Targeted attacks against you inflict two limb conditions instead of one. Vulnerability to electric damage."
+        ],
+        "effect": "Gli attacchi mirati subiti infliggono due condizioni all'arto anziché una. Vulnerabilità ai danni da elettricità."
     },
     {
-      "id": "robot_robobrain",
-      "name": "Sottotipo Robobrain",
-      "category": "Razziale",
-      "maxRank": 1,
-      "req": "Robot",
-      "ranks": [
-        "Cingoli per qualsiasi terreno (nessun costo aggiuntivo in terreno difficile). Vulnerabile a danni da impulsi EMP al serbatoio biogel della testa."
-      ]
+        "id": "dense_circuitry",
+        "name": "Circuiti Densi (Dense Circuitry)",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Synth",
+        "desc": "I tuoi fragili cablaggi interni sono più protetti, a scapito del tempo di risposta. Il tuo Tasso di Guarigione massimo aumenta di 2. Tuttavia, i tuoi tiri di Sequenza di Combattimento (Iniziativa) sono ridotti di 2.",
+        "descEn": "Your fragile wiring is more protected, at the cost of input lag. You gain a bonus to your Healing Rate maximum equal to 2. However, your Combat Sequence rolls are decreased by 2.",
+        "wildWasteland": "Zona Contaminata Selvaggia: Il tuo Tasso di Guarigione aumenta di un numero pari a metà del tuo livello (minimo 2). Tuttavia, i tuoi tiri di Iniziativa sono ridotti di un numero pari a metà del tuo livello (minimo 2).",
+        "wildWastelandEn": "Wild Wasteland: Your Healing Rate is increased by a number equal to half your level (min 2). However, your Combat Sequence rolls are decreased by half your level (min 2).",
+        "ranks": [
+            "I tuoi fragili cablaggi interni sono più protetti, a scapito del tempo di risposta. Il tuo Tasso di Guarigione massimo aumenta di 2. Tuttavia, i tuoi tiri di Sequenza di Combattimento (Iniziativa) sono ridotti di 2.",
+            "Zona Contaminata Selvaggia: Il tuo Tasso di Guarigione aumenta di un numero pari a metà del tuo livello (minimo 2). Tuttavia, i tuoi tiri di Iniziativa sono ridotti di un numero pari a metà del tuo livello (minimo 2)."
+        ],
+        "ranksEN": [
+            "Your fragile wiring is more protected, at the cost of input lag. You gain a bonus to your Healing Rate maximum equal to 2. However, your Combat Sequence rolls are decreased by 2.",
+            "Wild Wasteland: Your Healing Rate is increased by a number equal to half your level (min 2). However, your Combat Sequence rolls are decreased by half your level (min 2)."
+        ],
+        "effect": "I tuoi fragili cablaggi interni sono più protetti, a scapito del tempo di risposta. Il tuo Tasso di Guarigione massimo aumenta di 2. Tuttavia, i tuoi tiri di Sequenza di Combattimento (Iniziativa) sono ridotti di 2."
     },
     {
-      "id": "sm_flawed",
-      "name": "Ceppo Difettoso (Flawed Strain)",
-      "category": "Razziale",
-      "maxRank": 1,
-      "req": "Super Mutante (Super Mutant)",
-      "ranks": [
-        "+2 FOR e +2 END, +40 Carico extra, ma INT ridotta di 2 (massimo 3). Sostituisce il tratto Forza Brutale standard."
-      ]
+        "id": "robot_handy",
+        "name": "Sottotipo Mister Handy",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Robot",
+        "desc": "Propulsore a getto (vola fluttuando a 1 metro dal suolo, immune a trappole al suolo), 3 braccia/attrezzi polivalenti intercambiabili.",
+        "descEn": "Jet thruster (hovers 1m above ground, immune to ground traps), 3 multi-purpose interchangeable utility arms.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Propulsore a getto (vola fluttuando a 1 metro dal suolo, immune a trappole al suolo), 3 braccia/attrezzi polivalenti intercambiabili."
+        ],
+        "ranksEN": [
+            "Jet thruster (hovers 1m above ground, immune to ground traps), 3 multi-purpose interchangeable utility arms."
+        ],
+        "effect": "Propulsore a getto (vola fluttuando a 1 metro dal suolo, immune a trappole al suolo), 3 braccia/attrezzi polivalenti intercambiabili."
     },
     {
-      "id": "sm_nightkin",
-      "name": "Nightkin (Ombra)",
-      "category": "Razziale",
-      "maxRank": 1,
-      "req": "Super Mutante (Super Mutant)",
-      "ranks": [
-        "+1 FOR (minimo 6), +40 Carico. Campo Stealth: puoi spendere 3 AP per diventare invisibile per 1 minuto (richiede Stealth Boy o tecnologia Nightkin integrata). Schizofrenia: svantaggio a tiri salvezza INT se privato dello stealth per più di 24 ore."
-      ]
+        "id": "robot_protectron",
+        "name": "Sottotipo Protectron",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Robot",
+        "desc": "Chassis rinforzato pesante (+2 DT naturale), velocità di movimento ridotta di 3 metri.",
+        "descEn": "Reinforced heavy chassis (+2 natural DT), movement speed reduced by 10ft.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Chassis rinforzato pesante (+2 DT naturale), velocità di movimento ridotta di 3 metri."
+        ],
+        "ranksEN": [
+            "Reinforced heavy chassis (+2 natural DT), movement speed reduced by 10ft."
+        ],
+        "effect": "Chassis rinforzato pesante (+2 DT naturale), velocità di movimento ridotta di 3 metri."
     },
     {
-      "id": "fast_metabolism",
-      "name": "Metabolismo Rapido (Fast Metabolism)",
-      "category": "Razziale",
-      "maxRank": 2,
-      "req": "Umano",
-      "ranks": [
-        "Prerequisite: Human. Your metabolic rate is increased. Your Healing Rate is  increased by 2. However, your Radiation DC is increased  by 3.",
-        "Wild Wasteland: Your Healing Rate is increased by a  number equal to your level. However, whenever you  succeed a radiation check, your Radiation DC increases by  4 instead of 2."
-      ]
+        "id": "robot_robobrain",
+        "name": "Sottotipo Robobrain",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Robot",
+        "desc": "Cervello organico integrato: +1 Intelligenza, cingoli ad alta aderenza (ignora terreni difficili urbani/macerie).",
+        "descEn": "Organic brain housing: +1 Intelligence, high-traction treads (ignores difficult rubble terrain).",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Cervello organico integrato: +1 Intelligenza, cingoli ad alta aderenza (ignora terreni difficili urbani/macerie)."
+        ],
+        "ranksEN": [
+            "Organic brain housing: +1 Intelligence, high-traction treads (ignores difficult rubble terrain)."
+        ],
+        "effect": "Cervello organico integrato: +1 Intelligenza, cingoli ad alta aderenza (ignora terreni difficili urbani/macerie)."
     },
     {
-      "id": "cheaper_parts",
-      "name": "Componenti Economici (Cheaper Parts)",
-      "category": "Razziale",
-      "maxRank": 2,
-      "req": "Robot",
-      "ranks": [
-        "Prerequisite: Robot. You’re made from a more accessible and malleable  metal. Your Healing Rate is increased by 2. However,  your AC is reduced by 1.",
-        "Wild Wasteland: Your Healing Rate is increased by a  number equal to your level. However, your AC is decreased  by 1, and your DT is decreased by 2."
-      ]
+        "id": "cheaper_parts",
+        "name": "Componenti Economici (Cheaper Parts)",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Robot",
+        "desc": "Sei costruito con un metallo più malleabile ed economico. Il tuo Tasso di Guarigione aumenta di 2. Tuttavia, la tua Classe Armatura (CA) è ridotta di 1.",
+        "descEn": "You're made from a more accessible and malleable metal. Your Healing Rate is increased by 2. However, your AC is reduced by 1.",
+        "wildWasteland": "Zona Contaminata Selvaggia: Il tuo Tasso di Guarigione aumenta di un numero pari a metà del tuo livello (minimo 2). Tuttavia, la tua CA è ridotta di 2.",
+        "wildWastelandEn": "Wild Wasteland: Your Healing Rate is increased by half your level (minimum 2). However, your AC is reduced by 2.",
+        "ranks": [
+            "Sei costruito con un metallo più malleabile ed economico. Il tuo Tasso di Guarigione aumenta di 2. Tuttavia, la tua Classe Armatura (CA) è ridotta di 1.",
+            "Zona Contaminata Selvaggia: Il tuo Tasso di Guarigione aumenta di un numero pari a metà del tuo livello (minimo 2). Tuttavia, la tua CA è ridotta di 2."
+        ],
+        "ranksEN": [
+            "You're made from a more accessible and malleable metal. Your Healing Rate is increased by 2. However, your AC is reduced by 1.",
+            "Wild Wasteland: Your Healing Rate is increased by half your level (minimum 2). However, your AC is reduced by 2."
+        ],
+        "effect": "Sei costruito con un metallo più malleabile ed economico. Il tuo Tasso di Guarigione aumenta di 2. Tuttavia, la tua Classe Armatura (CA) è ridotta di 1."
     },
     {
-      "id": "dense_circuitry",
-      "name": "Circuiti Densi (Dense Circuitry)",
-      "category": "Razziale",
-      "maxRank": 2,
-      "req": "Synth",
-      "ranks": [
-        "Prerequisite: Synth. Your fragile wiring is more protected, at the cost of input  lag. You gain a bonus to your Healing Rate maximum  equal to 2. However, your Combat Sequence rolls are  decreased by 2.",
-        "Wild Wasteland: Your Healing Rate is increased by  a number equal to your level. However, your Combat  Sequence rolls have disadvantage and are decreased by  4."
-      ]
+        "id": "sm_flawed",
+        "name": "Ceppo Difettoso (Flawed Strain)",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Super Mutante (Super Mutant)",
+        "desc": "La mutazione non si è stabilizzata perfettamente: -1 a Intelligenza e Carisma, ma +2 a Forza e PF massimi.",
+        "descEn": "The FEV mutation did not stabilize cleanly: -1 Intelligence and Charisma, but +2 Strength and maximum HP.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "La mutazione non si è stabilizzata perfettamente: -1 a Intelligenza e Carisma, ma +2 a Forza e PF massimi."
+        ],
+        "ranksEN": [
+            "The FEV mutation did not stabilize cleanly: -1 Intelligence and Charisma, but +2 Strength and maximum HP."
+        ],
+        "effect": "La mutazione non si è stabilizzata perfettamente: -1 a Intelligenza e Carisma, ma +2 a Forza e PF massimi."
     },
     {
-      "id": "activated_actinides",
-      "name": "Attinidi Attivati (Activated Actinides)",
-      "category": "Razziale",
-      "maxRank": 2,
-      "req": "Ghoul",
-      "ranks": [
-        "Prerequisite: Ghoul. Through some mutation, you haven’t fully ghoulified. You  can heal the full amount from stimpaks and you can use  healing powder. However, you are no longer immune to  radiation and its effects, but you have advantage on any  Radiation checks and are resistant to radiation damage.",
-        "Wild Wasteland: In addition to the traits effects; Your  Healing Rate is increased by 2. However, whenever you  succeed a Radiation check, your Radiation DC increases  by 4 instead of 2."
-      ]
+        "id": "sm_nightkin",
+        "name": "Nightkin (Ombra)",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Super Mutante (Super Mutant)",
+        "desc": "Uso prolungato dello Stealth Boy: ottieni vantaggio alle prove di Furtività al buio, ma soffri di paranoia (svantaggio a tiri salvezza su Saggezza).",
+        "descEn": "Prolonged Stealth Boy use: advantage on Stealth in darkness, but suffering from schizophrenia/paranoia (disadvantage on Wisdom saves).",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Uso prolungato dello Stealth Boy: ottieni vantaggio alle prove di Furtività al buio, ma soffri di paranoia (svantaggio a tiri salvezza su Saggezza)."
+        ],
+        "ranksEN": [
+            "Prolonged Stealth Boy use: advantage on Stealth in darkness, but suffering from schizophrenia/paranoia (disadvantage on Wisdom saves)."
+        ],
+        "effect": "Uso prolungato dello Stealth Boy: ottieni vantaggio alle prove di Furtività al buio, ma soffri di paranoia (svantaggio a tiri salvezza su Saggezza)."
     },
     {
-      "id": "onerous_regeneration",
-      "name": "Rigenerazione Onerosa (Onerous Regeneration)",
-      "category": "Razziale",
-      "maxRank": 2,
-      "req": "Super Mutante",
-      "ranks": [
-        "Prerequisite: Super Mutant. Your metabolic rate is increased. Your Healing Rate is  increased by 2. However, your maximum stamina points  are reduced by a number equal to your level.",
-        "Wild Wasteland: Your Healing Rate is increased by a  number equal to your level. However, whenever you regain  stamina points from sleep, you regain half as much."
-      ]
+        "id": "onerous_regeneration",
+        "name": "Rigenerazione Onerosa (Onerous Regeneration)",
+        "category": "Razziale",
+        "maxRank": 1,
+        "req": "Super Mutante (Super Mutant)",
+        "desc": "Il tuo tasso metabolico è aumentato. Il tuo Tasso di Guarigione aumenta di 2. Tuttavia, i tuoi Punti Azione (PA) massimi sono ridotti di un numero pari al tuo livello.",
+        "descEn": "Your metabolic rate is increased. Your Healing Rate is increased by 2. However, your maximum stamina points are reduced by a number equal to your level.",
+        "wildWasteland": "Zona Contaminata Selvaggia: Il tuo Tasso di Guarigione aumenta di un numero pari a metà del tuo livello (minimo 2). Tuttavia, i tuoi PA massimi sono ridotti del doppio del tuo livello.",
+        "wildWastelandEn": "Wild Wasteland: Your Healing Rate is increased by half your level (min 2). However, your maximum stamina points are reduced by twice your level.",
+        "ranks": [
+            "Il tuo tasso metabolico è aumentato. Il tuo Tasso di Guarigione aumenta di 2. Tuttavia, i tuoi Punti Azione (PA) massimi sono ridotti di un numero pari al tuo livello.",
+            "Zona Contaminata Selvaggia: Il tuo Tasso di Guarigione aumenta di un numero pari a metà del tuo livello (minimo 2). Tuttavia, i tuoi PA massimi sono ridotti del doppio del tuo livello."
+        ],
+        "ranksEN": [
+            "Your metabolic rate is increased. Your Healing Rate is increased by 2. However, your maximum stamina points are reduced by a number equal to your level.",
+            "Wild Wasteland: Your Healing Rate is increased by half your level (min 2). However, your maximum stamina points are reduced by twice your level."
+        ],
+        "effect": "Il tuo tasso metabolico è aumentato. Il tuo Tasso di Guarigione aumenta di 2. Tuttavia, i tuoi Punti Azione (PA) massimi sono ridotti di un numero pari al tuo livello."
     },
     {
-      "id": "a_moment_of_respite",
-      "name": "Un Momento di Tregua (A Moment of Respite)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Intrattenitore",
-      "ranks": [
-        "You’re a natural when it comes to lifting spirits.  Whenever you and any other player characters rest,  you play music, sing a song, recount a story, or give an  inspiring speech. You and each other player character  resting gain temporary stamina points equal to  your Charisma score. However, you and each player  character’s group stealth is reduced by 2 so long as you  are within 500 feet of them.",
-        "Wild Wasteland: The amount of temporary stamina points  gained is instead double your Charisma score, but your  party’s group stealth is reduced by 5 so long as you’re in  the party."
-      ]
+        "id": "a_moment_of_respite",
+        "name": "Un Momento di Tregua (A Moment of Respite)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Intrattenitore",
+        "desc": "Sai come sollevare il morale del gruppo. Durante un riposo breve o lungo in cui intrattieni i compagni (musica, storie, discorsi), tu e ogni compagno recuperate 1d6 PF aggiuntivi.",
+        "descEn": "You're a natural at lifting spirits. When resting, you play music, tell stories, or give a speech. You and companions restore an additional 1d6 HP.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Sai come sollevare il morale del gruppo. Durante un riposo breve o lungo in cui intrattieni i compagni (musica, storie, discorsi), tu e ogni compagno recuperate 1d6 PF aggiuntivi."
+        ],
+        "ranksEN": [
+            "You're a natural at lifting spirits. When resting, you play music, tell stories, or give a speech. You and companions restore an additional 1d6 HP."
+        ],
+        "effect": "Sai come sollevare il morale del gruppo. Durante un riposo breve o lungo in cui intrattieni i compagni (musica, storie, discorsi), tu e ogni compagno recuperate 1d6 PF aggiuntivi."
     },
     {
-      "id": "bargaining_chip",
-      "name": "Moneta di Scambio (Bargaining Chip)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Commerciante",
-      "ranks": [
-        "You’ve got a nose for opportunity and know how to strike  bargains. Whenever you sell an item, you can use your  Discount ability to gain a bonus of caps equal to double  your Barter skill modifier. However, you sell all your items  for 10% less than their listed value.",
-        "Wild Wasteland: Whenever you sell an item, you can use  your Discount ability to gain a bonus of caps equal to  triple your Barter skill modifier. However, you sell all your  items for 20% less than their listed value."
-      ]
+        "id": "bargaining_chip",
+        "name": "Moneta di Scambio (Bargaining Chip)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Commerciante",
+        "desc": "Hai fiuto per gli affari. Quando vendi un oggetto, puoi usare la tua abilità Sconto per ottenere un bonus di tappi pari al doppio del tuo modificatore di Baratto.",
+        "descEn": "Whenever you sell an item, you can use your Discount ability to gain a bonus of caps equal to double your Barter modifier.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Hai fiuto per gli affari. Quando vendi un oggetto, puoi usare la tua abilità Sconto per ottenere un bonus di tappi pari al doppio del tuo modificatore di Baratto."
+        ],
+        "ranksEN": [
+            "Whenever you sell an item, you can use your Discount ability to gain a bonus of caps equal to double your Barter modifier."
+        ],
+        "effect": "Hai fiuto per gli affari. Quando vendi un oggetto, puoi usare la tua abilità Sconto per ottenere un bonus di tappi pari al doppio del tuo modificatore di Baratto."
     },
     {
-      "id": "do_no_harm",
-      "name": "Primo Non Nuocere (Do No Harm)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Dottore",
-      "ranks": [
-        "“Primum non nocere”, you’ve taken the hippocratic oath  and intend to heal others. Whenever you restore hit  points, you restore an additional 1 hit point. Whenever  you attack another creature and damage them, the  damage is reduced by 1 to a minimum of 1.",
-        "Wild Wasteland: In addition to the traits effects;  whenever you spend 6 AP to roll a Medicine check on  a dying creature to return them to 1 hit point, the check  automatically succeeds. However, if you ever damage  another creature from an attack you made against them,  and this damage kills them; you lose all abilities from this  trait."
-      ]
+        "id": "do_no_harm",
+        "name": "Primo Non Nuocere (Do No Harm)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Dottore",
+        "desc": "Hai prestato il giuramento di Ippocrate: ogni volta che ripristini PF ad altri, curi 1 PF addizionale. Tuttavia, se attacchi un'altra creatura subisci svantaggio al tiro per colpire a meno che tu non stia difendendo un alleato.",
+        "descEn": "Whenever you restore hit points to others, you restore an additional 1 HP. When attacking another creature you have disadvantage unless defending an ally.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Hai prestato il giuramento di Ippocrate: ogni volta che ripristini PF ad altri, curi 1 PF addizionale. Tuttavia, se attacchi un'altra creatura subisci svantaggio al tiro per colpire a meno che tu non stia difendendo un alleato."
+        ],
+        "ranksEN": [
+            "Whenever you restore hit points to others, you restore an additional 1 HP. When attacking another creature you have disadvantage unless defending an ally."
+        ],
+        "effect": "Hai prestato il giuramento di Ippocrate: ogni volta che ripristini PF ad altri, curi 1 PF addizionale. Tuttavia, se attacchi un'altra creatura subisci svantaggio al tiro per colpire a meno che tu non stia difendendo un alleato."
     },
     {
-      "id": "efficient_combatant",
-      "name": "Combattente Efficiente (Efficient Combatant)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Soldato",
-      "ranks": [
-        "Due to your training, you’re more reliable with a weapon.  Whenever you make an attack roll and the result is a 1,  you add your modifier and no longer automatically miss.  However, your Karma Cap does not flip back over when  you roll a 1 on attack rolls.",
-        "Wild Wasteland: Whenever you make an attack roll and  the result is a 1, you can re-roll the attack roll but must  take the new result. However, whenever you make an  attack roll and the result is a critical hit, you automatically  hit but deal no extra damage."
-      ]
+        "id": "efficient_combatant",
+        "name": "Combattente Efficiente (Efficient Combatant)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Soldato",
+        "desc": "Grazie al tuo addestramento militare, quando ottieni un 1 naturale su un tiro per colpire aggiungi comunque i tuoi modificatori e non manchi automaticamente.",
+        "descEn": "Due to your training, whenever you roll a natural 1 on an attack roll, you still add modifiers and do not automatically miss.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Grazie al tuo addestramento militare, quando ottieni un 1 naturale su un tiro per colpire aggiungi comunque i tuoi modificatori e non manchi automaticamente."
+        ],
+        "ranksEN": [
+            "Due to your training, whenever you roll a natural 1 on an attack roll, you still add modifiers and do not automatically miss."
+        ],
+        "effect": "Grazie al tuo addestramento militare, quando ottieni un 1 naturale su un tiro per colpire aggiungi comunque i tuoi modificatori e non manchi automaticamente."
     },
     {
-      "id": "endure_the_battle",
-      "name": "Resistere alla Battaglia (Endure the Battle)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Gladiatore",
-      "ranks": [
-        "You’ve come back from the brink more often than once.  If you roll a 19 or 20 on your Death Save, you return  to 1 hit point. However you do not add your Luck or  Endurance to your death saves.",
-        "Wild Wasteland: If you roll an 18, 19, or 20 on your Death  Save, you return to 1 hit point. However you do not add  your Luck, Endurance, or Party Nerve to your death saves."
-      ]
+        "id": "endure_the_battle",
+        "name": "Resistere alla Battaglia (Endure the Battle)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Gladiatore",
+        "desc": "La tua soglia del dolore è elevata: ottieni +2 ai Tiri Salvezza contro condizioni di stordimento o atterramento subite in combattimento.",
+        "descEn": "Your pain threshold is high: gain +2 to Saving Throws against stun or prone conditions in combat.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "La tua soglia del dolore è elevata: ottieni +2 ai Tiri Salvezza contro condizioni di stordimento o atterramento subite in combattimento."
+        ],
+        "ranksEN": [
+            "Your pain threshold is high: gain +2 to Saving Throws against stun or prone conditions in combat."
+        ],
+        "effect": "La tua soglia del dolore è elevata: ottieni +2 ai Tiri Salvezza contro condizioni di stordimento o atterramento subite in combattimento."
     },
     {
-      "id": "embolden",
-      "name": "Incoraggiare (Embolden)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Pastore",
-      "ranks": [
-        "You know how to prepare others for the worst, and to  inspire the soul. Whenever you roll combat sequence,  each other player character gains advantage on their first  attack roll they make on their turn. However, if any player  characters critically hit on their first attack after rolling  combat sequence, they do not deal any extra damage.",
-        "Wild Wasteland: Whenever you roll combat sequence,  each other player character gains advantage on their first  two attack rolls they make on their turn. However, if any  player characters critically hit on their first or second  attack after rolling combat sequence, they do not deal any  extra damage."
-      ]
+        "id": "embolden",
+        "name": "Incoraggiare (Embolden)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Pastore",
+        "desc": "Una volta per combattimento come azione, puoi pronunciare parole di fede o coraggio: tutti gli alleati entro 9 metri ottengono vantaggio al prossimo tiro salvezza.",
+        "descEn": "Once per combat as an action, speak words of courage: all allies within 30ft gain advantage on their next saving throw.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Una volta per combattimento come azione, puoi pronunciare parole di fede o coraggio: tutti gli alleati entro 9 metri ottengono vantaggio al prossimo tiro salvezza."
+        ],
+        "ranksEN": [
+            "Once per combat as an action, speak words of courage: all allies within 30ft gain advantage on their next saving throw."
+        ],
+        "effect": "Una volta per combattimento come azione, puoi pronunciare parole di fede o coraggio: tutti gli alleati entro 9 metri ottengono vantaggio al prossimo tiro salvezza."
     },
     {
-      "id": "field_research",
-      "name": "Ricerca sul Campo (Field Research)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Scienziato",
-      "ranks": [
-        "Your study of other creatures lends you to better fight  them. Whenever you deal damage from an attack to a  creature whose type you have fought before, the damage  is increased by 2. However, whenever you deal damage  from an attack to a creature whose type you haven’t yet  fought before, the damage is subtracted by 2.",
-        "Wild Wasteland: In addition to this trait’s effects;  whenever you rest and gain a bonus of XP after having  rolled combat sequence with a creature you have  never rolled combat sequence with before, you gain an  additional 20% bonus of XP. However, whenever you rest  and gain XP after having rolled combat sequence with a  creature you have rolled combat sequence with before,  you gain 10% less XP."
-      ]
+        "id": "field_research",
+        "name": "Ricerca sul Campo (Field Research)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Scienziato",
+        "desc": "Puoi esaminare una creatura o anomalia tecnologica con un'azione: con una prova di Scienza CD 12 identifichi subito le sue resistenze e vulnerabilità principali.",
+        "descEn": "As an action, inspect a creature or tech: DC 12 Science check identifies damage resistances and vulnerabilities.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Puoi esaminare una creatura o anomalia tecnologica con un'azione: con una prova di Scienza CD 12 identifichi subito le sue resistenze e vulnerabilità principali."
+        ],
+        "ranksEN": [
+            "As an action, inspect a creature or tech: DC 12 Science check identifies damage resistances and vulnerabilities."
+        ],
+        "effect": "Puoi esaminare una creatura o anomalia tecnologica con un'azione: con una prova di Scienza CD 12 identifichi subito le sue resistenze e vulnerabilità principali."
     },
     {
-      "id": "hardened_by_the_earth",
-      "name": "Temprato dalla Terra (Hardened by the Earth)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Agricoltore",
-      "ranks": [
-        "You’ve known long days and hard work, you have  advantage whenever you roll an Endurance check to  resist a level of Hunger or Fatigue. However, you fall  unconscious if you reach 8 levels of Hunger or Fatigue  instead of 10.",
-        "Wild Wasteland: In addition to the traits effects; whenever  your hit points or stamina points increase from leveling  up, you gain an extra point in each. However, the negative  effects from levels of Hunger and Fatigue are doubled."
-      ]
+        "id": "hardened_by_the_earth",
+        "name": "Temprato dalla Terra (Hardened by the Earth)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Agricoltore",
+        "desc": "Una vita di duro lavoro all'aperto: ottieni vantaggio a tutti i tiri salvezza su Costituzione contro calore estremo, freddo e disidratazione.",
+        "descEn": "A life of labor in the soil: advantage on Constitution saves against extreme weather, heat, cold, and dehydration.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Una vita di duro lavoro all'aperto: ottieni vantaggio a tutti i tiri salvezza su Costituzione contro calore estremo, freddo e disidratazione."
+        ],
+        "ranksEN": [
+            "A life of labor in the soil: advantage on Constitution saves against extreme weather, heat, cold, and dehydration."
+        ],
+        "effect": "Una vita di duro lavoro all'aperto: ottieni vantaggio a tutti i tiri salvezza su Costituzione contro calore estremo, freddo e disidratazione."
     },
     {
-      "id": "long_days_long_nights",
-      "name": "Giornate Lunghe, Notti Lunghe (Long Days, Long Nights)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Bracciante",
-      "ranks": [
-        "You’re accustomed to straining your body and enduring  physical work, whenever your stamina points increase  from leveling up, you gain an extra point. However, you  gain an additional level of fatigue whenever you fail an  Endurance check to resist sleep.",
-        "Wild Wasteland: In addition to the traits effects; whenever  your stamina points increase from leveling up, you gain  another extra point (for a total of 2). However, whenever  you regain stamina points from any rest that isn’t sleep,  you regain a fourth of your maximum stamina points  instead of half."
-      ]
+        "id": "long_days_long_nights",
+        "name": "Giornate Lunghe, Notti Lunghe (Long Days, Long Nights)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Bracciante",
+        "desc": "Abituato a turni estenuanti: il tuo sonno necessario per un riposo lungo è ridotto di 2 ore, e puoi ignorare il primo livello di affaticamento da privazione del sonno.",
+        "descEn": "Used to grueling work: long rest sleep required is reduced by 2 hours, and you ignore the first level of sleep exhaustion.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Abituato a turni estenuanti: il tuo sonno necessario per un riposo lungo è ridotto di 2 ore, e puoi ignorare il primo livello di affaticamento da privazione del sonno."
+        ],
+        "ranksEN": [
+            "Used to grueling work: long rest sleep required is reduced by 2 hours, and you ignore the first level of sleep exhaustion."
+        ],
+        "effect": "Abituato a turni estenuanti: il tuo sonno necessario per un riposo lungo è ridotto di 2 ore, e puoi ignorare il primo livello di affaticamento da privazione del sonno."
     },
     {
-      "id": "long_roads",
-      "name": "Strade Lunghe (Long Roads)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Pellegrino",
-      "ranks": [
-        "You’ve traveled far and wide and know how best to  handle the open road. When you and any other player  characters travel at a fast pace, you can move an  additional two miles per hour. However, if you do, at the  end of each hour you and each other player character  must succeed a DC 12 Endurance check or gain a level of  fatigue. The DC increases by 2 for any player character  who succeeds this check.",
-        "Wild Wasteland: When you and any other player  characters travel at a fast pace, you can move an  additional five miles per hour. However, if you do, at the  end of each hour you and each other player character  gains a level of fatigue."
-      ]
+        "id": "long_roads",
+        "name": "Strade Lunghe (Long Roads)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Pellegrino",
+        "desc": "La tua velocità di viaggio nella Zona Contaminata aumenta del 25% e il tuo gruppo non può perdersi a meno di condizioni meteorologiche soprannaturali.",
+        "descEn": "Your overland travel speed increases by 25% and your party cannot become lost by normal means.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "La tua velocità di viaggio nella Zona Contaminata aumenta del 25% e il tuo gruppo non può perdersi a meno di condizioni meteorologiche soprannaturali."
+        ],
+        "ranksEN": [
+            "Your overland travel speed increases by 25% and your party cannot become lost by normal means."
+        ],
+        "effect": "La tua velocità di viaggio nella Zona Contaminata aumenta del 25% e il tuo gruppo non può perdersi a meno di condizioni meteorologiche soprannaturali."
     },
     {
-      "id": "persistent",
-      "name": "Tenace / Persistente (Persistent)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Giornalista",
-      "ranks": [
-        "Whenever you flip a Karma Cap to re-roll a Skill check,  you make the roll at advantage. However, your Karma  Caps no longer flip back over whenever you roll a 1 on a  d20.",
-        "Wild Wasteland: Whenever you flip a Karma Cap to reroll  an Ability check, Skill check, or attack roll; you make the  roll at advantage. However, you start each game with one  of your Karma Caps flipped."
-      ]
+        "id": "persistent",
+        "name": "Tenace / Persistente (Persistent)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Giornalista",
+        "desc": "Non molli mai la presa quando cerchi informazioni: ottieni un bonus di +2 a tutte le prove di Eloquenza e Percezione per estorcere segreti o indizi.",
+        "descEn": "You never give up on finding the truth: +2 bonus to Speech and Perception checks when interrogating or searching clues.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Non molli mai la presa quando cerchi informazioni: ottieni un bonus di +2 a tutte le prove di Eloquenza e Percezione per estorcere segreti o indizi."
+        ],
+        "ranksEN": [
+            "You never give up on finding the truth: +2 bonus to Speech and Perception checks when interrogating or searching clues."
+        ],
+        "effect": "Non molli mai la presa quando cerchi informazioni: ottieni un bonus di +2 a tutte le prove di Eloquenza e Percezione per estorcere segreti o indizi."
     },
     {
-      "id": "proper_maintenance",
-      "name": "Manutenzione Adeguata (Proper Maintenance)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Meccanico",
-      "ranks": [
-        "You know how to keep good care of your equipment.  Whenever any of your weapons or armor have no levels  of decay, the first level of decay they gain is ignored.  However, your weapons and armor become non- functional when they have 8 levels of decay instead of  10.",
-        "Wild Wasteland: Whenever any of your weapons or armor  have one or two levels of decay, the negative effects are  ignored. However, your weapons and armor become non- functional when they have 5 levels of decay instead of 10."
-      ]
+        "id": "proper_maintenance",
+        "name": "Manutenzione Adeguata (Proper Maintenance)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Meccanico",
+        "desc": "Le armi e le armature da te riparate mantengono la loro efficienza più a lungo: le armi non si inceppano mai su un 1 naturale.",
+        "descEn": "Weapons and armor maintained by you stay reliable longer: weapons never jam on a natural 1.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Le armi e le armature da te riparate mantengono la loro efficienza più a lungo: le armi non si inceppano mai su un 1 naturale."
+        ],
+        "ranksEN": [
+            "Weapons and armor maintained by you stay reliable longer: weapons never jam on a natural 1."
+        ],
+        "effect": "Le armi e le armature da te riparate mantengono la loro efficienza più a lungo: le armi non si inceppano mai su un 1 naturale."
     },
     {
-      "id": "recluse",
-      "name": "Recluso / Eremita (Recluse)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Eremita",
-      "ranks": [
-        "You’ve spent more time honing your skills than learning  new things. Instead of gaining a perk at 1st level, five  different Skill modifiers of your choice increase by 2.",
-        "Wild Wasteland: Instead of gaining a perk at 1st and 2nd  level, all your Skill modifiers increase by 2."
-      ]
+        "id": "recluse",
+        "name": "Recluso / Eremita (Recluse)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Eremita",
+        "desc": "Sei abituato alla solitudine: quando ti trovi a più di 15 metri da qualsiasi alleato, ottieni un bonus di +1 a tutti i tiri salvezza.",
+        "descEn": "Accustomed to isolation: when more than 50ft away from any ally, you gain +1 to all saving throws.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Sei abituato alla solitudine: quando ti trovi a più di 15 metri da qualsiasi alleato, ottieni un bonus di +1 a tutti i tiri salvezza."
+        ],
+        "ranksEN": [
+            "Accustomed to isolation: when more than 50ft away from any ally, you gain +1 to all saving throws."
+        ],
+        "effect": "Sei abituato alla solitudine: quando ti trovi a più di 15 metri da qualsiasi alleato, ottieni un bonus di +1 a tutti i tiri salvezza."
     },
     {
-      "id": "street_rat",
-      "name": "Ratto di Strada (Street Rat)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Vagabondo",
-      "ranks": [
-        "From your time spent in settlements, you know how to  look the part and blend in. You have advantage on any  Sneak or Breach checks you make while in a settlement,  town, outpost, or otherwise populated location. However  your shifty reputation has led others to think twice before  helping you. You have disadvantage on any Speech or  Barter checks you make while in a settlement, town,  outpost, or otherwise populated location.",
-        "Wild Wasteland: You’ve got friends in low places, and  your reputation goes even further. In addition to the traits  effects; you can use your Discount ability three times  before resting. However, there’s a price on your head for  over 500 caps. Work with your GM on how you’ve obtained  this bounty, who would be after you, and how this will  affect your character."
-      ]
+        "id": "street_rat",
+        "name": "Ratto di Strada (Street Rat)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Vagabondo",
+        "desc": "I vicoli e le macerie urbane sono la tua casa: ottieni vantaggio alle prove di Furtività e Scassinare nelle aree cittadine in rovina.",
+        "descEn": "Urban ruins are your domain: advantage on Stealth and Lockpick checks within ruins and urban settlements.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "I vicoli e le macerie urbane sono la tua casa: ottieni vantaggio alle prove di Furtività e Scassinare nelle aree cittadine in rovina."
+        ],
+        "ranksEN": [
+            "Urban ruins are your domain: advantage on Stealth and Lockpick checks within ruins and urban settlements."
+        ],
+        "effect": "I vicoli e le macerie urbane sono la tua casa: ottieni vantaggio alle prove di Furtività e Scassinare nelle aree cittadine in rovina."
     },
     {
-      "id": "sweeten_the_deal",
-      "name": "Migliorare l'Accordo (Sweeten the Deal)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Mercenario",
-      "ranks": [
-        "You know how to strike a bargain and make anything  worth your time. Whenever you use your Discount ability,  the percentage of caps off the selected item is tripled.  However, all items cost 10% more for you.",
-        "Wild Wasteland: Whenever you use your Discount ability,  the percentage of caps off the selected item is sextupled.  However, all items cost 25% more for you."
-      ]
+        "id": "sweeten_the_deal",
+        "name": "Migliorare l'Accordo (Sweeten the Deal)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Mercenario",
+        "desc": "Sai negoziare le ricompense per i tuoi servizi: ottieni il 20% di tappi in più dalle ricompense di missioni e contratti completati.",
+        "descEn": "Skilled at contract negotiations: gain 20% more caps from completed bounties, quests, and contracts.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Sai negoziare le ricompense per i tuoi servizi: ottieni il 20% di tappi in più dalle ricompense di missioni e contratti completati."
+        ],
+        "ranksEN": [
+            "Skilled at contract negotiations: gain 20% more caps from completed bounties, quests, and contracts."
+        ],
+        "effect": "Sai negoziare le ricompense per i tuoi servizi: ottieni il 20% di tappi in più dalle ricompense di missioni e contratti completati."
     },
     {
-      "id": "talented",
-      "name": "Talentuoso (Talented)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Abitante del Vault",
-      "ranks": [
-        "You’ve learned many valuable  tricks, but haven’t honed your  skills as much. You gain an extra  perk at 1st level. However, five  different skill modifiers of your  choice decrease by 2.",
-        "Wild Wasteland: You gain two  extra perks at 1st level. However,  all your skill modifiers decrease  by 2."
-      ]
+        "id": "talented",
+        "name": "Talentuoso (Talented)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Abitante del Vault",
+        "desc": "L'educazione del Vault ti ha fornito solide basi: ricevi 5 Punti Abilità addizionali da spendere a tua scelta al 1° livello.",
+        "descEn": "Vault-Tec education grants great basics: receive 5 additional skill points to distribute at level 1.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "L'educazione del Vault ti ha fornito solide basi: ricevi 5 Punti Abilità addizionali da spendere a tua scelta al 1° livello."
+        ],
+        "ranksEN": [
+            "Vault-Tec education grants great basics: receive 5 additional skill points to distribute at level 1."
+        ],
+        "effect": "L'educazione del Vault ti ha fornito solide basi: ricevi 5 Punti Abilità addizionali da spendere a tua scelta al 1° livello."
     },
     {
-      "id": "the_sight_beyond",
-      "name": "La Vista Oltre (The Sight Beyond)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Cultista",
-      "ranks": [
-        "You often hear the whispers of the great beyond,  receiving paranormal visions of prophecy. When you  finish a rest that lasts at least 8 hours, you may roll a  d20 and record the result, this is your Sight roll. With this  Sight roll you can replace any attack roll, skill check, or  ability check made by you or a creature that you can see.  Once you use this Sight roll, you cannot use it again until  you rest again for at least 8 hours. However, you start  each game with one of your Karma Caps flipped.",
-        "Wild Wasteland: You may make two Sight rolls after you  rest for at least 8 hours, but your Karma Caps no longer  flips if you ever roll a 1 on a d20."
-      ]
+        "id": "the_sight_beyond",
+        "name": "La Vista Oltre (The Sight Beyond)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Cultista",
+        "desc": "Le tue visioni ti avvertono dei pericoli invisibili: non puoi essere colto di sorpresa in combattimento.",
+        "descEn": "Visions warn you of unseen danger: you cannot be surprised in combat.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Le tue visioni ti avvertono dei pericoli invisibili: non puoi essere colto di sorpresa in combattimento."
+        ],
+        "ranksEN": [
+            "Visions warn you of unseen danger: you cannot be surprised in combat."
+        ],
+        "effect": "Le tue visioni ti avvertono dei pericoli invisibili: non puoi essere colto di sorpresa in combattimento."
     },
     {
-      "id": "vigilant_watch",
-      "name": "Guardia Vigile (Vigilant Watch)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Guardia",
-      "ranks": [
-        "You’ve learned not to hesitate in moments of peril.  Whenever combat sequence is determined, your turn  placement is automatically put before the creature in the  turn order placed before you that isn’t a player character,  regardless of their roll. However your Combat Sequence  bonus is reduced by 1.",
-        "Wild Wasteland: Your turn placement is automatically put  before the previous two creatures in the turn order that  aren’t player characters, regardless of their roll. However  you have disadvantage on Combat Sequence rolls and  your bonus is reduced by 2."
-      ]
+        "id": "vigilant_watch",
+        "name": "Guardia Vigile (Vigilant Watch)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Guardia",
+        "desc": "Rimanere vigile è la tua seconda natura: ottieni un bonus di +2 alla tua Percezione Passiva e non subisci malus alla guardia notturna.",
+        "descEn": "Alertness is second nature: gain +2 to Passive Perception and suffer no penalties during night guard duty.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Rimanere vigile è la tua seconda natura: ottieni un bonus di +2 alla tua Percezione Passiva e non subisci malus alla guardia notturna."
+        ],
+        "ranksEN": [
+            "Alertness is second nature: gain +2 to Passive Perception and suffer no penalties during night guard duty."
+        ],
+        "effect": "Rimanere vigile è la tua seconda natura: ottieni un bonus di +2 alla tua Percezione Passiva e non subisci malus alla guardia notturna."
     },
     {
-      "id": "wasteland_knowledge",
-      "name": "Conoscenza della Zona (Wasteland Knowledge)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Scriba",
-      "ranks": [
-        "You’ve accumulated information about different  creatures and people in the wasteland. Whenever you  roll combat sequence, you can choose to know either  the hit point, stamina point, action point, AC, or DT total  of any other creatures that are hostile towards you in  the combat sequence. However, for each creature you  choose with this ability, they can re-roll their combat  sequence to potentially score a higher result.",
-        "Wild Wasteland: Whenever you roll combat sequence,  you can choose to know two of the following: Hit point,  stamina point, action point, AC, or DT total of any other  creatures that are hostile towards you in the combat  sequence. However, for each creature you choose with  this ability, they can re-roll their combat sequence twice to  potentially score a higher result."
-      ]
+        "id": "wasteland_knowledge",
+        "name": "Conoscenza della Zona (Wasteland Knowledge)",
+        "category": "Background",
+        "maxRank": 1,
+        "req": "Background: Scriba",
+        "desc": "Archivi ed enciclopedie ti danno una marcia in più: ottieni competenza in una abilità a scelta tra Scienza, Riparazione o Medicina.",
+        "descEn": "Archival learning gives an edge: gain proficiency in one skill among Science, Repair, or Medicine.",
+        "wildWasteland": "",
+        "wildWastelandEn": "",
+        "ranks": [
+            "Archivi ed enciclopedie ti danno una marcia in più: ottieni competenza in una abilità a scelta tra Scienza, Riparazione o Medicina."
+        ],
+        "ranksEN": [
+            "Archival learning gives an edge: gain proficiency in one skill among Science, Repair, or Medicine."
+        ],
+        "effect": "Archivi ed enciclopedie ti danno una marcia in più: ottieni competenza in una abilità a scelta tra Scienza, Riparazione o Medicina."
     },
     {
-      "id": "bruiser",
-      "name": "Bestione (Bruiser)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "A little slower, but a little bigger. You may not hit as  often, but they will feel it when you do! When you  damage a creature from an attack with a melee weapon  that deals bludgeoning damage, or an unarmed attack;  the damage is increased by an additional damage dice.  However any unarmed or melee weapon attack you make  costs 1 more action points.",
-        "Wild Wasteland, option 1: When you damage a creature  from an attack with a melee weapon that deals  bludgeoning damage, or an unarmed attack; the damage  is increased by 3. However any unarmed or melee weapon  attack you make costs 2 more action points. Wild Wasteland, option 2, true to the original: Your  Strength score is increased by 2, however your maximum  action points are reduced by 2."
-      ]
+        "id": "bruiser",
+        "name": "Bestione (Bruiser)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "Sei più grosso e lento. Il tuo punteggio di Forza aumenta di 2. Tuttavia, i tuoi Punti Azione (PA) massimi sono ridotti di 2.",
+        "descEn": "A little slower, but a little bigger. Your Strength score is increased by 2. However, your total Action Points are reduced by 2.",
+        "wildWasteland": "Zona Contaminata Selvaggia: La tua Forza aumenta di 4. Tuttavia, i tuoi PA massimi sono ridotti di 4.",
+        "wildWastelandEn": "Wild Wasteland: Your Strength is increased by 4. However, your AP total is reduced by 4.",
+        "ranks": [
+            "Sei più grosso e lento. Il tuo punteggio di Forza aumenta di 2. Tuttavia, i tuoi Punti Azione (PA) massimi sono ridotti di 2.",
+            "Zona Contaminata Selvaggia: La tua Forza aumenta di 4. Tuttavia, i tuoi PA massimi sono ridotti di 4."
+        ],
+        "ranksEN": [
+            "A little slower, but a little bigger. Your Strength score is increased by 2. However, your total Action Points are reduced by 2.",
+            "Wild Wasteland: Your Strength is increased by 4. However, your AP total is reduced by 4."
+        ],
+        "effect": "Sei più grosso e lento. Il tuo punteggio di Forza aumenta di 2. Tuttavia, i tuoi Punti Azione (PA) massimi sono ridotti di 2."
     },
     {
-      "id": "built_to_destroy",
-      "name": "Costruito per Distruggere (Built to Destroy)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "The flamer that burns twice as bright burns half as long.  Any damage you deal with a weapon is increased by 1.  However, whenever you roll a 1 on an attack roll with a  weapon; the weapon gains two levels of decay instead of  one.",
-        "Wild Wasteland: Any damage you deal with a weapon  is increased by 2. However, whenever you attack with a  weapon, it gaines Breakable (see pg #)."
-      ]
+        "id": "built_to_destroy",
+        "name": "Costruito per Distruggere (Built to Destroy)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "La gamma di minaccia per i tuoi colpi critici con qualsiasi arma è aumentata di 1 (es. 19-20). Tuttavia, le tue armi si deteriorano più rapidamente e subiscono inceppamento con un 1 o 2 naturale.",
+        "descEn": "The critical hit range for any weapon you use is expanded by 1 (e.g., 19-20). However, your weapons degrade faster and jam on a natural 1 or 2.",
+        "wildWasteland": "Zona Contaminata Selvaggia: La gamma di colpo critico aumenta di 2 (es. 18-20). Tuttavia, le armi si inceppano su un 1, 2 o 3 naturale.",
+        "wildWastelandEn": "Wild Wasteland: Critical hit range is expanded by 2 (e.g. 18-20). However, weapons jam on natural 1, 2, or 3.",
+        "ranks": [
+            "La gamma di minaccia per i tuoi colpi critici con qualsiasi arma è aumentata di 1 (es. 19-20). Tuttavia, le tue armi si deteriorano più rapidamente e subiscono inceppamento con un 1 o 2 naturale.",
+            "Zona Contaminata Selvaggia: La gamma di colpo critico aumenta di 2 (es. 18-20). Tuttavia, le armi si inceppano su un 1, 2 o 3 naturale."
+        ],
+        "ranksEN": [
+            "The critical hit range for any weapon you use is expanded by 1 (e.g., 19-20). However, your weapons degrade faster and jam on a natural 1 or 2.",
+            "Wild Wasteland: Critical hit range is expanded by 2 (e.g. 18-20). However, weapons jam on natural 1, 2, or 3."
+        ],
+        "effect": "La gamma di minaccia per i tuoi colpi critici con qualsiasi arma è aumentata di 1 (es. 19-20). Tuttavia, le tue armi si deteriorano più rapidamente e subiscono inceppamento con un 1 o 2 naturale."
     },
     {
-      "id": "enhancement_reliant",
-      "name": "Dipendente da Potenziamenti (Enhancement Reliant)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "You’re accustomed to the rush of chemical  enhancements or the electrodes of programs. If you are  addicted, you lose the condition whenever you rest for  at least 8 hours. However, you have disadvantage on any  Endurance check to resist becoming addicted.",
-        "Wild Wasteland:  If you are addicted, you lose the  condition after 1 hour. However, you always become  addicted after using a Chem or Robot Overclock Program."
-      ]
+        "id": "claustrophobia",
+        "name": "Claustrofobia (Claustrophobia)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "Ottieni +1 a tutti i punteggi SPECIAL quando ti trovi all'aperto sotto il cielo aperto. Tuttavia, subisci una penalità di -1 a tutti i punteggi SPECIAL quando ti trovi al chiuso o sottoterra.",
+        "descEn": "You gain +1 to all SPECIAL scores while outdoors. However, you suffer a -1 penalty to all SPECIAL scores while indoors or underground.",
+        "wildWasteland": "Zona Contaminata Selvaggia: Ottieni +2 a tutti gli SPECIAL all'aperto, ma subisci -2 a tutti gli SPECIAL al chiuso.",
+        "wildWastelandEn": "Wild Wasteland: Gain +2 to all SPECIAL outdoors, but suffer -2 to all SPECIAL indoors.",
+        "ranks": [
+            "Ottieni +1 a tutti i punteggi SPECIAL quando ti trovi all'aperto sotto il cielo aperto. Tuttavia, subisci una penalità di -1 a tutti i punteggi SPECIAL quando ti trovi al chiuso o sottoterra.",
+            "Zona Contaminata Selvaggia: Ottieni +2 a tutti gli SPECIAL all'aperto, ma subisci -2 a tutti gli SPECIAL al chiuso."
+        ],
+        "ranksEN": [
+            "You gain +1 to all SPECIAL scores while outdoors. However, you suffer a -1 penalty to all SPECIAL scores while indoors or underground.",
+            "Wild Wasteland: Gain +2 to all SPECIAL outdoors, but suffer -2 to all SPECIAL indoors."
+        ],
+        "effect": "Ottieni +1 a tutti i punteggi SPECIAL quando ti trovi all'aperto sotto il cielo aperto. Tuttavia, subisci una penalità di -1 a tutti i punteggi SPECIAL quando ti trovi al chiuso o sottoterra."
     },
     {
-      "id": "claustrophobia",
-      "name": "Claustrofobia (Claustrophobia)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "You have a fear of enclosed spaces. The effects from  your Party Nerve are doubled while you are outside (IE:  whenever you roll combat sequence and gain temporary  stamina points, you gain double the amount and  whenever you roll a death save, you double your party  nerve bonus.) However, you do not gain the benefits  of your Party Nerve while indoors, underground, or  otherwise not outside.",
-        "Wild Wasteland, true to the original: You gain advantage  on all ability and skill checks while outside, but  disadvantage on all ability and skill checks while indoors,  underground, or otherwise not outside."
-      ]
+        "id": "early_bird",
+        "name": "Mattiniero (Early Bird)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "Dalle 06:00 del mattino alle 18:00 del pomeriggio ottieni un bonus di +1 a tutti i punteggi SPECIAL. Dalle 18:00 alle 06:00 del mattino subisci una penalità di -1 a tutti i punteggi SPECIAL.",
+        "descEn": "From 6:00 AM to 6:00 PM you gain +1 to all SPECIAL scores. From 6:00 PM to 6:00 AM you suffer a -1 penalty to all SPECIAL scores.",
+        "wildWasteland": "Zona Contaminata Selvaggia: +2 a tutti gli SPECIAL di giorno (06:00-18:00), ma -2 a tutti gli SPECIAL di notte (18:00-06:00).",
+        "wildWastelandEn": "Wild Wasteland: +2 to all SPECIAL during the day (6 AM - 6 PM), but -2 to all SPECIAL at night (6 PM - 6 AM).",
+        "ranks": [
+            "Dalle 06:00 del mattino alle 18:00 del pomeriggio ottieni un bonus di +1 a tutti i punteggi SPECIAL. Dalle 18:00 alle 06:00 del mattino subisci una penalità di -1 a tutti i punteggi SPECIAL.",
+            "Zona Contaminata Selvaggia: +2 a tutti gli SPECIAL di giorno (06:00-18:00), ma -2 a tutti gli SPECIAL di notte (18:00-06:00)."
+        ],
+        "ranksEN": [
+            "From 6:00 AM to 6:00 PM you gain +1 to all SPECIAL scores. From 6:00 PM to 6:00 AM you suffer a -1 penalty to all SPECIAL scores.",
+            "Wild Wasteland: +2 to all SPECIAL during the day (6 AM - 6 PM), but -2 to all SPECIAL at night (6 PM - 6 AM)."
+        ],
+        "effect": "Dalle 06:00 del mattino alle 18:00 del pomeriggio ottieni un bonus di +1 a tutti i punteggi SPECIAL. Dalle 18:00 alle 06:00 del mattino subisci una penalità di -1 a tutti i punteggi SPECIAL."
     },
     {
-      "id": "early_bird",
-      "name": "Mattiniero (Early Bird)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "Early to bed, early to rise, makes a ghoul stealthy,  wealthy, and want to kill those guys! You can roll a d4  and add the number rolled to any ability or skill check  you make from the hours of 6am to 12pm. However,  you gain an additional level of fatigue whenever you fail  an Endurance check to  resist sleep.",
-        "Wild Wasteland, true to  the original: You have  a +2 to all skills in the  morning (6am to 12pm),  but a -1 during the night  (6pm to 6am)."
-      ]
+        "id": "fast_shot",
+        "name": "Tiro Rapido (Fast Shot)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "Il costo in PA per effettuare attacchi con armi a distanza è ridotto di 1 PA (minimo 1 PA). Tuttavia, subisci una penalità di -2 a tutti i tiri per colpire a distanza.",
+        "descEn": "The AP cost for attacks with ranged weapons is reduced by 1 AP (minimum 1). However, you take a -2 penalty to all ranged attack rolls.",
+        "wildWasteland": "Zona Contaminata Selvaggia: Il costo in PA per attacchi a distanza è ridotto di 2 PA. Tuttavia, subisci -4 a tutti i tiri per colpire a distanza.",
+        "wildWastelandEn": "Wild Wasteland: AP cost for ranged attacks is reduced by 2. However, -4 penalty to ranged attack rolls.",
+        "ranks": [
+            "Il costo in PA per effettuare attacchi con armi a distanza è ridotto di 1 PA (minimo 1 PA). Tuttavia, subisci una penalità di -2 a tutti i tiri per colpire a distanza.",
+            "Zona Contaminata Selvaggia: Il costo in PA per attacchi a distanza è ridotto di 2 PA. Tuttavia, subisci -4 a tutti i tiri per colpire a distanza."
+        ],
+        "ranksEN": [
+            "The AP cost for attacks with ranged weapons is reduced by 1 AP (minimum 1). However, you take a -2 penalty to all ranged attack rolls.",
+            "Wild Wasteland: AP cost for ranged attacks is reduced by 2. However, -4 penalty to ranged attack rolls."
+        ],
+        "effect": "Il costo in PA per effettuare attacchi con armi a distanza è ridotto di 1 PA (minimo 1 PA). Tuttavia, subisci una penalità di -2 a tutti i tiri per colpire a distanza."
     },
     {
-      "id": "enhancement_resistant",
-      "name": "Resistente ai Potenziamenti (Enhancement Resistant)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "Your body works hard to  be resistant to addiction.  You have advantage on any Endurance check to resist  becoming addicted. However, whenever you use a Chem  or Robot Overclock Program, the benefits last for half as  long as the listed duration.",
-        "Wild Wasteland: You are immune to the addicted  condition. However, whenever you use a Chem or Robot \n\n\nOverclock Program, the benefits last for a maximum of  one round regardless of its listed duration."
-      ]
+        "id": "feral",
+        "name": "Selvaggio (Feral)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "I tuoi attacchi senz'armi infliggono 1d4 danni letali addizionali e ottieni vantaggio alle prove di Intimidire. Tuttavia, subisci svantaggio a tutte le prove di Eloquenza e Baratto.",
+        "descEn": "Your unarmed attacks deal 1d4 additional lethal damage and you gain advantage on Intimidation. However, you have disadvantage on Speech and Barter.",
+        "wildWasteland": "Zona Contaminata Selvaggia: Danni senz'armi aumentati di 1d8, ma sei incapace di comunicare normalmente (impossibile usare Eloquenza o Baratto).",
+        "wildWastelandEn": "Wild Wasteland: Unarmed damage increased by 1d8, but unable to speak properly (cannot use Speech or Barter).",
+        "ranks": [
+            "I tuoi attacchi senz'armi infliggono 1d4 danni letali addizionali e ottieni vantaggio alle prove di Intimidire. Tuttavia, subisci svantaggio a tutte le prove di Eloquenza e Baratto.",
+            "Zona Contaminata Selvaggia: Danni senz'armi aumentati di 1d8, ma sei incapace di comunicare normalmente (impossibile usare Eloquenza o Baratto)."
+        ],
+        "ranksEN": [
+            "Your unarmed attacks deal 1d4 additional lethal damage and you gain advantage on Intimidation. However, you have disadvantage on Speech and Barter.",
+            "Wild Wasteland: Unarmed damage increased by 1d8, but unable to speak properly (cannot use Speech or Barter)."
+        ],
+        "effect": "I tuoi attacchi senz'armi infliggono 1d4 danni letali addizionali e ottieni vantaggio alle prove di Intimidire. Tuttavia, subisci svantaggio a tutte le prove di Eloquenza e Baratto."
     },
     {
-      "id": "fast_shot",
-      "name": "Tiro Rapido (Fast Shot)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "You don’t have time to aim because you’re already firing!  Whenever you spend action points to make an attack  with a ranged weapon or explosive; you can choose to  have disadvantage on the attack roll, if you do the attack  costs 1 less action point to a minimum of 3.",
-        "Wild Wasteland: In addition to the traits effects: You have  advantage whenever you roll combat sequence, however  you cannot make targeted attacks with ranged weapons."
-      ]
+        "id": "finesse",
+        "name": "Finezza (Finesse)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "La tua gamma di minaccia per i colpi critici con armi da mischia o a distanza aumenta di 1 (es. 19-20). Tuttavia, tutti i tuoi danni normali non critici sono ridotti di 1 (minimo 1 danno).",
+        "descEn": "Your critical hit threat range with melee or ranged weapons increases by 1 (e.g. 19-20). However, all non-critical damage is reduced by 1 (minimum 1).",
+        "wildWasteland": "Zona Contaminata Selvaggia: Gamma di critico aumentata di 2 (es. 18-20), ma danni normali ridotti di 2.",
+        "wildWastelandEn": "Wild Wasteland: Critical threat range increased by 2 (e.g. 18-20), but non-critical damage reduced by 2.",
+        "ranks": [
+            "La tua gamma di minaccia per i colpi critici con armi da mischia o a distanza aumenta di 1 (es. 19-20). Tuttavia, tutti i tuoi danni normali non critici sono ridotti di 1 (minimo 1 danno).",
+            "Zona Contaminata Selvaggia: Gamma di critico aumentata di 2 (es. 18-20), ma danni normali ridotti di 2."
+        ],
+        "ranksEN": [
+            "Your critical hit threat range with melee or ranged weapons increases by 1 (e.g. 19-20). However, all non-critical damage is reduced by 1 (minimum 1).",
+            "Wild Wasteland: Critical threat range increased by 2 (e.g. 18-20), but non-critical damage reduced by 2."
+        ],
+        "effect": "La tua gamma di minaccia per i colpi critici con armi da mischia o a distanza aumenta di 1 (es. 19-20). Tuttavia, tutti i tuoi danni normali non critici sono ridotti di 1 (minimo 1 danno)."
     },
     {
-      "id": "feral",
-      "name": "Selvaggio (Feral)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "You’ve survived in the heart of the savage wasteland.  Whenever you deal damage with an unarmed or melee  weapon attack, you deal an extra 2 damage. However,  you do not gain the benefits from Party Nerve.",
-        "Wild Wasteland: In addition to the traits effects;  whenever you spend at least 6 action points to move,  you immediately gain 2 action points. However, you have  disadvantage on all Barter and Speech skill checks.  And, regardless of your Charisma ability score, you  are considered to have a 4 in Charisma for any perk  requirement."
-      ]
+        "id": "gifted",
+        "name": "Dotato (Gifted)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "Hai abilità naturali superiori alla media. Ottieni +1 a tutti i punteggi SPECIAL. Tuttavia, ricevi 5 Punti Abilità in meno per ogni avanzamento di livello.",
+        "descEn": "You have natural innate abilities. Gain +1 to all SPECIAL scores. However, you receive 5 fewer skill points each level up.",
+        "wildWasteland": "Zona Contaminata Selvaggia: +2 a tutti i punteggi SPECIAL. Tuttavia, ricevi 10 Punti Abilità in meno per livello.",
+        "wildWastelandEn": "Wild Wasteland: +2 to all SPECIAL scores. However, you receive 10 fewer skill points each level up.",
+        "ranks": [
+            "Hai abilità naturali superiori alla media. Ottieni +1 a tutti i punteggi SPECIAL. Tuttavia, ricevi 5 Punti Abilità in meno per ogni avanzamento di livello.",
+            "Zona Contaminata Selvaggia: +2 a tutti i punteggi SPECIAL. Tuttavia, ricevi 10 Punti Abilità in meno per livello."
+        ],
+        "ranksEN": [
+            "You have natural innate abilities. Gain +1 to all SPECIAL scores. However, you receive 5 fewer skill points each level up.",
+            "Wild Wasteland: +2 to all SPECIAL scores. However, you receive 10 fewer skill points each level up."
+        ],
+        "effect": "Hai abilità naturali superiori alla media. Ottieni +1 a tutti i punteggi SPECIAL. Tuttavia, ricevi 5 Punti Abilità in meno per ogni avanzamento di livello."
     },
     {
-      "id": "finesse",
-      "name": "Finezza (Finesse)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "Whenever you critically hit with a weapon, the critical hit  damage multiplier either increases by 1 or the damage  dice increases by 1. However, whenever you make an  attack roll the total is reduced by 1.",
-        "Wild Wasteland: Whenever you critically hit with a weapon,  the critical hit damage multiplier either increases by 2 or  the damage dice increases by 2. However, whenever you  make an attack roll the total is reduced by 2."
-      ]
+        "id": "godspeed",
+        "name": "A Tutta Birra (Godspeed)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "La tua velocità di movimento aumenta di 3 metri (10 ft) per turno. Tuttavia, quando scatti o corri raddoppi il costo in PA per il movimento.",
+        "descEn": "Your base walking movement speed increases by 10ft. However, dashing or running costs double the normal AP.",
+        "wildWasteland": "Zona Contaminata Selvaggia: Velocità aumentata di 6 metri (20 ft), ma scattare richiede il triplo dei PA.",
+        "wildWastelandEn": "Wild Wasteland: Movement speed increases by 20ft, but sprint/dash costs triple AP.",
+        "ranks": [
+            "La tua velocità di movimento aumenta di 3 metri (10 ft) per turno. Tuttavia, quando scatti o corri raddoppi il costo in PA per il movimento.",
+            "Zona Contaminata Selvaggia: Velocità aumentata di 6 metri (20 ft), ma scattare richiede il triplo dei PA."
+        ],
+        "ranksEN": [
+            "Your base walking movement speed increases by 10ft. However, dashing or running costs double the normal AP.",
+            "Wild Wasteland: Movement speed increases by 20ft, but sprint/dash costs triple AP."
+        ],
+        "effect": "La tua velocità di movimento aumenta di 3 metri (10 ft) per turno. Tuttavia, quando scatti o corri raddoppi il costo in PA per il movimento."
     },
     {
-      "id": "gifted",
-      "name": "Dotato (Gifted)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "You have more innate abilities than most, so you have  not spent as much time honing your skills. Your Carry  Load increases by 10, your Combat Sequence bonus  increases by 1, you can use Discount an additional time  per rest, your Party Nerve increases by 1, and you have  an additional Karma Cap. However, you decrease all your  skill check bonuses by 3.",
-        "Wild Wasteland: Your Carry Load increases by 20, your  Combat Sequence bonus increases by 2, you can use  Discount two additional times per rest, your Party Nerve  increases by 2, and you have two additional Karma Caps.  However, you decrease all your skill check bonuses by 6."
-      ]
+        "id": "good_natured",
+        "name": "Buon Tempramento (Good Natured)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "Ottieni +3 alle abilità Baratto, Medicina, Riparazione, Scienza ed Eloquenza. Tuttavia, subisci -2 a tutte le abilità di combattimento (Armi Leggere, Armi Pesanti, Armi ad Energia, Mischia, Senz'Armi, Esplosivi).",
+        "descEn": "Gain +3 to Barter, Medicine, Repair, Science, and Speech. However, take a -2 penalty to all combat skills.",
+        "wildWasteland": "Zona Contaminata Selvaggia: +5 a tutte le abilità pacifiche, ma -4 a tutte le abilità di combattimento.",
+        "wildWastelandEn": "Wild Wasteland: +5 to peaceful skills, but -4 to all combat skills.",
+        "ranks": [
+            "Ottieni +3 alle abilità Baratto, Medicina, Riparazione, Scienza ed Eloquenza. Tuttavia, subisci -2 a tutte le abilità di combattimento (Armi Leggere, Armi Pesanti, Armi ad Energia, Mischia, Senz'Armi, Esplosivi).",
+            "Zona Contaminata Selvaggia: +5 a tutte le abilità pacifiche, ma -4 a tutte le abilità di combattimento."
+        ],
+        "ranksEN": [
+            "Gain +3 to Barter, Medicine, Repair, Science, and Speech. However, take a -2 penalty to all combat skills.",
+            "Wild Wasteland: +5 to peaceful skills, but -4 to all combat skills."
+        ],
+        "effect": "Ottieni +3 alle abilità Baratto, Medicina, Riparazione, Scienza ed Eloquenza. Tuttavia, subisci -2 a tutte le abilità di combattimento (Armi Leggere, Armi Pesanti, Armi ad Energia, Mischia, Senz'Armi, Esplosivi)."
     },
     {
-      "id": "godspeed",
-      "name": "A Tutta Birra (Godspeed)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "While your stamina points are equal to 0, you can choose  to gain one additional action point at the start of your  turn. However, if you do so, your AC and DT are each  decreased by 2.",
-        "Wild Wasteland: While your stamina points are equal to 0,  you can choose to gain 2 additional action points at the  start of your turn. However, if you do, you do not subtract  your DT to any damage dealt to your hit points and your  AC is equal to 8."
-      ]
+        "id": "brawny",
+        "name": "Muscoloso (Brawny)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "I tuoi attacchi in mischia e senz'armi infliggono 2 danni addizionali. Tuttavia, la tua Agilità è ridotta di 1.",
+        "descEn": "Your melee and unarmed attacks deal 2 additional damage. However, your Agility is reduced by 1.",
+        "wildWasteland": "Zona Contaminata Selvaggia: Attacchi in mischia infliggono 4 danni addizionali. Tuttavia, la tua Agilità è ridotta di 2.",
+        "wildWastelandEn": "Wild Wasteland: Melee attacks deal 4 additional damage. However, Agility is reduced by 2.",
+        "ranks": [
+            "I tuoi attacchi in mischia e senz'armi infliggono 2 danni addizionali. Tuttavia, la tua Agilità è ridotta di 1.",
+            "Zona Contaminata Selvaggia: Attacchi in mischia infliggono 4 danni addizionali. Tuttavia, la tua Agilità è ridotta di 2."
+        ],
+        "ranksEN": [
+            "Your melee and unarmed attacks deal 2 additional damage. However, your Agility is reduced by 1.",
+            "Wild Wasteland: Melee attacks deal 4 additional damage. However, Agility is reduced by 2."
+        ],
+        "effect": "I tuoi attacchi in mischia e senz'armi infliggono 2 danni addizionali. Tuttavia, la tua Agilità è ridotta di 1."
     },
     {
-      "id": "good_natured",
-      "name": "Buon Tempramento (Good Natured)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "You’re Good Natured at heart, more prone to solving  problems with your mind than violence. Regardless of  your Charisma ability score, you are considered to have  an additional two points in your Charisma ability score  for any perk requirement. (For example, if your Charisma  ability score is equal to 5, with this trait it would be  considered a 7 for perk requirements). However,  regardless of your Agility and Strength ability scores, you  are considered to have two points reduced for any Agility  or Strength perk requirement.",
-        "Wild Wasteland: Regardless of your Charisma ability  score, you are considered to have a 10 in your Charisma  ability score for any perk requirement. However,  regardless of your Agility and Strength ability scores, you  are considered to have a 4 for any Agility or Strength perk  requirement."
-      ]
+        "id": "hoarder",
+        "name": "Accaparratore (Hoarder)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "La tua capacità di carico massima aumenta di 25 libbre. Tuttavia, se il tuo carico scende al di sotto del 75% del tuo carico massimo, subisci una penalità di -1 a tutti i punteggi SPECIAL per l'ansia.",
+        "descEn": "Your carry capacity is increased by 25lbs. However, if your inventory weight drops below 75% of your max carry weight, you suffer -1 to all SPECIAL.",
+        "wildWasteland": "Zona Contaminata Selvaggia: Carico massimo aumentato di 50 libbre, ma subisci -2 a tutti gli SPECIAL se sei sotto il 75% del carico.",
+        "wildWastelandEn": "Wild Wasteland: Carry capacity increased by 50lbs, but suffer -2 to all SPECIAL when below 75% capacity.",
+        "ranks": [
+            "La tua capacità di carico massima aumenta di 25 libbre. Tuttavia, se il tuo carico scende al di sotto del 75% del tuo carico massimo, subisci una penalità di -1 a tutti i punteggi SPECIAL per l'ansia.",
+            "Zona Contaminata Selvaggia: Carico massimo aumentato di 50 libbre, ma subisci -2 a tutti gli SPECIAL se sei sotto il 75% del carico."
+        ],
+        "ranksEN": [
+            "Your carry capacity is increased by 25lbs. However, if your inventory weight drops below 75% of your max carry weight, you suffer -1 to all SPECIAL.",
+            "Wild Wasteland: Carry capacity increased by 50lbs, but suffer -2 to all SPECIAL when below 75% capacity."
+        ],
+        "effect": "La tua capacità di carico massima aumenta di 25 libbre. Tuttavia, se il tuo carico scende al di sotto del 75% del tuo carico massimo, subisci una penalità di -1 a tutti i punteggi SPECIAL per l'ansia."
     },
     {
-      "id": "brawny",
-      "name": "Muscoloso (Brawny)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "You gain a bonus to your maximum hit points equal to  your level. However your maximum stamina points are  reduced by a number equal to your level.",
-        "Wild Wasteland: In addition to this trait’s effects; you gain  a bonus to your maximum hit points equal to your level.  However your maximum stamina points are reduced by a  number equal to your level."
-      ]
+        "id": "hot_blooded",
+        "name": "A Sangue Caldo (Hot Blooded)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "Quando i tuoi Punti Ferita scendono sotto il 50%, ottieni un bonus di +2 a tutti i tiri per il danno. Tuttavia, la tua Agilità e Percezione sono ridotte di 1 mentre sei sotto il 50% di PF.",
+        "descEn": "When your HP drops below 50%, you gain +2 to all damage rolls. However, your Agility and Perception are reduced by 1 while below 50% HP.",
+        "wildWasteland": "Zona Contaminata Selvaggia: Sotto il 50% di PF ottieni +4 ai danni, ma Agilità e Percezione sono ridotte di 2.",
+        "wildWastelandEn": "Wild Wasteland: Below 50% HP gain +4 damage, but Agility and Perception are reduced by 2.",
+        "ranks": [
+            "Quando i tuoi Punti Ferita scendono sotto il 50%, ottieni un bonus di +2 a tutti i tiri per il danno. Tuttavia, la tua Agilità e Percezione sono ridotte di 1 mentre sei sotto il 50% di PF.",
+            "Zona Contaminata Selvaggia: Sotto il 50% di PF ottieni +4 ai danni, ma Agilità e Percezione sono ridotte di 2."
+        ],
+        "ranksEN": [
+            "When your HP drops below 50%, you gain +2 to all damage rolls. However, your Agility and Perception are reduced by 1 while below 50% HP.",
+            "Wild Wasteland: Below 50% HP gain +4 damage, but Agility and Perception are reduced by 2."
+        ],
+        "effect": "Quando i tuoi Punti Ferita scendono sotto il 50%, ottieni un bonus di +2 a tutti i tiri per il danno. Tuttavia, la tua Agilità e Percezione sono ridotte di 1 mentre sei sotto il 50% di PF."
     },
     {
-      "id": "hoarder",
-      "name": "Accaparratore (Hoarder)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "Your Carry Load increases by 25. However, you have  disadvantage on all ability checks, skill checks, and  attack rolls while you’re not carrying at least 50 load  of any combination of weapons, armor, ammunition,  explosives, chems, food, drink, or junk items.",
-        "Wild Wasteland: You are immune to the Encumbered  condition, however whenever your Carry Load falls below  your maximum, you gain a level of fatigue."
-      ]
+        "id": "jinxed",
+        "name": "Iettatore (Jinxed)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "Tutti coloro che ti circondano (inclusi te stesso, i tuoi alleati e i tuoi nemici) subiscono un fallimento critico quando ottengono un 1 o un 2 naturale al d20.",
+        "descEn": "Everyone around you (including yourself, allies, and enemies) suffers a critical failure on rolls of natural 1 or 2.",
+        "wildWasteland": "Zona Contaminata Selvaggia: Il fallimento critico si verifica con un 1, 2 o 3 naturale per tutti entro 9 metri da te.",
+        "wildWastelandEn": "Wild Wasteland: Critical failure occurs on a natural 1, 2, or 3 for everyone within 30ft.",
+        "ranks": [
+            "Tutti coloro che ti circondano (inclusi te stesso, i tuoi alleati e i tuoi nemici) subiscono un fallimento critico quando ottengono un 1 o un 2 naturale al d20.",
+            "Zona Contaminata Selvaggia: Il fallimento critico si verifica con un 1, 2 o 3 naturale per tutti entro 9 metri da te."
+        ],
+        "ranksEN": [
+            "Everyone around you (including yourself, allies, and enemies) suffers a critical failure on rolls of natural 1 or 2.",
+            "Wild Wasteland: Critical failure occurs on a natural 1, 2, or 3 for everyone within 30ft."
+        ],
+        "effect": "Tutti coloro che ti circondano (inclusi te stesso, i tuoi alleati e i tuoi nemici) subiscono un fallimento critico quando ottengono un 1 o un 2 naturale al d20."
     },
     {
-      "id": "hot_blooded",
-      "name": "A Sangue Caldo (Hot Blooded)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "While your stamina points are equal to 0, you gain the  following effects: When you roll a 1 or 2 on a damage die  for an attack you make with any weapon, you can reroll  the die and must use the new roll, even if the new roll is  a 1 or a 2. Whenever you make an attack roll, subtract 2  from the result.",
-        "Wild Wasteland: In addition to this trait’s effects: When  your stamina points are equal to 0; the damage you deal  from any attack roll is increased by 5. However, you have  disadvantage on all your attack rolls while your stamina  points are equal to 0."
-      ]
+        "id": "loose_cannon",
+        "name": "Mina Vagante (Loose Cannon)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "Il costo in PA per lanciare armi da lancio ed esplosivi è ridotto di 1 PA. Tuttavia, la tua gittata di lancio massima è ridotta del 25%.",
+        "descEn": "The AP cost to throw thrown weapons and grenades is reduced by 1 AP. However, throwing range is reduced by 25%.",
+        "wildWasteland": "Zona Contaminata Selvaggia: Il costo per lanciare è ridotto di 2 PA, ma la gittata di lancio è ridotta del 50%.",
+        "wildWastelandEn": "Wild Wasteland: Throwing cost reduced by 2 AP, but throwing range reduced by 50%.",
+        "ranks": [
+            "Il costo in PA per lanciare armi da lancio ed esplosivi è ridotto di 1 PA. Tuttavia, la tua gittata di lancio massima è ridotta del 25%.",
+            "Zona Contaminata Selvaggia: Il costo per lanciare è ridotto di 2 PA, ma la gittata di lancio è ridotta del 50%."
+        ],
+        "ranksEN": [
+            "The AP cost to throw thrown weapons and grenades is reduced by 1 AP. However, throwing range is reduced by 25%.",
+            "Wild Wasteland: Throwing cost reduced by 2 AP, but throwing range reduced by 50%."
+        ],
+        "effect": "Il costo in PA per lanciare armi da lancio ed esplosivi è ridotto di 1 PA. Tuttavia, la tua gittata di lancio massima è ridotta del 25%."
     },
     {
-      "id": "jinxed",
-      "name": "Iettatore (Jinxed)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "The good thing is that everyone around you has more  critical failures in combat, the bad thing is - so do you!  Whenever any creature in the game makes an attack  roll, the chance to automatically miss the attack and  for the weapon to gain a level of decay is increased by  1. (Example: If only one player character has taken this  perk; then if any creature makes an attack roll and rolls  a 1 or 2 on the dice, they automatically miss and their  weapon gains a level of decay. However, if your karma  cap is flipped you may flip it back over.)",
-        "Wild Wasteland: Whenever any creature in the game  makes an attack roll, the chance to automatically miss the  attack is increased by 2."
-      ]
+        "id": "night_person",
+        "name": "Creatura Notturna (Night Person)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "Dalle 18:00 del pomeriggio alle 06:00 del mattino ottieni un bonus di +1 a Intelligenza e Percezione. Dalle 06:00 alle 18:00 subisci una penalità di -1 a Intelligenza e Percezione.",
+        "descEn": "From 6:00 PM to 6:00 AM you gain +1 to Intelligence and Perception. From 6:00 AM to 6:00 PM you suffer -1 to Intelligence and Perception.",
+        "wildWasteland": "Zona Contaminata Selvaggia: +2 a INT e PER di notte (18:00-06:00), ma -2 a INT e PER di giorno (06:00-18:00).",
+        "wildWastelandEn": "Wild Wasteland: +2 to INT and PER at night, but -2 to INT and PER during the day.",
+        "ranks": [
+            "Dalle 18:00 del pomeriggio alle 06:00 del mattino ottieni un bonus di +1 a Intelligenza e Percezione. Dalle 06:00 alle 18:00 subisci una penalità di -1 a Intelligenza e Percezione.",
+            "Zona Contaminata Selvaggia: +2 a INT e PER di notte (18:00-06:00), ma -2 a INT e PER di giorno (06:00-18:00)."
+        ],
+        "ranksEN": [
+            "From 6:00 PM to 6:00 AM you gain +1 to Intelligence and Perception. From 6:00 AM to 6:00 PM you suffer -1 to Intelligence and Perception.",
+            "Wild Wasteland: +2 to INT and PER at night, but -2 to INT and PER during the day."
+        ],
+        "effect": "Dalle 18:00 del pomeriggio alle 06:00 del mattino ottieni un bonus di +1 a Intelligenza e Percezione. Dalle 06:00 alle 18:00 subisci una penalità di -1 a Intelligenza e Percezione."
     },
     {
-      "id": "loose_cannon",
-      "name": "Mina Vagante (Loose Cannon)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "Whenever you spend action points to throw an explosive,  you spend 1 less action point to a minimum of 3.  However, you can throw them only up to half their listed  range.",
-        "Wild Wasteland: In addition to this trait’s effects:  Whenever you throw an explosive, and it deals damage  to another player character’s hit points, the damage  is doubled for all other creatures that aren’t player  characters."
-      ]
+        "id": "one_hander",
+        "name": "A Una Mano (One Hander)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "Ottieni un bonus di +2 ai tiri per colpire quando impugni e usi un'arma ad una mano. Tuttavia, subisci una penalità di -4 ai tiri per colpire quando usi armi a due mani.",
+        "descEn": "Gain +2 to attack rolls when wielding a one-handed weapon. However, take a -4 penalty to attack rolls with two-handed weapons.",
+        "wildWasteland": "Zona Contaminata Selvaggia: +3 ai tiri per colpire con armi a una mano, ma -6 con armi a due mani.",
+        "wildWastelandEn": "Wild Wasteland: +3 to attack rolls with one-handed weapons, but -6 with two-handed weapons.",
+        "ranks": [
+            "Ottieni un bonus di +2 ai tiri per colpire quando impugni e usi un'arma ad una mano. Tuttavia, subisci una penalità di -4 ai tiri per colpire quando usi armi a due mani.",
+            "Zona Contaminata Selvaggia: +3 ai tiri per colpire con armi a una mano, ma -6 con armi a due mani."
+        ],
+        "ranksEN": [
+            "Gain +2 to attack rolls when wielding a one-handed weapon. However, take a -4 penalty to attack rolls with two-handed weapons.",
+            "Wild Wasteland: +3 to attack rolls with one-handed weapons, but -6 with two-handed weapons."
+        ],
+        "effect": "Ottieni un bonus di +2 ai tiri per colpire quando impugni e usi un'arma ad una mano. Tuttavia, subisci una penalità di -4 ai tiri per colpire quando usi armi a due mani."
     },
     {
-      "id": "night_person",
-      "name": "Creatura Notturna (Night Person)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "You’re more of a night-person. You can roll a d4 and  add the number rolled to any ability or skill check you  make from the hours of 6pm to 6am. However, you  gain an additional level of fatigue whenever you fail an  Endurance check to resist sleep.",
-        "Wild Wasteland, true to the original: You have a -1 to all  skills in the morning (6am to 12pm), but a +2 during the  night (6pm to 6am)."
-      ]
+        "id": "one_in_a_million",
+        "name": "Uno su un Milione (One in a Million)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "Una volta per sessione, puoi ritirare qualsiasi tiro di d20 fallito e prendere il nuovo risultato. Tuttavia, il tuo punteggio di Fortuna è ridotto permanentemente di 1.",
+        "descEn": "Once per session, re-roll any failed d20 roll and take the new result. However, your Luck score is permanently reduced by 1.",
+        "wildWasteland": "Zona Contaminata Selvaggia: Due volte per sessione puoi ritirare un d20 fallito, ma la tua Fortuna è ridotta di 2.",
+        "wildWastelandEn": "Wild Wasteland: Twice per session re-roll a failed d20, but Luck is reduced by 2.",
+        "ranks": [
+            "Una volta per sessione, puoi ritirare qualsiasi tiro di d20 fallito e prendere il nuovo risultato. Tuttavia, il tuo punteggio di Fortuna è ridotto permanentemente di 1.",
+            "Zona Contaminata Selvaggia: Due volte per sessione puoi ritirare un d20 fallito, ma la tua Fortuna è ridotta di 2."
+        ],
+        "ranksEN": [
+            "Once per session, re-roll any failed d20 roll and take the new result. However, your Luck score is permanently reduced by 1.",
+            "Wild Wasteland: Twice per session re-roll a failed d20, but Luck is reduced by 2."
+        ],
+        "effect": "Una volta per sessione, puoi ritirare qualsiasi tiro di d20 fallito e prendere il nuovo risultato. Tuttavia, il tuo punteggio di Fortuna è ridotto permanentemente di 1."
     },
     {
-      "id": "one_hander",
-      "name": "A Una Mano (One Hander)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "Whenever you make an attack roll with a weapon that  only requires one hand, add 2 to the result. However,  whenever you make an attack roll with a weapon that  requires two-hands, subtract 2 from the result.",
-        "Wild Wasteland: Whenever you deal damage from an  attack with a weapon that only requires one hand, add 2  to the total. However, whenever you deal damage from an  attack with a weapon that requires two-hands, subtract 2  from the total."
-      ]
+        "id": "skilled",
+        "name": "Abile (Skilled)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "Ottieni +2 a tutti i punteggi delle tue Abilità. Tuttavia, guadagni il 10% in meno di Punti Esperienza (XP) da tutte le fonti.",
+        "descEn": "Gain +2 to all Skill values. However, you gain 10% less Experience Points (XP) from all sources.",
+        "wildWasteland": "Zona Contaminata Selvaggia: +4 a tutte le Abilità, ma guadagni il 20% in meno di Punti Esperienza.",
+        "wildWastelandEn": "Wild Wasteland: +4 to all Skills, but gain 20% less XP.",
+        "ranks": [
+            "Ottieni +2 a tutti i punteggi delle tue Abilità. Tuttavia, guadagni il 10% in meno di Punti Esperienza (XP) da tutte le fonti.",
+            "Zona Contaminata Selvaggia: +4 a tutte le Abilità, ma guadagni il 20% in meno di Punti Esperienza."
+        ],
+        "ranksEN": [
+            "Gain +2 to all Skill values. However, you gain 10% less Experience Points (XP) from all sources.",
+            "Wild Wasteland: +4 to all Skills, but gain 20% less XP."
+        ],
+        "effect": "Ottieni +2 a tutti i punteggi delle tue Abilità. Tuttavia, guadagni il 10% in meno di Punti Esperienza (XP) da tutte le fonti."
     },
     {
-      "id": "one_in_a_million",
-      "name": "Uno su un Milione (One in a Million)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "You’re not particularly lucky or unfortunate, but when  lightning strikes, it strikes hard! When you critically hit  with an attack roll from any weapon, roll a d20. If you roll  a 20 on this d20 roll then you automatically hit and roll  the extra damage listed in the weapon table, however  this damage is quadrupled. If you do not roll a 20, your  attack still hits but does not deal any critical hit damage.",
-        "Wild Wasteland: When you critically hit with an attack roll  from any weapon, roll a d20. If you roll a 20 on this d20  roll then roll another d20. If you roll a 20 on the third d20  roll then you automatically hit and roll the extra damage  listed in the weapon table, however this damage is  octupled."
-      ]
+        "id": "small_frame",
+        "name": "Piccola Stazza (Small Frame)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "La tua corporatura minuta ti rende più scattante ma meno resistente. Ottieni un bonus ai tuoi Punti Azione (PA) massimi pari al tuo livello. Tuttavia, i tuoi Punti Ferita (PF) massimi sono ridotti di un numero pari al tuo livello.",
+        "descEn": "You gain a bonus to your maximum stamina points equal to your level. However your maximum hit points are reduced by a number equal to your level.",
+        "wildWasteland": "Zona Contaminata Selvaggia: In aggiunta agli effetti del tratto: raddoppia sia i benefici che le penalità (+2x livello PA massimi, ma -2x livello PF massimi).",
+        "wildWastelandEn": "Wild Wasteland: In addition to this trait's effects; you gain a bonus to your maximum stamina points equal to your level. However your maximum hit points are reduced by a number equal to your level.",
+        "ranks": [
+            "La tua corporatura minuta ti rende più scattante ma meno resistente. Ottieni un bonus ai tuoi Punti Azione (PA) massimi pari al tuo livello. Tuttavia, i tuoi Punti Ferita (PF) massimi sono ridotti di un numero pari al tuo livello.",
+            "Zona Contaminata Selvaggia: In aggiunta agli effetti del tratto: raddoppia sia i benefici che le penalità (+2x livello PA massimi, ma -2x livello PF massimi)."
+        ],
+        "ranksEN": [
+            "You gain a bonus to your maximum stamina points equal to your level. However your maximum hit points are reduced by a number equal to your level.",
+            "Wild Wasteland: In addition to this trait's effects; you gain a bonus to your maximum stamina points equal to your level. However your maximum hit points are reduced by a number equal to your level."
+        ],
+        "effect": "La tua corporatura minuta ti rende più scattante ma meno resistente. Ottieni un bonus ai tuoi Punti Azione (PA) massimi pari al tuo livello. Tuttavia, i tuoi Punti Ferita (PF) massimi sono ridotti di un numero pari al tuo livello."
     },
     {
-      "id": "skilled",
-      "name": "Abile (Skilled)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "Prerequisite: An ability score equal to or lower than 3. Increase one Skill modifier by 2.",
-        "Wild Wasteland: Prerequisite: One Ability Score equal to 1.  Increase one Skill modifier by 5."
-      ]
-    },
-    {
-      "id": "small_frame",
-      "name": "Costituzione Minuta (Small Frame)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "You gain a bonus to your  maximum stamina points equal  to your level. However your  maximum hit points are reduced  by a number equal to your level.",
-        "Wild Wasteland: In addition to this  trait’s effects; you gain a bonus  to your maximum stamina points  equal to your level. However your  maximum hit points are reduced by  a number equal to your level."
-      ]
-    },
-    {
-      "id": "trigger_discipline",
-      "name": "Disciplina di Fuoco (Trigger Discipline)",
-      "category": "Generale",
-      "maxRank": 2,
-      "req": "-",
-      "ranks": [
-        "Whenever you make a targeted  attack roll with a ranged weapon,  the additional cost is reduced by 1 AP. However, your  combat sequence bonus is reduced by 2.",
-        "Wild Wasteland: Whenever you make a targeted attack roll  with a ranged weapon, the additional cost is reduced by 2  AP. However, your combat sequence bonus is reduced by  5. \n\n\nPERKS “I do this shit for the love of the game.” \t - The Ghoul A perk represents a talent or an area of expertise that  gives a character special capabilities. Some of these  abilities defy natural laws and basic physics, but there  are far more unexplainable phenomena in the wasteland.  Whenever you gain a Perk you immediately gain its  abilities.  Requirement. If a perk has a requirement you must meet  the requirement before you take the perk. Repeat. Some perks have a Repeat section that allows  you to gain the benefits of a perk you have previously  chosen. The repeat section specifies how many different  times you can take the perk, and if there are any  requirements to doing so. Otherwise, unless specified,  you cannot gain the benefits of a perk you have  previously gained. GENERAL PERKS “You survived. The Chosen One cannot be weak or we are all  doomed. Are you prepared for your quest?” \t - Arroyo elder General perks have no ability score attached to them and  function as a catch-all for most characters. The abilities  have less specialized purposes but can either improve  the concept behind your character or grant game-altering  abilities.  ADAPTIVE REFLEXES Requirement: Missing Hand, Arm, Foot, or Leg. You’ve learned to endure and overcome your disability.  If you lost your foot or leg, you are no longer limited to  moving only 20 feet on a turn. If you lost your hand or  foot: you gain 3 points which you can use to increase  any of your ability scores by the amount used. If you lost  your arm or leg: you gain 5 points which you can use to  increase any of your ability scores by the amount used.  Repeat: You can take this perk as many times as you have  missing arms or legs. BLIND DEVIL Requirement: Permanently Blinded. Attuning to your loss of sight has made your other  senses sharper. You can sense your surroundings  with pinpoint accuracy. You can effectively “see” any  target within a number of feet of you equal to 5 x your  Perception ability score. Additionally, your passive sense  increases by 5 and you have advantage on all your  combat sequence rolls.  COWBOY Whenever you spend AP to draw a lever action rifle,  cowboy repeater, or revolver, the AP cost is reduced to  1. Additionally, if you attack and hit a surprised creature  with a lever action rifle, cowboy repeater, or revolver; the  attack critically hits.  DEADEYE Whenever you roll attack or damage with a ranged  weapon, add 2 to the result. Additionally, whenever you  make a targeted attack roll to the head with a ranged  weapon, add an additional 2 to the result. Repeat: You can take this perk up to a maximum of three  times. DUELIST  Whenever you roll attack or damage with an unarmed or  melee weapon, add 2 to the result. Requirements: You can take this perk up to a maximum of  three times. EDUCATED Requirement: Intelligence 4 or lower.  You gain 4 skill points when you reach 5th, 9th, 13th,  17th, 21st, 25th, and 29th level instead of 3. Additionally,  you gain a number of skill points equal to the total  available at your level as if your Intelligence ability score  is equal to 5. (Use the Level Up table on page 6 for  reference)."
-      ]
-    },
-    {
-      "id": "adventurers_instinct",
-      "name": "Istinto dell'Avventuriero (Adventurers Instinct)",
-      "category": "Background",
-      "maxRank": 2,
-      "req": "Background: Abitante della Zona",
-      "ranks": [
-        "Hai l'istinto affinato dalla sopravvivenza nelle terre desolate. Hai vantaggio a tutti i tiri salvezza contro pericoli ambientali naturali, radiazioni improvvise e imboscate nei tragitti di viaggio. Tuttavia, non puoi mai beneficiare di rifugi di lusso o sonno confortevole: recuperi risorse solo con riposi all'aperto o di fortuna.",
-        "Wild Wasteland: Il tuo istinto di sopravvivenza ti conferisce +3 a tutte le prove di Sopravvivenza e Sequenza di Combattimento. Tuttavia, sei perseguitato dalla paranoia selvaggia: non puoi mai essere considerato nascosto o a riposo se ci sono altri umanoidi entro 30 piedi da te."
-      ]
+        "id": "trigger_discipline",
+        "name": "Disciplina di Fuoco (Trigger Discipline)",
+        "category": "Generale",
+        "maxRank": 1,
+        "req": "-",
+        "desc": "Quando effettui un attacco mirato con un'arma a distanza, il costo addizionale in PA è ridotto di 1 PA. Tuttavia, il tuo bonus di Sequenza di Combattimento (Iniziativa) è ridotto di 2.",
+        "descEn": "Whenever you make a targeted attack roll with a ranged weapon, the additional cost is reduced by 1 AP. However, your combat sequence bonus is reduced by 2.",
+        "wildWasteland": "Zona Contaminata Selvaggia: Il costo addizionale degli attacchi mirati è ridotto di 2 PA. Tuttavia, la tua Iniziativa è ridotta di 4.",
+        "wildWastelandEn": "Wild Wasteland: Targeted attack additional cost is reduced by 2 AP. However, combat sequence is reduced by 4.",
+        "ranks": [
+            "Quando effettui un attacco mirato con un'arma a distanza, il costo addizionale in PA è ridotto di 1 PA. Tuttavia, il tuo bonus di Sequenza di Combattimento (Iniziativa) è ridotto di 2.",
+            "Zona Contaminata Selvaggia: Il costo addizionale degli attacchi mirati è ridotto di 2 PA. Tuttavia, la tua Iniziativa è ridotta di 4."
+        ],
+        "ranksEN": [
+            "Whenever you make a targeted attack roll with a ranged weapon, the additional cost is reduced by 1 AP. However, your combat sequence bonus is reduced by 2.",
+            "Wild Wasteland: Targeted attack additional cost is reduced by 2 AP. However, combat sequence is reduced by 4."
+        ],
+        "effect": "Quando effettui un attacco mirato con un'arma a distanza, il costo addizionale in PA è ridotto di 1 PA. Tuttavia, il tuo bonus di Sequenza di Combattimento (Iniziativa) è ridotto di 2."
     }
-  ],
+],
+
   "perks": [
     {
       "id": "adaptive_reflexes",
