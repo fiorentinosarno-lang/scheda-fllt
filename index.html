@@ -25,18 +25,28 @@
   <!-- PIP-BOY SCANLINE OVERLAY -->
   <div class="scanlines"></div>
 
-  <!-- APPLICATION HEADER & PIP-BOY STATUS -->
-  <header class="app-header no-print">
-    <div class="brand">
-      <div class="brand-icon"></div>
-      <div>
-        <div class="brand-title">VAULT-TEC PIP-BOY 3000 Mk IV</div>
-        <div class="brand-sub">SISTEMA DI GESTIONE PERSONAGGIO - ZONA CONTAMINATA</div>
+  <!-- APPLICATION HEADER & PIP-BOY STATUS (CON SEZIONE STRUMENTI A SCOMPARSA SU MOBILE) -->
+  <header class="app-header no-print" id="main-app-header">
+    <div class="brand-bar">
+      <div class="brand">
+        <div class="brand-icon"></div>
+        <div class="brand-text-wrap">
+          <div class="brand-title">VAULT-TEC PIP-BOY 3000 Mk IV</div>
+          <div class="brand-sub">SISTEMA DI GESTIONE PERSONAGGIO</div>
+        </div>
       </div>
+      <!-- Pulsante Toggle a Scomparsa per Mobile -->
+      <button type="button" class="btn btn-sm mobile-tools-toggle no-print" id="mobile-tools-toggle" onclick="toggleMobileTopTools()" aria-expanded="false" title="Apri o chiudi il pannello strumenti di gestione">
+        <span class="m-toggle-icon">⚙️</span>
+        <span class="m-toggle-text">STRUMENTI</span>
+        <span class="m-toggle-arrow">▼</span>
+      </button>
     </div>
 
-    <!-- Quick action controls -->
-    <div class="header-actions">
+    <!-- Contenitore a Scomparsa su Mobile (Temi, Salvataggio, Dadi, Compendio, Scheda Riassuntiva) -->
+    <div class="header-tools-collapsible" id="header-tools-collapsible">
+      <!-- Quick action controls -->
+      <div class="header-actions">
       <!-- Theme Switcher -->
       <div class="theme-selector theme-switch-group" id="theme-selector-group">
         <button type="button" class="theme-btn active" data-set-theme="vault" onclick="applyTheme('vault')" title="Tema Ufficiale Vault-Tec">VAULT-TEC</button>
@@ -55,10 +65,9 @@
       <button type="button" class="btn" id="btn-print-sheet" title="Stampa o esporta in PDF">🖨️ STAMPA</button>
       <div class="save-status saved" id="save-status-indicator" title="Autosalvataggio attivo nel browser: ogni modifica è sempre memorizzata automaticamente">SALVATO AUTOMATICO [OK]</div>
     </div>
-  </header>
 
-  <!-- TOP PERSISTENT SUMMARY BAR -->
-  <div class="sheet-summary-bar no-print">
+    <!-- TOP PERSISTENT SUMMARY BAR -->
+    <div class="sheet-summary-bar no-print">
     <div class="summary-group">
       <label for="char-name-header">Nome Personaggio</label>
       <input type="text" id="char-name-header" class="input-field" placeholder="Es. John Cassidy">
@@ -81,64 +90,28 @@
     <div class="summary-actions" style="margin-left:auto;">
       <span class="sheet-binder-note">Scheda Personaggio Fallout TTRPG &bull; Sistema 2d20</span>
     </div>
+    </div>
+    </div> <!-- END header-tools-collapsible -->
+  </header>
+
+  <!-- MINI-VITALS HUD STRIP (STICKY IN ALTO SU MOBILE, SOLO ~26px) -->
+  <div id="fallout-mobile-vitals" class="mobile-top-vitals-strip no-print">
+    <div class="m-vital-chip" onclick="switchMobileSection('core')" title="Punti Ferita Attuali / Massimi">
+      <span class="m-vital-icon">❤️</span> <span id="m-hud-hp">PF --/--</span>
+    </div>
+    <div class="m-vital-chip" onclick="switchMobileSection('core')" title="Punti Azione Attuali / Massimi">
+      <span class="m-vital-icon">⚡</span> <span id="m-hud-ap">PA --/--</span>
+    </div>
+    <div class="m-vital-chip" onclick="switchMobileSection('armors')" title="Soglia Danni (DT Totale)">
+      <span class="m-vital-icon">🛡️</span> <span id="m-hud-dt">DT --</span>
+    </div>
+    <div class="m-vital-chip" onclick="switchMobileSection('survival')" title="Radiazioni e CD Radiazioni">
+      <span class="m-vital-icon">☢️</span> <span id="m-hud-rad">Rad --</span>
+    </div>
   </div>
 
   <!-- MAIN CHARACTER SHEET BINDER CONTAINER -->
   <main class="app-container layout-binder-root layout-codex-root">
-
-    <!-- =========================================================================
-         FALLOUT VAULT-TEC DEDICATED MOBILE HUD & PIP-BOY SWITCHER (< 900px ONLY)
-         Completamente invisibile su PC/Desktop, attivo e touch-friendly su Mobile.
-         ========================================================================= -->
-    <div id="fallout-mobile-dock" class="mobile-only-dock no-print">
-      <!-- Mini Vitals HUD Strip -->
-      <div class="mobile-vitals-strip">
-        <div class="m-vital-chip" onclick="switchMobileSection('core')" title="Punti Ferita Attuali">
-          <span class="m-vital-icon">❤️</span> <span id="m-hud-hp">PF --/--</span>
-        </div>
-        <div class="m-vital-chip" onclick="switchMobileSection('core')" title="Punti Azione">
-          <span class="m-vital-icon">⚡</span> <span id="m-hud-ap">PA --/--</span>
-        </div>
-        <div class="m-vital-chip" onclick="switchMobileSection('armors')" title="Soglia Danni (DT)">
-          <span class="m-vital-icon">🛡️</span> <span id="m-hud-dt">DT --</span>
-        </div>
-        <div class="m-vital-chip" onclick="switchMobileSection('survival')" title="Radiazioni e CD">
-          <span class="m-vital-icon">☢️</span> <span id="m-hud-rad">Rad --</span>
-        </div>
-      </div>
-
-      <!-- 5-Section Pip-Boy Mobile Tab Bar -->
-      <nav class="mobile-nav-bar" aria-label="Navigazione Mobile Fallout">
-        <button type="button" class="mobile-nav-btn active" data-m-target="core" onclick="switchMobileSection('core')">
-          <span class="m-btn-icon">👤</span>
-          <span class="m-btn-label">STAT/SKILL</span>
-        </button>
-        <button type="button" class="mobile-nav-btn" data-m-target="perks" onclick="switchMobileSection('perks')">
-          <span class="m-btn-icon">🎖️</span>
-          <span class="m-btn-label">PERK</span>
-        </button>
-        <button type="button" class="mobile-nav-btn" data-m-target="weapons" onclick="switchMobileSection('weapons')">
-          <span class="m-btn-icon">⚔️</span>
-          <span class="m-btn-label">ARMI</span>
-        </button>
-        <button type="button" class="mobile-nav-btn" data-m-target="armors" onclick="switchMobileSection('armors')">
-          <span class="m-btn-icon">🛡️</span>
-          <span class="m-btn-label">ARMATURE</span>
-        </button>
-        <button type="button" class="mobile-nav-btn" data-m-target="survival" onclick="switchMobileSection('survival')">
-          <span class="m-btn-icon">☢️</span>
-          <span class="m-btn-label">SOPRAVV.</span>
-        </button>
-        <button type="button" class="mobile-nav-btn" data-m-target="inventory" onclick="switchMobileSection('inventory')">
-          <span class="m-btn-icon">🎒</span>
-          <span class="m-btn-label">ZAINO</span>
-        </button>
-        <button type="button" class="mobile-nav-btn" data-m-target="all" onclick="switchMobileSection('all')" title="Mostra tutte le sezioni insieme">
-          <span class="m-btn-icon">📜</span>
-          <span class="m-btn-label">TUTTO</span>
-        </button>
-      </nav>
-    </div>
 
     <div class="sheet-binder-frame">
 
@@ -3116,5 +3089,41 @@ Tratti Leggendari Telaio PA
   <!-- SCRIPTS -->
   <script src="rules-data.js"></script>
   <script src="app.js"></script>
+
+  <!-- =========================================================================
+       FALLOUT VAULT-TEC DEDICATED MOBILE BOTTOM NAVIGATION DOCK (FIXED AT BOTTOM)
+       Ultra-visibile, touch-friendly, contrasto elevato con stile Pip-Boy.
+       ========================================================================= -->
+  <nav id="fallout-mobile-bottom-dock" class="mobile-bottom-dock no-print" aria-label="Navigazione Mobile Fallout">
+    <button type="button" class="mobile-nav-btn active" data-m-target="core" onclick="switchMobileSection('core')">
+      <span class="m-btn-icon">👤</span>
+      <span class="m-btn-label">STAT/SKILL</span>
+    </button>
+    <button type="button" class="mobile-nav-btn" data-m-target="perks" onclick="switchMobileSection('perks')">
+      <span class="m-btn-icon">🎖️</span>
+      <span class="m-btn-label">PERK</span>
+    </button>
+    <button type="button" class="mobile-nav-btn" data-m-target="weapons" onclick="switchMobileSection('weapons')">
+      <span class="m-btn-icon">⚔️</span>
+      <span class="m-btn-label">ARMI</span>
+    </button>
+    <button type="button" class="mobile-nav-btn" data-m-target="armors" onclick="switchMobileSection('armors')">
+      <span class="m-btn-icon">🛡️</span>
+      <span class="m-btn-label">ARMATURE</span>
+    </button>
+    <button type="button" class="mobile-nav-btn" data-m-target="survival" onclick="switchMobileSection('survival')">
+      <span class="m-btn-icon">☢️</span>
+      <span class="m-btn-label">SOPRAVV.</span>
+    </button>
+    <button type="button" class="mobile-nav-btn" data-m-target="inventory" onclick="switchMobileSection('inventory')">
+      <span class="m-btn-icon">🎒</span>
+      <span class="m-btn-label">ZAINO</span>
+    </button>
+    <button type="button" class="mobile-nav-btn" data-m-target="all" onclick="switchMobileSection('all')" title="Mostra tutte le sezioni insieme">
+      <span class="m-btn-icon">📜</span>
+      <span class="m-btn-label">TUTTO</span>
+    </button>
+  </nav>
+
 </body>
 </html>

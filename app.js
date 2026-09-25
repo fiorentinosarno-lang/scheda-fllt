@@ -8758,17 +8758,26 @@ function switchMobileSection(sectionKey) {
 
   // Smooth scroll to top of content on mobile switch
   if (typeof window !== "undefined" && window.innerWidth <= 900) {
-    const dock = document.getElementById("fallout-mobile-dock");
-    if (dock) {
-      dock.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   try { localStorage.setItem("fallout_mobile_active_section", sectionKey); } catch(e){}
 }
 window.switchMobileSection = switchMobileSection;
+
+function toggleMobileTopTools() {
+  if (typeof document === "undefined") return;
+  const panel = document.getElementById("header-tools-collapsible");
+  const btn = document.getElementById("mobile-tools-toggle");
+  if (!panel) return;
+  const isOpen = panel.classList.toggle("m-tools-open");
+  if (btn) {
+    btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    const arrow = btn.querySelector(".m-toggle-arrow");
+    if (arrow) arrow.textContent = isOpen ? "▲" : "▼";
+  }
+}
+window.toggleMobileTopTools = toggleMobileTopTools;
 
 function initMobileAccordion() {
   if (typeof document === "undefined") return;
@@ -9440,7 +9449,8 @@ if (typeof module !== 'undefined' && module.exports) {
     syncRacialPerksAndBonuses,
     switchMobileSection,
     initMobileAccordion,
-    updateMobileHUD
+    updateMobileHUD,
+    toggleMobileTopTools
   };
 }
 
@@ -9456,3 +9466,4 @@ window.showToast = showToast;
 window.switchMobileSection = switchMobileSection;
 window.initMobileAccordion = initMobileAccordion;
 window.updateMobileHUD = updateMobileHUD;
+window.toggleMobileTopTools = toggleMobileTopTools;
