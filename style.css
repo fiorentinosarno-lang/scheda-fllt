@@ -174,9 +174,7 @@ body::before {
   border-bottom: 3px solid var(--border-highlight);
   margin-bottom: 16px;
   box-shadow: 0 4px 15px var(--accent-glow);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  position: static;
 }
 
 .brand {
@@ -13108,9 +13106,8 @@ body[data-theme="enclave"] .die-card.is-success {
   /* 2. Compact Mobile Header */
   .app-header,
   .top-header {
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 200 !important;
+    position: static !important;
+    top: auto !important;
     padding: 6px 8px !important;
     gap: 6px !important;
     margin-bottom: 8px !important;
@@ -13554,13 +13551,12 @@ body[data-theme="enclave"] .die-card.is-success {
     justify-content: space-between !important;
     align-items: center !important;
     gap: 4px !important;
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 990 !important;
+    position: static !important;
+    top: auto !important;
     background: var(--bg-panel, #ffffff) !important;
     border-bottom: 2px solid var(--accent, #b45309) !important;
     padding: 4px 6px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+    box-shadow: none !important;
     box-sizing: border-box !important;
   }
 

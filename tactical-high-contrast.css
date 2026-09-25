@@ -963,10 +963,20 @@ body[data-theme] .damage-badge .tactical-badge-val {
    HEADER E SUMMARY BAR
    ============================================================================= */
 
-.app-header {
+.app-header,
+.top-header,
+#main-app-header {
+  position: static !important;
+  top: auto !important;
   background: var(--bg-secondary) !important;
   border-bottom: 1px solid var(--border-color) !important;
   padding: 12px 20px !important;
+  box-shadow: none !important;
+}
+
+.sheet-summary-bar {
+  position: static !important;
+  top: auto !important;
 }
 
 .brand-bar {
@@ -1222,13 +1232,47 @@ body[data-theme] .damage-badge .tactical-badge-val {
 }
 
 @media (max-width: 768px) {
+  .app-header,
+  .top-header,
+  #main-app-header {
+    position: static !important;
+    top: auto !important;
+    padding: 8px 10px !important;
+    box-shadow: none !important;
+  }
+
+  .brand-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+
+  .header-actions {
+    margin-left: 0 !important;
+    justify-content: flex-start !important;
+  }
+
+  .sheet-summary-bar {
+    position: static !important;
+    top: auto !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    box-shadow: none !important;
+  }
+
+  .summary-group {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
   .app-container {
-    padding: 8px !important;
+    padding: 6px !important;
   }
 
   .sheet-binder-frame {
-    padding: 10px !important;
-    padding-bottom: 75px !important;
+    padding: 8px !important;
+    padding-bottom: 80px !important;
   }
 
   .primary-vitals-container {
@@ -1293,11 +1337,11 @@ body[data-theme] .damage-badge .tactical-badge-val {
   }
 
   .mobile-top-vitals-strip {
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 9998 !important;
+    position: static !important;
+    top: auto !important;
     background: #181818 !important;
     border-bottom: 1px solid var(--border-color) !important;
+    box-shadow: none !important;
   }
 
   .limb-control-row {
