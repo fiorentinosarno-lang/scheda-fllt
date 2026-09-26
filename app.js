@@ -1057,18 +1057,18 @@ function renderBodyPaperdoll() {
   const summaryContent = (penalties.length === 0)
     ? "🟢 Nessuna menomazione: corpo in piena efficienza operativa."
     : penalties.map(p => `<div>${p}</div>`).join("");
-  const borderColor = (penalties.length === 0) ? "var(--success)" : "var(--warning)";
-  const textColor = (penalties.length === 0) ? "var(--text-bright)" : "var(--warning)";
 
   if (penaltySummaryEl) {
     penaltySummaryEl.innerHTML = summaryContent;
-    penaltySummaryEl.style.borderColor = borderColor;
-    penaltySummaryEl.style.color = textColor;
+    penaltySummaryEl.classList.toggle("has-penalty", penalties.length > 0);
+    penaltySummaryEl.style.borderColor = "";
+    penaltySummaryEl.style.color = "";
   }
   if (corePenaltySummaryEl) {
     corePenaltySummaryEl.innerHTML = summaryContent;
-    corePenaltySummaryEl.style.borderColor = borderColor;
-    corePenaltySummaryEl.style.color = textColor;
+    corePenaltySummaryEl.classList.toggle("has-penalty", penalties.length > 0);
+    corePenaltySummaryEl.style.borderColor = "";
+    corePenaltySummaryEl.style.color = "";
   }
 }
 
@@ -3870,8 +3870,8 @@ function renderBio() {
     eventsListEl.innerHTML = character.bio.events.map((ev, idx) => `
       <div class="bio-dynamic-item">
         <div style="flex:1;">
-          <div style="font-weight:bold; color:var(--text-bright);">${ev.title || "Evento"} <span class="bio-item-tag">${ev.date || ""}</span></div>
-          <div style="font-size:11px; color:var(--text-dim);">${ev.desc || ""}</div>
+          <div style="font-weight:800; color:var(--text-bright);">${ev.title || "Evento"} <span class="bio-item-tag">${ev.date || ""}</span></div>
+          <div style="font-size:12px; color:#334155; margin-top:3px; line-height:1.4;">${ev.desc || ""}</div>
         </div>
         <button class="btn btn-sm btn-danger no-print" onclick="removeBioEvent(${idx})">✕</button>
       </div>`).join("");
@@ -3885,7 +3885,7 @@ function renderBio() {
       <div class="bio-dynamic-item">
         <div style="flex:1;">
           <span class="bio-item-tag ${g.completed ? "completed" : "rival"}">${g.type || "Obiettivo"}</span>
-          <span style="margin-left:4px; color:var(--text-bright); font-weight:${g.completed ? "normal" : "bold"}; ${g.completed ? "text-decoration:line-through;" : ""}">${g.desc}</span>
+          <span style="margin-left:6px; color:var(--text-bright); font-weight:${g.completed ? "normal" : "bold"}; ${g.completed ? "text-decoration:line-through;" : ""}">${g.desc}</span>
         </div>
         <button class="btn btn-sm ${g.completed ? "btn-primary" : ""}" onclick="toggleBioGoalStatus(${idx})" title="Alterna completato">${g.completed ? "✓" : "○"}</button>
         <button class="btn btn-sm btn-danger no-print" onclick="removeBioGoal(${idx})">✕</button>
@@ -3900,8 +3900,8 @@ function renderBio() {
       <div class="bio-dynamic-item">
         <div style="flex:1;">
           <span class="bio-item-tag ${rel.type === "ally" ? "ally" : rel.type === "enemy" ? "enemy" : "rival"}">${rel.type === "ally" ? "Alleato" : rel.type === "enemy" ? "Nemico" : "Contatto"}</span>
-          <strong style="color:var(--text-bright); margin-left:4px;">${rel.name}</strong> <span style="font-size:11px; color:var(--text-dim);">${rel.role || ""}</span>
-          ${rel.notes ? `<div style="font-size:11px; color:var(--accent); margin-top:2px;">${rel.notes}</div>` : ""}
+          <strong style="color:var(--text-bright); margin-left:6px; font-size:13px;">${rel.name}</strong> <span style="font-size:12px; color:#475569; font-weight:600;">(${rel.role || "Ruolo non specificato"})</span>
+          ${rel.notes ? `<div style="font-size:12px; color:#0369a1; font-weight:600; margin-top:3px; background:rgba(3,105,161,0.06); padding:2px 6px; border-radius:3px; display:inline-block;">📝 ${rel.notes}</div>` : ""}
         </div>
         <button class="btn btn-sm btn-danger no-print" onclick="removeBioRelationship(${idx})">✕</button>
       </div>`).join("");
@@ -3914,8 +3914,8 @@ function renderBio() {
     giftsListEl.innerHTML = character.bio.masterGifts.map((gift, idx) => `
       <div class="bio-dynamic-item">
         <div style="flex:1;">
-          <strong style="color:var(--warning);">⭐ ${gift.title}</strong>
-          <div style="font-size:11px; color:var(--text-dim);">${gift.desc || ""}</div>
+          <strong style="color:#b45309; font-size:13px;">⭐ ${gift.title}</strong>
+          <div style="font-size:12px; color:#334155; margin-top:3px; line-height:1.4;">${gift.desc || ""}</div>
         </div>
         <button class="btn btn-sm btn-danger no-print" onclick="removeBioGift(${idx})">✕</button>
       </div>`).join("");

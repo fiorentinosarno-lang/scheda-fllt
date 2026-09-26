@@ -2363,15 +2363,17 @@ body[data-theme="enclave"] .racial-page26-badge {
 
 .badge-input {
   width: 44px;
-  height: 24px;
+  height: 28px;
+  line-height: 26px;
+  padding: 2px 4px;
   background: var(--bg-input);
   border: 1px solid var(--border-color);
   color: var(--text-bright);
   font-family: var(--font-mono);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: bold;
   text-align: center;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 .inline-stat-input {
@@ -3260,14 +3262,16 @@ body[data-theme="enclave"] .bg-skill-tag-chip {
 }
 
 .armor-rank-step.locked-rank-step {
-  opacity: 0.65;
-  background: rgba(0, 0, 0, 0.18);
-  border-left: 3px dashed rgba(148, 163, 184, 0.35);
+  opacity: 1;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-left: 4px dashed #64748b;
+  color: #1e293b;
 }
 
 .armor-rank-step.locked-rank-step .rank-step-badge {
-  color: #94a3b8;
-  font-weight: normal;
+  color: #475569;
+  font-weight: 800;
 }
 
 .armor-slot-dot {
@@ -7667,19 +7671,28 @@ body[data-theme="enclave"] .bio-panel-master-gift .bio-panel-title {
 
 /* --- 2. SIDEBAR: OMINO VERDE (STATO ARTI PAPERDOLL) --- */
 #anatomical-body-card {
-  background: #090e17 !important; /* HUD tattico scuro per contrasto */
+  background: #0b1120 !important; /* HUD tattico scuro per contrasto */
   border: 1.5px solid #1e3a8a !important;
   border-top: 4px solid #16a34a !important;
-  border-radius: 6px !important;
-  padding: 10px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+  border-radius: 8px !important;
+  padding: 12px 14px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+  color: #f8fafc !important;
 }
 
+#anatomical-body-card .box-title-bar span:first-child,
 #anatomical-body-card .anatomical-header {
   color: #4ade80 !important;
-  font-weight: 800 !important;
+  font-weight: 900 !important;
   font-family: 'JetBrains Mono', monospace !important;
-  text-shadow: 0 0 6px rgba(74, 222, 128, 0.4) !important;
+  text-shadow: 0 0 8px rgba(74, 222, 128, 0.45) !important;
+  letter-spacing: 0.05em !important;
+}
+
+#anatomical-body-card .box-title-bar span:last-child {
+  color: #93c5fd !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
 }
 
 .body-silhouette-svg {

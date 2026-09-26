@@ -653,11 +653,11 @@ body[data-theme] .sheet-binder-frame {
 
 .segmented-control {
   display: inline-flex !important;
-  background: #141414 !important;
-  border: 1px solid var(--border-color) !important;
+  background: #0f172a !important;
+  border: 1px solid #334155 !important;
   border-radius: var(--radius-sm) !important;
   padding: 2px !important;
-  gap: 2px !important;
+  gap: 3px !important;
   flex: 1 !important;
 }
 
@@ -673,12 +673,12 @@ body[data-theme] .sheet-binder-frame {
 .segmented-control .seg-btn {
   flex: 1 !important;
   text-align: center !important;
-  padding: 5px 6px !important;
-  font-size: 11px !important;
+  padding: 6px 8px !important;
+  font-size: 11.5px !important;
   font-weight: 700 !important;
   border-radius: 3px !important;
   cursor: pointer !important;
-  color: var(--text-dim) !important;
+  color: #cbd5e1 !important;
   background: transparent !important;
   transition: all 0.15s ease-in-out !important;
   border: 1px solid transparent !important;
@@ -686,24 +686,33 @@ body[data-theme] .sheet-binder-frame {
   white-space: nowrap !important;
 }
 
+.segmented-control .seg-btn:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
 .segmented-control input[type="radio"]:checked + .seg-btn {
   color: #ffffff !important;
+  font-weight: 800 !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
 }
 
 .segmented-control input[type="radio"][value="healthy"]:checked + .seg-btn {
-  background: #1b5e20 !important;
-  border-color: #4caf50 !important;
+  background: #16a34a !important;
+  border-color: #22c55e !important;
+  color: #ffffff !important;
 }
 
 .segmented-control input[type="radio"][value="crippled"]:checked + .seg-btn {
-  background: #b76e00 !important;
-  border-color: #ffa726 !important;
+  background: #b45309 !important;
+  border-color: #f59e0b !important;
+  color: #ffffff !important;
 }
 
 .segmented-control input[type="radio"][value="severed"]:checked + .seg-btn {
-  background: #b71c1c !important;
-  border-color: #ef5350 !important;
+  background: #b91c1c !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
 }
 
 .limb-path {
@@ -1449,4 +1458,424 @@ body[data-theme] .damage-badge .tactical-badge-val {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* =============================================================================
+   ULTRA-READABILITY & HIGH CONTRAST (WCAG AAA) FIXES
+   Risoluzione problemi di contrasto, clipping numerico, spazi e visibilità umana
+   ============================================================================= */
+
+/* 1. Global Selection & Input Focus State */
+::selection {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+body[data-theme] input:focus,
+body[data-theme] select:focus,
+body[data-theme] textarea:focus,
+body[data-theme] .input-field:focus {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 2.5px rgba(37, 99, 235, 0.22) !important;
+  outline: none !important;
+}
+
+body[data-theme="enclave"] input:focus,
+body[data-theme="enclave"] select:focus,
+body[data-theme="enclave"] textarea:focus,
+body[data-theme="enclave"] .input-field:focus {
+  background-color: #0f172a !important;
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2.5px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* 2. STATO ARTI & ANATOMIA OPERATIVA (#anatomical-body-card) */
+#anatomical-body-card {
+  background: #0b1120 !important;
+  border: 1.5px solid #1e3a8a !important;
+  border-top: 4px solid #16a34a !important;
+  border-radius: 8px !important;
+  padding: 12px 14px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+  color: #f8fafc !important;
+}
+
+#anatomical-body-card .box-title-bar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  border-bottom: 1px solid #1e3a8a !important;
+  padding-bottom: 8px !important;
+  margin-bottom: 12px !important;
+}
+
+#anatomical-body-card .box-title-bar span:first-child {
+  color: #4ade80 !important;
+  font-weight: 900 !important;
+  font-size: 13.5px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  letter-spacing: 0.05em !important;
+  text-shadow: 0 0 8px rgba(74, 222, 128, 0.45) !important;
+}
+
+#anatomical-body-card .box-title-bar span:last-child {
+  color: #93c5fd !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.05em !important;
+}
+
+#anatomical-body-card .limb-control-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  background: #111827 !important;
+  border: 1px solid #1e3a8a !important;
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+  margin-bottom: 6px !important;
+}
+
+#anatomical-body-card .limb-name {
+  color: #f8fafc !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+#anatomical-body-card .segmented-control {
+  display: inline-flex !important;
+  background: #030712 !important;
+  border: 1px solid #374151 !important;
+  border-radius: 5px !important;
+  padding: 2px !important;
+  gap: 3px !important;
+  flex: 1 !important;
+}
+
+#anatomical-body-card .segmented-control .seg-btn {
+  flex: 1 !important;
+  text-align: center !important;
+  padding: 6px 8px !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  color: #cbd5e1 !important;
+  background: transparent !important;
+  transition: all 0.15s ease-in-out !important;
+  border: 1px solid transparent !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+}
+
+#anatomical-body-card .segmented-control .seg-btn:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.14) !important;
+}
+
+#anatomical-body-card .segmented-control input[type="radio"]:checked + .seg-btn {
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6) !important;
+}
+
+#anatomical-body-card .segmented-control input[type="radio"][value="healthy"]:checked + .seg-btn {
+  background: #15803d !important;
+  border-color: #22c55e !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.45) !important;
+}
+
+#anatomical-body-card .segmented-control input[type="radio"][value="crippled"]:checked + .seg-btn {
+  background: #b45309 !important;
+  border-color: #f59e0b !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.45) !important;
+}
+
+#anatomical-body-card .segmented-control input[type="radio"][value="severed"]:checked + .seg-btn {
+  background: #b91c1c !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.45) !important;
+}
+
+#anatomical-body-card .limb-penalty-banner,
+.limb-penalty-banner {
+  background: #052e16 !important;
+  border: 1.5px solid #16a34a !important;
+  border-radius: 6px !important;
+  color: #86efac !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  padding: 8px 12px !important;
+  margin-top: 12px !important;
+  line-height: 1.4 !important;
+}
+
+#anatomical-body-card .limb-penalty-banner.has-penalty,
+.limb-penalty-banner.has-penalty {
+  background: #451a03 !important;
+  border-color: #f59e0b !important;
+  color: #fef08a !important;
+}
+
+/* 3. INVENTORY TABLE INPUTS & NUMBERS VISIBILITY */
+.inv-table {
+  width: 100% !important;
+  table-layout: auto !important;
+}
+
+.inv-table th {
+  padding: 8px 6px !important;
+  vertical-align: middle !important;
+  font-size: 11.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.5px !important;
+}
+
+.inv-table td {
+  padding: 6px 6px !important;
+  vertical-align: middle !important;
+}
+
+.inv-table input.input-field {
+  padding: 5px 6px !important;
+  height: 32px !important;
+  line-height: 20px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  box-sizing: border-box !important;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 4px !important;
+}
+
+body[data-theme="enclave"] .inv-table input.input-field {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+/* Numeric columns: centered, monospaced & fully visible */
+.inv-table td:nth-child(2) input,
+.inv-table td:nth-child(3) input,
+.inv-table td:nth-child(4) input {
+  text-align: center !important;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace) !important;
+  font-weight: 700 !important;
+}
+
+/* Stepper buttons prevention of clipping in number inputs */
+.inv-table input[type="number"] {
+  -moz-appearance: textfield !important;
+}
+
+.inv-table input[type="number"]::-webkit-outer-spin-button,
+.inv-table input[type="number"]::-webkit-inner-spin-button {
+  width: 14px !important;
+  height: 100% !important;
+  opacity: 0.55 !important;
+}
+
+/* 4. ARMOR UPGRADES PROGRESSION (LOCKED & ACTIVE RANKS) */
+.armor-rank-step {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+  padding: 6px 10px !important;
+  border-radius: 6px !important;
+  margin-top: 4px !important;
+  transition: all 0.15s ease !important;
+}
+
+.armor-rank-step.active-rank-step {
+  color: #065f46 !important;
+  background: #ecfdf5 !important;
+  border: 1px solid #6ee7b7 !important;
+  border-left: 4px solid #059669 !important;
+  font-weight: 500 !important;
+}
+
+.armor-rank-step.active-rank-step .rank-step-badge {
+  color: #047857 !important;
+  font-weight: 800 !important;
+}
+
+.armor-rank-step.locked-rank-step {
+  opacity: 1 !important;
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  border-left: 4px dashed #64748b !important;
+  color: #1e293b !important;
+}
+
+.armor-rank-step.locked-rank-step .rank-step-badge {
+  color: #475569 !important;
+  font-weight: 800 !important;
+}
+
+.armor-rank-step.locked-rank-step .rank-step-desc {
+  color: #0f172a !important;
+  font-weight: 500 !important;
+}
+
+body[data-theme="enclave"] .armor-rank-step.active-rank-step {
+  background: rgba(16, 185, 129, 0.18) !important;
+  border: 1px solid #10b981 !important;
+  border-left: 4px solid #34d399 !important;
+  color: #d1fae5 !important;
+}
+
+body[data-theme="enclave"] .armor-rank-step.active-rank-step .rank-step-badge {
+  color: #34d399 !important;
+}
+
+body[data-theme="enclave"] .armor-rank-step.locked-rank-step {
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
+  border-left: 4px dashed #64748b !important;
+  color: #cbd5e1 !important;
+}
+
+body[data-theme="enclave"] .armor-rank-step.locked-rank-step .rank-step-badge {
+  color: #94a3b8 !important;
+}
+
+body[data-theme="enclave"] .armor-rank-step.locked-rank-step .rank-step-desc {
+  color: #f1f5f9 !important;
+}
+
+/* 5. ARMATURA & PROTEZIONE (AC & DT BADGES & WEIGHT) */
+.stat-badge-box {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  padding: 3px 8px !important;
+  text-decoration: none !important;
+}
+
+body[data-theme="enclave"] .stat-badge-box {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+}
+
+.stat-badge-box.has-tooltip {
+  text-decoration: none !important;
+}
+
+.stat-badge-box .badge-label {
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  text-decoration: underline dotted #64748b !important;
+}
+
+body[data-theme="enclave"] .stat-badge-box .badge-label {
+  color: #f8fafc !important;
+  text-decoration: underline dotted #94a3b8 !important;
+}
+
+.stat-badge-box .badge-input {
+  width: 44px !important;
+  height: 28px !important;
+  line-height: 26px !important;
+  padding: 2px 4px !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  text-align: center !important;
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 4px !important;
+  color: #020617 !important;
+  -moz-appearance: textfield !important;
+}
+
+body[data-theme="enclave"] .stat-badge-box .badge-input {
+  background: #1e293b !important;
+  border-color: #475569 !important;
+  color: #f8fafc !important;
+}
+
+.stat-badge-box .badge-input::-webkit-outer-spin-button,
+.stat-badge-box .badge-input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+#armor-weight-badge-row {
+  color: #1e293b !important;
+  background: rgba(3, 105, 161, 0.08) !important;
+  border-color: rgba(3, 105, 161, 0.25) !important;
+}
+
+#armor-weight-display {
+  color: #0369a1 !important;
+  font-weight: 800 !important;
+}
+
+body[data-theme="enclave"] #armor-weight-badge-row {
+  color: #f1f5f9 !important;
+  background: rgba(56, 189, 248, 0.1) !important;
+  border-color: rgba(56, 189, 248, 0.3) !important;
+}
+
+body[data-theme="enclave"] #armor-weight-display {
+  color: #38bdf8 !important;
+}
+
+/* 6. LABELS, BIOMETRICS & DYNAMIC BIO ITEMS */
+.input-group label {
+  color: #1e293b !important;
+  font-weight: 800 !important;
+  font-size: 11.5px !important;
+  letter-spacing: 0.5px !important;
+}
+
+body[data-theme="enclave"] .input-group label {
+  color: #cbd5e1 !important;
+}
+
+.bio-dynamic-item,
+.bio-dynamic-list > div {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+  margin-top: 6px !important;
+  font-size: 13px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+}
+
+body[data-theme="enclave"] .bio-dynamic-item,
+body[data-theme="enclave"] .bio-dynamic-list > div {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+.bio-item-tag {
+  font-size: 10.5px !important;
+  text-transform: uppercase !important;
+  font-weight: 800 !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  letter-spacing: 0.03em !important;
+}
+
 
